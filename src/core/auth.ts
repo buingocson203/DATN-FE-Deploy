@@ -1,5 +1,6 @@
 import { SigninForm } from "../common/Schema";
-import instance from "./instance";
+import instance from "./api";
+// import instance from "./instance";
 
 export const signin = (data: SigninForm) => {
     const uri = "/signin"
