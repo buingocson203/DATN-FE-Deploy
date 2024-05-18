@@ -3,6 +3,6 @@ import instance from "./api";
 // import instance from "./instance";
 
 export const signin = (data: SigninForm) => {
-    const uri = "/signin"
+    const uri = "api/auth/signin"
     return instance.post(uri, data)
 }

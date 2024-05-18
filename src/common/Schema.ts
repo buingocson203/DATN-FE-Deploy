@@ -2,25 +2,24 @@ import Joi from 'joi'
 import * as Yup from 'Yup'
 export const formSchema = Joi.object({
     userName: Joi.string().min(6).required().messages({
-        'string.min': ' it nhat 6 ki tu',
-        'any.required': 'khong duoc de trong'
+        'string.min': ' Ít nhất 6 kí tự',
+        'any.required': 'Vui lòng không để trống'
     }),
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
         .required()
         .messages({
-            'string.email': 'Email khong hop le',
-            'any.required': 'Email khong duoc bo trong'
+            'string.email': 'Email không hợp lệ',
+            'any.required': 'Email không được bỏ trống'
         }),
     password: Joi.string().min(6).max(32).required().messages({
-        'string.min': 'Mat khau it nhat 6 ki tu',
-        'string.max': 'Mat khau khong qua 32 ki tu',
-        'any.required': 'khong duoc de trong'
+        'string.min': 'Mật khẩu ít nhất 6 kí tự',
+        'string.max': 'Mật khẩu không quá 32 kí tự',
+        'any.required': 'Không được để trống'
     }),
-    confirmPassword: Joi.string().min(6).max(32).required().messages({
-        'string.min': 'Mat khau it nhat 6 ki tu',
-        'string.max': 'Mat khau khong qua 32 ki tu',
-        'any.required': 'khong duoc de trong'
+    confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
+        'any.only': 'Mật khẩu xác nhận không trùng khớp',
+        'any.required': 'Không được để trống'
     })
 })
 

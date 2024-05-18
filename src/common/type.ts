@@ -34,7 +34,7 @@ export const signinSchema = Yup.object({
 export type SigninForm = Yup.InferType<typeof signinSchema>
 
 export interface IUser {
-    id: number
+    id?: number
     userName: string
     email: string
     firstName: string
