@@ -7,8 +7,10 @@ import { useMutation, useQueryClient } from "react-query"
 import { useLocalStorage } from "./useStorage"
 
 type FormAuthType = {
-    email: string,
+    userName: string
+    email: string
     password: string
+    confirmPassword: string
 }
 
 type useAuthMutationProps = {
@@ -17,7 +19,7 @@ type useAuthMutationProps = {
     onSuccess?: () => void
 }
 
-const useAuthMutation = ({action, defaultValues = {email: "", password: ""}, onSuccess}: useAuthMutationProps) => {
+const useAuthMutation = ({action, defaultValues = {userName: "",email: "", password: "", confirmPassword: ""}, onSuccess}: useAuthMutationProps) => {
 const queryClient = useQueryClient()
 const [, setUser] = useLocalStorage('user', {})
 const {mutate, ...rest} = useMutation({
@@ -43,7 +45,7 @@ const {mutate, ...rest} = useMutation({
         // luu vao Local Storage
         setUser(data)
     }
-})
+})  
 const form = useForm<FormAuthType>({
     resolver: joiResolver(formSchema),
     defaultValues
