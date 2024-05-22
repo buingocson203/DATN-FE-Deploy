@@ -1,16 +1,18 @@
 
 import { Outlet } from 'react-router-dom'
+import Footer from './base/Footer'
+import Header from './base/Header'
 
 type Props = {}
 
 const BaseLayout = (props: Props) => {
   return (
     <div>
-      <header>header</header>
+      <Header />
       <main>
         <Outlet />
       </main>
-      <footer>Footer</footer>
+      <Footer />
     </div>
   )
 }

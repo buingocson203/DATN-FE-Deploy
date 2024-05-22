@@ -1,6 +1,7 @@
 
 import { IProduct } from "@/common/type"
 import instance from "../core/api"
+import { cachedDataVersionTag } from "v8"
 
 export const getProducts = async () => {
     try {
