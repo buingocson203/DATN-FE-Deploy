@@ -1,7 +1,8 @@
 import { EyeIcon, ShoppingCartIcon, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function ProductItem() {
-    return <div className="cursor-pointer group">
+    return <Link to="/products/giay-nike" className="cursor-pointer group">
         <div className="pt-6 relative pb-3 overflow-hidden">
             <span className='absolute text-xs p-1 px-2 bg-red-500 rounded-full inline-flex item-center gap-1 text-white items-center w-fit top-0 left-2'>
                 <Zap size={10} />
@@ -30,5 +31,5 @@ export default function ProductItem() {
                 <span className="text-neutral-300 text-xs line-through">1,500,000đ</span>
             </div>
         </div>
-    </div>
+    </Link>
 }
