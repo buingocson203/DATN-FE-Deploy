@@ -87,7 +87,7 @@ const HomePage = (props: Props) => {
         </div>
       </div>
       <div className='bg-pink-50 relative'>
-        <div className='bg-pink-50 absolute top-0 bottom-0 -right-96 -left-96'></div>
+        {/* <div className='bg-pink-50 absolute top-0 bottom-0 -right-96 -left-96'></div> */}
         <div className='py-16 px-2'>
           <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
             <span className="animate-ping inline-flex w-2 h-2 rounded-full bg-yellow-500 opacity-75 align-middle relative bottom-1 mr-5"></span>
@@ -136,7 +136,7 @@ const HomePage = (props: Props) => {
       </div>
 
       <div className='bg-pink-50 relative'>
-        <div className='bg-pink-50 absolute top-0 bottom-0 -right-96 -left-96'></div>
+        {/* <div className='bg-pink-50 absolute top-0 bottom-0 -right-96 -left-96'></div> */}
         <div className='py-16 px-2'>
           <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
             Sản phẩm bán chạy

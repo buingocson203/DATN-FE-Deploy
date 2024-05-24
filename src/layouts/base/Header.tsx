@@ -4,7 +4,7 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Bell, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import logo from '../../assets/1-01.png'
 export default function Header() {
     const [open, setOpen] = useState(false)
 
@@ -25,7 +25,7 @@ export default function Header() {
             </div>
         </div>
 
-        <div className="flex app-container border-b border-neutral-200 py-3 gap-5">
+        <div className="flex app-container border-b border-neutral-200 py-3 gap-5 ">
             <div className="block md:hidden">
                 <Sheet >
                     <SheetTrigger>
@@ -57,7 +57,7 @@ export default function Header() {
 
             <div className="md:w-[200px] flex-1 md:flex-none flex justify-center">
                 <Link to="/">
-                    <img src="https://theme.hstatic.net/200000690551/1001033677/14/logo.png?v=292" alt="" className="w-[100px] md:w-auto object-contain" />
+                    <img src={logo} alt="" className="w-[100px] md:w-auto object-contain" />
                 </Link>
             </div>
             <div className="hidden md:block flex-1">
