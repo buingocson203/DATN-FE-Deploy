@@ -25,7 +25,7 @@ export const formSchema = Joi.object({
 })
 
 export const signinSchema = Yup.object({
-    email: Yup.string().email('Email sai định dạng').trim().required('Trường dữ liệu bắt buộc và không được để trống'),
+    email: Yup.string().email('Email sai định dạng').trim().required('Vui lòng không để trống'),
     password: Yup.string()
         .min(6, 'Mật khẩu tối thiểu 6 ký tự')
         .max(32, 'Mật khẩu tối đa 32 ký tự')

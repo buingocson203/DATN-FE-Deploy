@@ -1,25 +1,30 @@
 import Joi from 'joi'
 import * as Yup from 'Yup'
+
 export const formSchema = Joi.object({
     userName: Joi.string().min(6).required().messages({
-        'string.min': ' Ít nhất 6 kí tự',
-        'any.required': 'Vui lòng không để trống'
+        'string.min': 'Tên đăng nhập phải có ít nhất 6 kí tự',
+        'any.required': 'Tên đăng nhập không được bỏ trống',
+        'string.empty': 'Tên đăng nhập không được bỏ trống'
     }),
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
         .required()
         .messages({
             'string.email': 'Email không hợp lệ',
-            'any.required': 'Email không được bỏ trống'
+            'any.required': 'Email không được bỏ trống',
+            'string.empty': 'Email không được bỏ trống'
         }),
     password: Joi.string().min(6).max(32).required().messages({
         'string.min': 'Mật khẩu ít nhất 6 kí tự',
         'string.max': 'Mật khẩu không quá 32 kí tự',
-        'any.required': 'Không được để trống'
+        'any.required': 'Mật khẩu không được bỏ trống',
+        'string.empty': 'Mật khẩu không được bỏ trống'
     }),
     confirmPassword: Joi.string().valid(Joi.ref('password')).required().messages({
         'any.only': 'Mật khẩu xác nhận không trùng khớp',
-        'any.required': 'Không được để trống'
+        'any.required': 'Mật khẩu xác nhận không được bỏ trống',
+        'string.empty': 'Mật khẩu xác nhận không được bỏ trống'
     })
 })
 
