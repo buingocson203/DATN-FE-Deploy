@@ -23,7 +23,7 @@ import CategoryManagementPage from '@/pages/pagesAdmin/Category'
 import { useEffect, useState } from 'react'
 import { ICategory } from '@/common/interfaces/category'
 import ListUser from '@/pages/pagesAdmin/ListUser'
-import Collection from '@/pages/Collection'
+
 const Routers = () => {
 
 
@@ -35,6 +35,9 @@ const Routers = () => {
                 <Route index element={<HomePage />} />
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
+                <Route path='cart' element={<Cart />} />
+                <Route path='formaddress' element={<FormAddress />} />
+                <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />
             </Route>
             <Route path='admin' element={<AdminLayout />}>
