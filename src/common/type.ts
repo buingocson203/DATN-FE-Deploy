@@ -43,3 +43,14 @@ export interface IUser {
     confirmPassword: string
     role: string
 }
+
+export interface ISize {
+    _id?: number | string
+    size: string
+    slug: string
+    payload?: {
+        _id?: number | string
+        size?: string
+        slug?: string
+    }
+}
