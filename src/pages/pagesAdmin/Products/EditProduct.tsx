@@ -1,3 +1,6 @@
+
+import { useProductQuery } from '@/hooks/useProductQuery'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useProductMutation } from '@/hooks/useProductMutation'
 import { useToast } from '../../../components/ui/use-toast'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../../../components/ui/form'
@@ -5,31 +8,50 @@ import { Input } from '../../../components/ui/input'
 import { Select } from '../../../components/ui/select-category'
 import { Button } from '../../../components/ui/button'
 import { Textarea } from '../../../components/ui/textarea'
-import React from 'react'
+import React, { useEffect } from 'react'
 import instance from '@/core/api'
-import { useNavigate } from 'react-router-dom'
+type Props = {}
 
-const AddProduct = () => {
+const EditProduct = (props: Props) => {
     const navigate = useNavigate()
+    const { productId } = useParams()
+    const { data } = useProductQuery(productId)
+    console.log('data - ', data)
+
+
     const { toast } = useToast()
     const { form, onSubmit } = useProductMutation({
-        action: 'ADD',
+        action: 'UPDATE',
         onSuccess: () => {
             toast({
                 variant: 'success',
                 title: 'Chuc mung thanh nien',
                 description: 'Them san pham thanh cong'
             })
-            form.reset()
+            form.reset();
             navigate('/admin/products')
         }
     })
+    useEffect(() => {
+        if (data && form) {
+            form.reset({
+                name: data?.name || '',
+                description: data?.description || '',
+                price: data?.price || 0,
+                image: data?.image || '',
+                color: data?.color || '',
+                priceSale: data?.priceSale || 0,
+                categoryId: data?.categoryId?._id || '',
+                sizeId: data?.sizeId.map((item: any) => item._id)
+            })
+        }
+    }, [data, form])
     console.log('form - ', form.getValues())
-    const [sizes, setSizes] = React.useState<{_id: string, size: string}[]>([])
+    const [sizes, setSizes] = React.useState<{ _id: string, size: string }[]>([])
     React.useEffect(() => {
-        ;(async () => {
+        ; (async () => {
             try {
-                const response = await instance.get('api/variant')
+                const response = await instance.get('/variant')
                 setSizes(response.data.data)
             } catch (error) {
                 console.log(error)
@@ -38,9 +60,14 @@ const AddProduct = () => {
     }, [])
     return (
         <div className='border p-6'>
-            <h2 className='text-xl font-bold'>Them san pham</h2>
+            <h2 className='text-xl font-bold'>Sua san pham</h2>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+                <form
+                    onSubmit={form.handleSubmit((value) => {
+                        onSubmit({ _id: data?._id, ...value })
+                    })}
+                    className='space-y-4'
+                >
                     <FormField
                         control={form.control}
                         name='name'
@@ -124,74 +151,23 @@ const AddProduct = () => {
                             </FormItem>
                         )}
                     ></FormField>
-                    <Button type='submit'>Them</Button>
+                    <FormField
+                        control={form.control}
+                        name='priceSale'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className='font-bold'>Gia khuyen mai San Pham</FormLabel>
+                                <FormControl>
+                                    <Input placeholder='Gia khuyen mai san pham' {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <Button type='submit'>Sua san pham</Button>
                 </form>
             </Form>
         </div>
     )
 }
 
-export default AddProduct
-
-
-
-// import { Button, Form } from 'antd'
-// import FormProduct from './FormProduct'
-
-// const formItemLayout = {
-//     labelCol: {
-//         xs: { span: 24 },
-//         sm: { span: 6 }
-//     },
-//     wrapperCol: {
-//         xs: { span: 24 },
-//         sm: { span: 14 }
-//     }
-// }
-
-// const AddProduct = () => {
-//     const onFinish = (values: any) => {
-//         console.log('Form values:', values)
-//     }
-
-//     return (
-//         <>
-//             <div className='container'>
-//                 <div className='title' style={{ fontSize: '25px', margin: '10px 0', fontWeight: '700' }}>
-//                     <h2>Thêm mới sản phẩm</h2>
-//                 </div>
-//                 <div className='form'>
-//                     <Form
-//                         {...formItemLayout}
-//                         variant='filled'
-//                         onFinish={onFinish} // Set the onFinish callback
-//                     >
-//                         <div
-//                             className='div'
-//                             style={{
-//                                 display: 'flex',
-//                                 justifyContent: 'space-between',
-//                                 alignItems: 'center',
-//                                 padding: '0 5%'
-//                             }}
-//                         >
-//                             <div className='form_left'>
-//                                 <FormProduct />
-//                             </div>
-//                             <div className='form_right'></div>
-//                         </div>
-
-//                         <Form.Item wrapperCol={{ offset: 6, span: 16 }} style={{ margin: '0 auto' }}>
-//                             <Button type='primary' htmlType='submit'>
-//                                 Thêm
-//                             </Button>
-//                         </Form.Item>
-//                     </Form>
-//                 </div>
-//             </div>
-//         </>
-//     )
-// }
-
-// export default AddProduct
-
+export default EditProduct
