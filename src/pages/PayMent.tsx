@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react'
+import { Link } from 'react-router-dom'
 
 
 const PayMent = () => {
@@ -7,24 +8,21 @@ const PayMent = () => {
         <div className="max-w-screen-xl m-auto text-[20px]">
         <div className="cart grid grid-cols-4 gap-5 my-5 mx-0">
             <div className="cart__content col-span-2">
-                <div className="img__pay">
-                    <img src="https://theme.hstatic.net/200000690551/1001033677/14/logo.png?v=292" alt="" />
-                </div>
                 <div className="nav__link flex items-center gap-2 text-[18px]">
-                    <a href="" className="flex items-center gap-2 text-sky-500">Giỏ hàng
-                        <Icon className='text-gray-400 text-[18px]' icon="mingcute:right-line" /></a>
-                    <a href="" className="flex items-center gap-2 text-sky-500">
+                    <Link to='/cart' className="flex items-center gap-2 text-sky-500">Giỏ hàng
+                        <Icon className='text-gray-400 text-[18px]' icon="mingcute:right-line" /></Link>
+                    <Link to='/formaddress' className="flex items-center gap-2 text-sky-500">
                         Thông tin giao hàng
                         <Icon className='text-gray-400 text-[18px]' icon="mingcute:right-line" />
-                    </a>
+                    </Link>
                     <p className="flex items-center text-gray-400">
                         Phương thức thanh toán
                     </p>
                 </div>
 
                 <h2 className="my-4 text-[20px] font-normal">Phương thức vận chuyển</h2>
-                <div className="text-center border-2 border-solid rounded py-4">
-                    <Icon className='text-[150px] text-gray-500 flex justify-center' icon="iconamoon:box-thin" />
+                <div className=" border-2 border-solid rounded py-4 text-center">
+                    <Icon className='text-[150px] text-gray-500 ml-[230px]' icon="iconamoon:box-thin" />
                     <p className="text-gray-500 text-[18px]">Không tìm thấy phương thức vận chuyển phù hợp</p>
                 </div>
 
@@ -47,7 +45,7 @@ const PayMent = () => {
                 <div className="pay__info">
                     <div className="form__profile">
                         <div className="pay__router flex justify-between items-center mt-4">
-                            <a href="" className="text-sky-600 text-[18px]">Giỏ hàng</a>
+                            <Link to='/cart' className="text-sky-600 text-[18px]">Giỏ hàng</Link>
                             <button className="text-white bg-sky-700 px-5 py-3 rounded text-[18px]">
                                 Hoàn tất đơn hàng
                             </button>

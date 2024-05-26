@@ -1,6 +1,7 @@
 import React from 'react'
 import { Icon } from '@iconify/react';
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb';
+import { Link } from 'react-router-dom';
 const Cart = () => {
     const breadcrumb: IBreadCrumb[] = [
         {
@@ -136,10 +137,10 @@ const Cart = () => {
                     <hr className="mb-3 border-dashed" />
                     <div className="info--detail-note text-[16px] text-gray-600">
                         <li>Phí vận chuyển sẽ được tính ở trang thanh toán.</li>
-                        <li>Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.</li>
+                        <li>Mua thật nhiều nhận nhiều ưu đãi</li>
                     </div>
-                    <div className="info--detail-btn bg-red-500 text-center mt-4">
-                        <button className="text-white py-2 uppercase">Thanh toán</button>
+                    <div className="info--detail-btn bg-red-500 text-center py-2 mt-4">
+                        <Link to='/formaddress' className="text-white uppercase">Thanh toán</Link>
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react'
 import React from 'react'
-
+import { Link } from 'react-router-dom'
 
 const FormAddress = () => {
     return (
@@ -8,9 +8,7 @@ const FormAddress = () => {
             <div className="max-w-screen-xl m-auto text-[20px]">
                 <div className="cart grid grid-cols-4 gap-5 my-5 mx-0">
                     <div className="cart__content col-span-2">
-                        <div className="img__pay">
-                            <img src="https://theme.hstatic.net/200000690551/1001033677/14/logo.png?v=292" alt="" />
-                        </div>
+                        
                         <div className="nav__link flex items-center gap-2 text-[18px]">
                             <a href="" className="flex items-center gap-2 text-sky-500">Giỏ hàng
                                 <Icon className='text-gray-400 text-[18px]' icon="mingcute:right-line" /></a>
@@ -142,10 +140,10 @@ const FormAddress = () => {
                                         </div>
                                     </div>
                                     <div className="pay__router flex justify-between items-center mt-4">
-                                        <a href="" className="text-sky-600 text-[18px]">Giỏ hàng</a>
-                                        <button className="text-white bg-sky-700 px-5 py-3 rounded text-[18px]">
+                                        <Link to='/cart' className="text-sky-600 text-[18px]">Giỏ hàng</Link>
+                                        <Link to='/payment' className="text-white bg-sky-700 px-5 py-3 rounded text-[18px]">
                                             Tiếp tục đến phương thức thanh toán
-                                        </button>
+                                        </Link>
                                     </div>
                                 </form>
                             </div>
