@@ -41,7 +41,7 @@ const HomePage = (props: Props) => {
             Danh mục nổi bật
           </h1>
           <div className='grid lg:grid-cols-4 md:grid-cols-2 gap-4'>
-            <Link to="/" className='relative group'>
+            <Link to="/collections/nike" className='relative group'>
               <div className='h-fit overflow-hidden'>
                 <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_1_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
               </div>
@@ -52,7 +52,7 @@ const HomePage = (props: Props) => {
                 </button>
               </div>
             </Link>
-            <Link to="/" className='relative group'>
+            <Link to="/collections/new-balance-fila" className='relative group'>
               <div className='h-fit overflow-hidden'>
                 <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_2_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
               </div>
@@ -63,7 +63,7 @@ const HomePage = (props: Props) => {
                 </button>
               </div>
             </Link>
-            <Link to="/" className='relative group'>
+            <Link to="/collections/adidas" className='relative group'>
               <div className='h-fit overflow-hidden'>
                 <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_3_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
               </div>
@@ -74,7 +74,7 @@ const HomePage = (props: Props) => {
                 </button>
               </div>
             </Link>
-            <Link to="/" className='relative group'>
+            <Link to="/collections/mlb" className='relative group'>
               <div className='h-fit overflow-hidden'>
                 <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_4_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
               </div>
