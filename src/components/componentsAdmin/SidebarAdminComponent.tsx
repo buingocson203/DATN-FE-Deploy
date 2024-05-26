@@ -49,6 +49,7 @@ const SidebarAdminComponent = (props: Props) => {
                             </Link>
                         </li>
                         <li>
+
                             <Link
                                 to='/admin/products'
                                 className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-indigo-500 text-white-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'
@@ -73,6 +74,52 @@ const SidebarAdminComponent = (props: Props) => {
                                     List Product
                                 </span>
                             </Link>
+
+                        </li>
+                        <li>
+                            <Link
+                                to='/admin/categories'
+                                className='relative flex flex-row items-center h-11 focus:outline-none hover:bg-indigo-500 text-white-600 hover:text-gray-800 border-l-4 border-transparent hover:border-indigo-500 pr-6'
+                            >
+                                <span className='inline-flex justify-center items-center ml-4'>
+                                    <svg
+                                        className='w-5 h-5'
+                                        fill='none'
+                                        stroke='currentColor'
+                                        viewBox='0 0 24 24'
+                                        xmlns='http://www.w3.org/2000/svg'
+                                    >
+                                        <path
+                                            stroke-linecap='round'
+                                            stroke-linejoin='round'
+                                            stroke-width='2'
+                                            d='M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z'
+                                        ></path>
+                                    </svg>
+                                </span>
+                                <span className='ml-2 text-sm tracking-wide truncate' style={{ color: 'white' }}>
+                                    Variant
+                                </span>
+                            </Link>
+                            <ul className="ml-4 space-y-1 px-4">
+                                <li>
+                                    <a
+                                        href="#"
+                                        className=" ml-2 text-sm tracking-wide  truncate block rounded-lg px-4 py-2   text-white hover:bg-indigo-500 hover:text-white"
+                                    >
+                                        Quản lý màu
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a
+                                        href="#"
+                                        className=" ml-2  tracking-wide truncateblock rounded-lg px-4 py-2 text-sm  text-white hover:bg-indigo-500 hover:text-white"
+                                    >
+                                        Quản lý size
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <Link
