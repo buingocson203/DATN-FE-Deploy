@@ -63,37 +63,7 @@ const ProductDetail = () => {
                                     })}
                                 </div>
                             </div>
-                            <div className='flex items-center justify-center mt-5'>
-                                <span className='w-[120px]'>Màu sắc:</span>
-                                <div className='flex-1 flex flex-wrap gap-2'>
-                                    {['#fff'].map((color) => {
-                                        return (
-                                            <span
-                                                className='inline-block w-8 h-8 rounded-full cursor-pointer border border-neutral-300'
-                                                key={color}
-                                                style={{
-                                                    backgroundColor: color
-                                                }}
-                                            ></span>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                            <div className='flex items-center justify-center mt-5'>
-                                <span className='w-[120px]'>Kiểu dáng:</span>
-                                <div className='flex-1 flex flex-wrap gap-2'>
-                                    {['Thấp cổ'].map((size) => {
-                                        return (
-                                            <span
-                                                className='inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300'
-                                                key={size}
-                                            >
-                                                {size}
-                                            </span>
-                                        )
-                                    })}
-                                </div>
-                            </div>
+                            
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Số lượng:</span>
                                 <div className='flex-1 flex'>
