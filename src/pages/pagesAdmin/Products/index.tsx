@@ -79,7 +79,18 @@ const Product = () => {
     const [categories, setCategories] = useState<{
         _id: string
         , name: string
-    }[]>([])
+    }[]>([]);
+    const [sizes, setSizes] = useState<{ _id: string, size: string }[]>([])
+    useEffect(() => {
+        ; (async () => {
+            try {
+                const response = await instance.get('api/variant')
+                setSizes(response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, [])
     useEffect(() => {
         (async () => {
             try {
@@ -215,8 +226,8 @@ const Product = () => {
         {
             title: 'Ảnh',
             dataIndex: 'image',
-            key: 'image',
-            render: (image) => <img src={image} alt="Product" className='w-16 !h-16 object-cover' />,
+            key: 'image', width: '10%',
+            render: (image) => <img src={image} alt="Product" className='w-16 !aspect-square object-cover shrink-0' />,
         },
         {
             title: 'Tên',
@@ -231,6 +242,13 @@ const Product = () => {
             key: 'categoryId',
             width: '10%',
             render: (categoryId) => <p>{categories.find(item => item._id === categoryId)?.name}</p>
+        },
+        {
+            title: 'Kích thước',
+            dataIndex: 'sizeId',
+            key: 'sizeId',
+            width: '15%',
+            render: (sizeId: string[]) => <p>{sizeId.map(item => sizes.find(i => i._id === item)?.size || '').join(', ')}</p>
         },
         {
             title: 'Màu sắc',

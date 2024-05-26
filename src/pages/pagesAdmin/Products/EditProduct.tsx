@@ -51,7 +51,7 @@ const EditProduct = (props: Props) => {
     React.useEffect(() => {
         ; (async () => {
             try {
-                const response = await instance.get('/variant')
+                const response = await instance.get('api/variant')
                 setSizes(response.data.data)
             } catch (error) {
                 console.log(error)
@@ -156,7 +156,7 @@ const EditProduct = (props: Props) => {
                             <FormItem>
                                 <FormLabel className='font-bold'>Gia San Pham</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Gia san pham' {...field} />
+                                    <Input type='number' placeholder='Gia san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -168,7 +168,7 @@ const EditProduct = (props: Props) => {
                             <FormItem>
                                 <FormLabel className='font-bold'>Gia khuyen mai San Pham</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Gia khuyen mai san pham' {...field} />
+                                    <Input type='number' placeholder='Gia khuyen mai san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}

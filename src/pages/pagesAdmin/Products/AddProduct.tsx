@@ -119,7 +119,7 @@ const AddProduct = () => {
                             <FormItem>
                                 <FormLabel className='font-bold'>Gia San Pham</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Gia san pham' {...field} />
+                                    <Input type='number' placeholder='Gia san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
