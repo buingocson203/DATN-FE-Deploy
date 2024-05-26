@@ -23,6 +23,7 @@ import CategoryManagementPage from '@/pages/pagesAdmin/Category'
 import { useEffect, useState } from 'react'
 import { ICategory } from '@/common/interfaces/category'
 import ListUser from '@/pages/pagesAdmin/ListUser'
+import ProtectedRoute from './ProtectedRoute'
 
 const Routers = () => {
 
@@ -36,22 +37,15 @@ const Routers = () => {
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
             </Route>
-            <Route path='admin' element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path='/admin/dashboard' element={<Dashboard />} />
-                <Route path='/admin/products' element={<Product />} />
-                <Route path='/admin/products/add' element={<AddProduct />} />
-                <Route path='/admin/categories' element={<CategoryManagementPage />} />
-                {/* <Route path='/admin/categories/edit/:id' element={<EditCategory />} />
-                <Route path='/admin/categories/add' element={<AddCategory />} /> */}
-                <Route path='/admin/user' element={<ListUser />} />
-                <Route path='/admin/bill' element={<ListBill />} />
-                <Route path='/admin/bill/:id' element={<BillDetail />} />
-                {/* <Route path='products' element={<ManagerProductPage />}>
-                    <Route index element={<List />} />
-                    <Route path='add' element={<Add />} />
-                    <Route path=':id/edit' element={<Edit />} />
-                </Route> */}
+            <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
+                <Route index element={<ProtectedRoute element={Dashboard} />} />
+                <Route path='/admin/dashboard' element={<ProtectedRoute element={Dashboard} />} />
+                <Route path='/admin/products' element={<ProtectedRoute element={Product} />} />
+                <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
+                <Route path='/admin/categories' element={<ProtectedRoute element={CategoryManagementPage} />} />
+                <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
+                <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
+                <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
             </Route>
         </Routes>
     )

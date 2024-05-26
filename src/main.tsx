@@ -6,13 +6,16 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Toaster } from './components/ui/toaster.tsx'
+import { AuthProvider } from './hooks/AuthContext.js'
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <QueryClientProvider client={queryClient}>
+    <AuthProvider>
     <BrowserRouter>
       <App />
 
     </BrowserRouter>
+    </AuthProvider>
      <Toaster/>
      <ReactQueryDevtools initialIsOpen={false} />
   </QueryClientProvider>
