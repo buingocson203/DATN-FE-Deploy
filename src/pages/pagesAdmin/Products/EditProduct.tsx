@@ -63,9 +63,19 @@ const EditProduct = (props: Props) => {
             <h2 className='text-xl font-bold'>Sua san pham</h2>
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit((value) => {
-                        onSubmit({ _id: data?._id, ...value })
-                    })}
+                    onSubmit={form.handleSubmit(
+                        (value) => {
+                            if (value.priceSale >= value.price) {
+                                toast({
+                                    variant: 'destructive',
+                                    title: 'Chuc mung thanh nien',
+                                    description: 'Gia khuyen mai khong duoc lon hon hoac bang gia goc'
+                                })
+                            } else {
+                                onSubmit({ _id: data?._id, ...value })
+                            }
+                        }
+                    )}
                     className='space-y-4'
                 >
                     <FormField

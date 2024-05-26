@@ -25,9 +25,9 @@ const AddProduct = () => {
         }
     })
     console.log('form - ', form.getValues())
-    const [sizes, setSizes] = React.useState<{_id: string, size: string}[]>([])
+    const [sizes, setSizes] = React.useState<{ _id: string, size: string }[]>([])
     React.useEffect(() => {
-        ;(async () => {
+        ; (async () => {
             try {
                 const response = await instance.get('api/variant')
                 setSizes(response.data.data)
