@@ -5,15 +5,15 @@
 // import { SubmitHandler, useForm } from 'react-hook-form'
 // import { useMutation, useQueryClient } from 'react-query'
 
-// type formControlDataType = {
-//     name: string
-//     price: number
-// }
+type formControlDataType = {
+    name: string
+    price: number
+}
 
-// const formSchema = Joi.object({
-//     name: Joi.string().min(2).max(50),
-//     price: Joi.number()
-// })
+const formSchema = Joi.object({
+    name: Joi.string().min(2).max(50),
+    price: Joi.number()
+})
 
 // type useProductMutationProps = {
 //     action: 'ADD' | 'UPDATE' | 'DELETE'
