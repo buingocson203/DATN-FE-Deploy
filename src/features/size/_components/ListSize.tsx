@@ -34,6 +34,7 @@ const ListSize = () => {
 
     const columns = getColumns(onRemove);
     const tableData = data?.data || []; // Adjusted based on your response structure
+console.log("table",tableData);
 
     return <DataTable columns={columns} data={tableData} />;
 };
