@@ -15,7 +15,6 @@ import dayjs from 'dayjs';
 import { formatPrice } from '@/lib/utils';
 import confirm from 'antd/es/modal/confirm';
 
-
 type InputRef = GetRef<typeof Input>;
 
 interface DataType {
@@ -34,39 +33,39 @@ interface DataType {
 
 type DataIndex = keyof DataType;
 
-// const data: DataType[] = [
-//     {
-//         key: '1',
-//         name: 'John Brown',
-//         category: 'New York No. 1 Lake Park',
-//         date: "12/2/2222",
-//         sold: 727,
-//         status: "còn hàng",
-//         soluong: 100,
-//         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
-//     },
-//     {
-//         key: '2',
-//         name: 'Joe Black',
-//         date: "12/2/2222",
-//         category: 'London No. 1 Lake Park',
-//         sold: 727,
-//         status: "hết hàng",
-//         soluong: 1000,
-//         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
-//     },
-//     {
-//         key: '3',
-//         name: 'Jim Green',
-//         date: "12/2/2222",
-//         category: 'Sydney No. 1 Lake Park',
-//         sold: 727,
-//         status: "hết hàng",
-//         soluong: 200,
-//         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
-//     },
+const data: DataType[] = [
+    {
+        key: '1',
+        name: 'John Brown',
+        category: 'New York No. 1 Lake Park',
+        date: "12/2/2222",
+        sold: 727,
+        status: "Còn hàng",
+        soluong: 100,
+        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
+    },
+    {
+        key: '2',
+        name: 'Joe Black',
+        date: "12/2/2222",
+        category: 'London No. 1 Lake Park',
+        sold: 727,
+        status: "Hết hàng",
+        soluong: 1000,
+        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
+    },
+    {
+        key: '3',
+        name: 'Jim Green',
+        date: "12/2/2222",
+        category: 'Sydney No. 1 Lake Park',
+        sold: 727,
+        status: "Hết hàng",
+        soluong: 200,
+        image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
+    },
 
-// ];
+];
 const Product = () => {
     const navigate = useNavigate();
     const [data, setData] = useState<DataType[]>([]);
@@ -272,6 +271,17 @@ const Product = () => {
             render: (priceSale) => <p>{formatPrice(priceSale)}</p>
         },
         {
+            title: 'Trạng thái',
+            dataIndex: 'status',
+            key: 'status',
+            width: '10%',
+            ...getColumnSearchProps('status'),
+            sorter: (a, b) => a.status.length - b.status.length,
+            sortDirections: ['descend', 'ascend'],
+            render: (status) => {
+                const statusColor = status === 'Còn hàng' ? 'text-green-500 font-bold' : 'text-red-500 font-bold'
+                return <p className={statusColor}>{status}</p>;
+            },
             title: 'Ngày',
             dataIndex: 'createdAt',
             key: 'createdAt',
@@ -280,6 +290,7 @@ const Product = () => {
             // sorter: (a, b) => a.createdAt.length - b.createdAt.length,
             // sortDirections: ['descend', 'ascend'],
             render: (createdAt) => <p>{dayjs(createdAt).format('HH:MM DD-MM-YYYY')}</p>
+
         },
         // {
         //     title: 'Số lượng',
@@ -441,20 +452,20 @@ const Product = () => {
         }
     };
     return (
-        <div >
+        <div>
             <div className='flex justify-between items-center mx-[50px] my-4'>
                 <div>
-                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
-                        Sản phẩm
-                    </p>
+                    <p className='text-[26px] uppercase font-semibold'>Quản lí sản phẩm</p>
                 </div>
-                <div className="flex justify-end mb-2">
+                <div className='flex justify-end mb-2'>
                     <Button
-                        type="primary"
+                        type='primary'
                         icon={<PlusCircleOutlined />}
                         size={'large'}
-                        className="bg-[#1677ff]"
+                        className='bg-[#1677ff]'
                         onClick={() => {
+                            form.resetFields()
+                            showModal('add')
                             // form.resetFields();
                             // showModal('add');
                             navigate('/admin/products/add')
@@ -463,7 +474,6 @@ const Product = () => {
                 </div>
             </div>
             <Table columns={columns} dataSource={data} />
-
         </div>
     )
 }

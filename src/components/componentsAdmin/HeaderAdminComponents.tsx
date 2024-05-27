@@ -16,7 +16,7 @@ const HeaderAdminComponents = ({ darkMode, toggleDarkMode }: any) => {
                 </form>
             </div>
             <div className='hd__func'>
-                <Switch darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+                {/* <Switch darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> */}
 
                 <div className='notifycations'>
                     <div className='notica'>
