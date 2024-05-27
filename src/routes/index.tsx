@@ -22,7 +22,7 @@ import Cart from '@/pages/Cart'
 import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
-import Size from '@/pages/pagesAdmin/Size'
+import ListSize from '@/features/size/_components/ListSize'
 
 
 const Routers = () => {
@@ -51,7 +51,7 @@ const Routers = () => {
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
-                <Route path='/admin/size' element={<ProtectedRoute element={Size} />} />
+                <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
             </Route>
         </Routes>
     )
