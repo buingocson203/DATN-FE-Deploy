@@ -12,6 +12,7 @@ import Signin from '@/pages/auth/Signin'
 import Dashboard from '@/pages/pagesAdmin/Dashboard'
 import Product from '@/pages/pagesAdmin/Products'
 import AddProduct from '@/pages/pagesAdmin/Products/AddProduct'
+import EditProduct from '@/pages/pagesAdmin/Products/EditProduct'
 import ListBill from '@/pages/pagesAdmin/ListBill'
 import BillDetail from '@/pages/pagesAdmin/ListBill/BillDetail'
 import CategoryManagementPage from '@/pages/pagesAdmin/Category'
@@ -44,6 +45,7 @@ const Routers = () => {
                 <Route path='/admin/dashboard' element={<ProtectedRoute element={Dashboard} />} />
                 <Route path='/admin/products' element={<ProtectedRoute element={Product} />} />
                 <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
+                <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
                 <Route path='/admin/categories' element={<ProtectedRoute element={CategoryManagementPage} />} />
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
