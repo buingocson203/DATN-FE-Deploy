@@ -10,6 +10,7 @@ import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import { Option } from 'antd/es/mentions';
 import Highlighter from 'react-highlight-words';
+import ModalForm from '@/components/ModalForm/ModalForm';
 
 
 type InputRef = GetRef<typeof Input>;
@@ -174,14 +175,14 @@ const Category = () => {
                     <Button
                         type="primary"
                         onClick={() => {
-                            // const post = posts?.find((post: IPost) => post._id === record._id);
+                            const post = posts?.find((post: IPost) => post._id === record._id);
 
-                            // form.setFieldsValue({
-                            //   _id: post?._id,
-                            //   title: post?.title,
-                            //   images: post?.images,
-                            //   description: post?.description,
-                            // });
+                            form.setFieldsValue({
+                              _id: post?._id,
+                              title: post?.title,
+                              images: post?.images,
+                              description: post?.description,
+                            });
                             showModal('edit');
                         }}
                         ghost
@@ -296,7 +297,7 @@ const Category = () => {
             <div className='flex justify-between items-center mx-[50px] my-4'>
                 <div>
                     <p className='text-[30px]' style={{ fontWeight: 900 }}>
-                        Danh mục sản phẩm
+                        Danh mục sản phẩm 
                     </p>
                 </div>
                 <div className="flex justify-end mb-2">
@@ -313,7 +314,7 @@ const Category = () => {
                 </div>
             </div>
             <Table columns={columns} dataSource={data} />
-            {/* <ModalForm
+            {<ModalForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 form={form}
@@ -322,7 +323,7 @@ const Category = () => {
             >
                 <Form
                     form={form}
-                    // {...layout}
+                    {...layout}
                     name="nest-messages"
                     onFinish={onFinish}
                     validateMessages={validateMessages}
@@ -378,7 +379,7 @@ const Category = () => {
 
                     </div>
                 </Form>
-            </ModalForm> */}
+            </ModalForm> }
         </div>
     )
 }
