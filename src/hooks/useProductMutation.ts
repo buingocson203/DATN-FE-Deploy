@@ -6,13 +6,26 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useMutation, useQueryClient } from 'react-query'
 
 type formControlDataType = {
+    _id: string
     name: string
+    image: string
     price: number
+    categoryId: string
+    sizeId: string[]
+    priceSale: number
+    color: string
+    description: string
 }
 
 const formSchema = Joi.object({
-    name: Joi.string().min(2).max(50),
-    price: Joi.number()
+    name: Joi.string().min(6).max(50),
+    image: Joi.string().min(1).required(),
+    price: Joi.number().required().min(0),
+    categoryId: Joi.string().required(),
+    sizeId: Joi.array().items(Joi.string().required()).required(),
+    priceSale: Joi.number(),
+    color: Joi.string().required(),
+    description: Joi.string().required()
 })
 
 type useProductMutationProps = {
