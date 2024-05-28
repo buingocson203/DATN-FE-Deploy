@@ -1,12 +1,14 @@
-import { useProductMutation } from '@/hooks/useProductMutation'
+
 import { useToast } from '../../../components/ui/use-toast'
 import { Form, FormControl, FormField, FormItem, FormLabel } from '../../../components/ui/form'
 import { Input } from '../../../components/ui/input'
 import { Button } from '../../../components/ui/button'
+import { useCategoryMutation } from '@/hooks/useAdmCategoryMutation'
 
-const Add = () => {
+
+const AddCategory = () => {
     const { toast } = useToast()
-    const { form, onSubmit } = useProductMutation({
+    const { form, onSubmit } = useCategoryMutation({
         action: 'ADD',
         onSuccess: () => {
             toast({
@@ -29,19 +31,7 @@ const Add = () => {
                             <FormItem>
                                 <FormLabel className='font-bold'>Ten danh muc</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Ten san pham' {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    ></FormField>
-                    <FormField
-                        control={form.control}
-                        name='price'
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className='font-bold'>Gia San Pham</FormLabel>
-                                <FormControl>
-                                    <Input placeholder='Gia san pham' {...field} />
+                                    <Input placeholder='Ten danh muc' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -53,4 +43,4 @@ const Add = () => {
     )
 }
 
-export default Add
+export default AddCategory

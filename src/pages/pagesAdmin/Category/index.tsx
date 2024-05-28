@@ -339,45 +339,13 @@ const Category = () => {
                         <Form.Item name="name" label="Tên" rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}>
                             <Input.TextArea rows={2} placeholder="Name " />
                         </Form.Item>
-                        <Form.Item name="price" label="Giá" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="Price" style={{ width: '100%' }} />
-                        </Form.Item>
-
-                        <Form.Item name="images" label="Ảnh pet" rules={[{ required: true }]}>
-                            <Dragger multiple listType="picture" customRequest={customRequest} >
-                                <Button icon={<UploadOutlined />}>Thêm Ảnh</Button>
-                            </Dragger>
-                        </Form.Item>
+                        
                     </div>
 
-                    <div className="w-full">
-                        <Form.Item label="Trạng thái" rules={[{ required: true }]}>
-                            <Select size="large" placeholder="---- Status ----">
-                                <Option key={"1"} value={"true"}>
-                                    Còn hàng
-                                </Option>
-                                <Option key={"2"} value={"fale"}>
-                                    Hết hàng
-                                </Option>
-                            </Select>
-                        </Form.Item>
+                    
 
 
-                        <Form.Item name="sold" label="Đã bán" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="sold" style={{ width: '100%' }} />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            name="description"
-                            label="Thông Tin Sản Phẩm"
-                            rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}
-                        >
-                            <Input.TextArea rows={4} placeholder="Description" />
-                        </Form.Item>
-
-
-                    </div>
+                    
                 </Form>
             </ModalForm> }
         </div>
