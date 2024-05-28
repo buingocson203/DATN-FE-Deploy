@@ -1,28 +1,34 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd';
 import { Button, Form, Input, InputNumber, Popconfirm, Select, Space, Table, message } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import { Option } from 'antd/es/mentions';
 import Highlighter from 'react-highlight-words';
-
+import instance from '@/core/api';
+import dayjs from 'dayjs';
+import { formatPrice } from '@/lib/utils';
+import confirm from 'antd/es/modal/confirm';
 
 type InputRef = GetRef<typeof Input>;
 
 interface DataType {
-    key: string;
-    name: string;
-    date: string;
-    category: string;
-    image: string;
-    sold: number;
-    soluong: number;
-    status: string;
+    "_id": string,
+    "name": string,
+    "price": number,
+    "description": string,
+    "image": string,
+    "categoryId": string,
+    "sizeId": string[],
+    "color": string,
+    "priceSale": number,
+    "createdAt": Date,
+    "updatedAt": Date
 }
 
 type DataIndex = keyof DataType;
@@ -34,7 +40,7 @@ const data: DataType[] = [
         category: 'New York No. 1 Lake Park',
         date: "12/2/2222",
         sold: 727,
-        status: "còn hàng",
+        status: "Còn hàng",
         soluong: 100,
         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
     },
@@ -44,7 +50,7 @@ const data: DataType[] = [
         date: "12/2/2222",
         category: 'London No. 1 Lake Park',
         sold: 727,
-        status: "hết hàng",
+        status: "Hết hàng",
         soluong: 1000,
         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
     },
@@ -54,22 +60,68 @@ const data: DataType[] = [
         date: "12/2/2222",
         category: 'Sydney No. 1 Lake Park',
         sold: 727,
-        status: "hết hàng",
+        status: "Hết hàng",
         soluong: 200,
         image: 'https://laptopdell.com.vn/wp-content/uploads/2022/07/laptop_lenovo_legion_s7_8.jpg',
     },
 
 ];
 const Product = () => {
+    const navigate = useNavigate();
+    const [data, setData] = useState<DataType[]>([]);
+    console.log('data - ', data)
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMode, setModalMode] = useState('');
+    const [categories, setCategories] = useState<{
+        _id: string
+        , name: string
+    }[]>([]);
+    const [sizes, setSizes] = useState<{ _id: string, size: string }[]>([])
+    useEffect(() => {
+        ; (async () => {
+            try {
+                const response = await instance.get('api/variant')
+                setSizes(response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, [])
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await instance.get('api/categories')
+                setCategories(response.data.data)
+            } catch (error) {
+                console.log(error)
+            }
+        })()
+    }, [])
+    useEffect(() => {
+        fetchDataProduct()
+    }, [])
+    const fetchDataProduct = async () => {
+        try {
 
-
+            const response = await instance.get('api/product');
+            setData(response.data.datas.docs)
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const confirmDelete = async (productId: string) => {
-        message.success("xoá thành công")
+        try {
+            await instance.delete(`api/product/${productId}`)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            fetchDataProduct()
+            message.success("xoá thành công")
+        }
+
     };
     const cancelDelete = () => {
         message.error('Product deletion cancelled');
@@ -173,9 +225,8 @@ const Product = () => {
         {
             title: 'Ảnh',
             dataIndex: 'image',
-            key: 'image',
-            width: '5%',
-            render: (image) => <img src={image} alt="Product" width={70} />,
+            key: 'image', width: '10%',
+            render: (image) => <img src={image} alt="Product" className='w-16 !aspect-square object-cover shrink-0' />,
         },
         {
             title: 'Tên',
@@ -186,37 +237,38 @@ const Product = () => {
         },
         {
             title: 'Danh Mục',
-            dataIndex: 'category',
-            key: 'category',
+            dataIndex: 'categoryId',
+            key: 'categoryId',
+            width: '10%',
+            render: (categoryId) => <p>{categories.find(item => item._id === categoryId)?.name}</p>
+        },
+        {
+            title: 'Kích thước',
+            dataIndex: 'sizeId',
+            key: 'sizeId',
             width: '15%',
-            ...getColumnSearchProps('category'),
+            render: (sizeId: string[]) => <p>{sizeId.map(item => sizes.find(i => i._id === item)?.size || '').join(', ')}</p>
         },
         {
-            title: 'Ngày',
-            dataIndex: 'date',
-            key: 'date',
+            title: 'Màu sắc',
+            dataIndex: 'color',
+            key: 'color',
             width: '10%',
-            ...getColumnSearchProps('date'),
-            sorter: (a, b) => a.date.length - b.date.length,
-            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('color'),
         },
         {
-            title: 'Số lượng',
-            dataIndex: 'soluong',
-            key: 'soluong',
+            title: 'Giá',
+            dataIndex: 'price',
+            key: 'price',
             width: '10%',
-            ...getColumnSearchProps('soluong'),
-            sorter: (a, b) => a.sold - b.sold,
-            sortDirections: ['descend', 'ascend'],
+            render: (price) => <p>{formatPrice(price)}</p>
         },
         {
-            title: 'Đã bán',
-            dataIndex: 'sold',
-            key: 'sold',
+            title: 'Giá khuyến mại',
+            dataIndex: 'priceSale',
+            key: 'priceSale',
             width: '10%',
-            ...getColumnSearchProps('sold'),
-            sorter: (a, b) => a.sold - b.sold,
-            sortDirections: ['descend', 'ascend'],
+            render: (priceSale) => <p>{formatPrice(priceSale)}</p>
         },
         {
             title: 'Trạng thái',
@@ -227,10 +279,50 @@ const Product = () => {
             sorter: (a, b) => a.status.length - b.status.length,
             sortDirections: ['descend', 'ascend'],
             render: (status) => {
-                const statusColor = status === 'còn hàng' ? 'text-green-500' : 'text-red-500';
+                const statusColor = status === 'Còn hàng' ? 'text-green-500 font-bold' : 'text-red-500 font-bold'
                 return <p className={statusColor}>{status}</p>;
             },
+            title: 'Ngày',
+            dataIndex: 'createdAt',
+            key: 'createdAt',
+            width: '15%',
+            // ...getColumnSearchProps('createdAt'),
+            // sorter: (a, b) => a.createdAt.length - b.createdAt.length,
+            // sortDirections: ['descend', 'ascend'],
+            render: (createdAt) => <p>{dayjs(createdAt).format('HH:MM DD-MM-YYYY')}</p>
+
         },
+        // {
+        //     title: 'Số lượng',
+        //     dataIndex: 'soluong',
+        //     key: 'soluong',
+        //     width: '10%',
+        //     ...getColumnSearchProps(''),
+        //     sorter: (a, b) => a.sold - b.sold,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title: 'Đã bán',
+        //     dataIndex: 'sold',
+        //     key: 'sold',
+        //     width: '10%',
+        //     ...getColumnSearchProps('sold'),
+        //     sorter: (a, b) => a.sold - b.sold,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title: 'Trạng thái',
+        //     dataIndex: 'status',
+        //     key: 'status',
+        //     width: '10%',
+        //     ...getColumnSearchProps(''),
+        //     sorter: (a, b) => a.status.length - b.status.length,
+        //     sortDirections: ['descend', 'ascend'],
+        //     render: (status) => {
+        //         const statusColor = status === 'còn hàng' ? 'text-green-500' : 'text-red-500';
+        //         return <p className={statusColor}>{status}</p>;
+        //     },
+        // },
         {
             title: 'Hành động',
             dataIndex: '',
@@ -249,7 +341,8 @@ const Product = () => {
                             //   images: post?.images,
                             //   description: post?.description,
                             // });
-                            showModal('edit');
+                            // showModal('edit');
+                            navigate(`/admin/products/edit/${record._id}`)
                         }}
                         ghost
                     >
@@ -260,7 +353,7 @@ const Product = () => {
                         placement="topRight"
                         title="Xóa bài viết?"
                         description="Bạn có chắc chắn xóa bài viết này không?"
-                        onConfirm={() => confirm(record.key)}
+                        onConfirm={() => confirmDelete(record._id)}
                         onCancel={cancel}
                         okText="Đồng ý"
                         cancelText="Không"
@@ -359,28 +452,28 @@ const Product = () => {
         }
     };
     return (
-        <div >
+        <div>
             <div className='flex justify-between items-center mx-[50px] my-4'>
                 <div>
-                    <p className='text-[30px]' style={{ fontWeight: 900 }}>
-                        Sản phẩm
-                    </p>
+                    <p className='text-[26px] uppercase font-semibold'>Quản lí sản phẩm</p>
                 </div>
-                <div className="flex justify-end mb-2">
+                <div className='flex justify-end mb-2'>
                     <Button
-                        type="primary"
+                        type='primary'
                         icon={<PlusCircleOutlined />}
                         size={'large'}
-                        className="bg-[#1677ff]"
+                        className='bg-[#1677ff]'
                         onClick={() => {
-                            form.resetFields();
-                            showModal('add');
+                            form.resetFields()
+                            showModal('add')
+                            // form.resetFields();
+                            // showModal('add');
+                            navigate('/admin/products/add')
                         }}
                     ></Button>
                 </div>
             </div>
             <Table columns={columns} dataSource={data} />
-
         </div>
     )
 }

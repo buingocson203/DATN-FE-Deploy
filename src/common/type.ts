@@ -1,5 +1,6 @@
 import Joi from 'joi'
 import * as Yup from 'Yup'
+import { number } from 'joi';
 export const formSchema = Joi.object({
     userName: Joi.string().min(6).required().messages({
         'string.min': ' it nhat 6 ki tu',
@@ -44,13 +45,10 @@ export interface IUser {
     role: string
 }
 
-export interface ICategory {
-    _id?: number | string
-    name: string
-    slug: string
-    payload?: {
-        _id?: number | string
-        size?: string
-        slug?: string
-    }
+
+export interface ISize {
+    _id?:  string 
+    size: string
+    slug: string 
+   
 }

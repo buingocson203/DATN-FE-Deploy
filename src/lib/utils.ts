@@ -11,5 +11,5 @@ export const formatPrice = (price: number) => {
       currencyDisplay: 'code'
   }).format(price)
   const formattedPriceWithoutVND = formattedPrice.replace('VND', '')
-  return formattedPriceWithoutVND + '<sup>đ</sup>'
+  return formattedPriceWithoutVND + 'đ'
 }
