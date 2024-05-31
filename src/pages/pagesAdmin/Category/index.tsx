@@ -10,6 +10,7 @@ import Dragger from 'antd/es/upload/Dragger';
 import axios from 'axios';
 import { Option } from 'antd/es/mentions';
 import Highlighter from 'react-highlight-words';
+import ModalForm from '@/components/ModalForm/ModalForm';
 
 
 type InputRef = GetRef<typeof Input>;
@@ -174,14 +175,14 @@ const Category = () => {
                     <Button
                         type="primary"
                         onClick={() => {
-                            // const post = posts?.find((post: IPost) => post._id === record._id);
+                            const post = posts?.find((post: IPost) => post._id === record._id);
 
-                            // form.setFieldsValue({
-                            //   _id: post?._id,
-                            //   title: post?.title,
-                            //   images: post?.images,
-                            //   description: post?.description,
-                            // });
+                            form.setFieldsValue({
+                              _id: post?._id,
+                              title: post?.title,
+                              images: post?.images,
+                              description: post?.description,
+                            });
                             showModal('edit');
                         }}
                         ghost
@@ -296,7 +297,7 @@ const Category = () => {
             <div className='flex justify-between items-center mx-[50px] my-4'>
                 <div>
                     <p className='text-[30px]' style={{ fontWeight: 900 }}>
-                        Danh mục sản phẩm
+                        Danh mục sản phẩm 
                     </p>
                 </div>
                 <div className="flex justify-end mb-2">
@@ -313,7 +314,7 @@ const Category = () => {
                 </div>
             </div>
             <Table columns={columns} dataSource={data} />
-            {/* <ModalForm
+            {<ModalForm
                 isModalOpen={isModalOpen}
                 setIsModalOpen={setIsModalOpen}
                 form={form}
@@ -322,7 +323,7 @@ const Category = () => {
             >
                 <Form
                     form={form}
-                    // {...layout}
+                    {...layout}
                     name="nest-messages"
                     onFinish={onFinish}
                     validateMessages={validateMessages}
@@ -338,47 +339,15 @@ const Category = () => {
                         <Form.Item name="name" label="Tên" rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}>
                             <Input.TextArea rows={2} placeholder="Name " />
                         </Form.Item>
-                        <Form.Item name="price" label="Giá" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="Price" style={{ width: '100%' }} />
-                        </Form.Item>
-
-                        <Form.Item name="images" label="Ảnh pet" rules={[{ required: true }]}>
-                            <Dragger multiple listType="picture" customRequest={customRequest} >
-                                <Button icon={<UploadOutlined />}>Thêm Ảnh</Button>
-                            </Dragger>
-                        </Form.Item>
+                        
                     </div>
 
-                    <div className="w-full">
-                        <Form.Item label="Trạng thái" rules={[{ required: true }]}>
-                            <Select size="large" placeholder="---- Status ----">
-                                <Option key={"1"} value={"true"}>
-                                    Còn hàng
-                                </Option>
-                                <Option key={"2"} value={"fale"}>
-                                    Hết hàng
-                                </Option>
-                            </Select>
-                        </Form.Item>
+                    
 
 
-                        <Form.Item name="sold" label="Đã bán" rules={[{ required: true, type: 'number', min: 0 }]}>
-                            <InputNumber size="large" placeholder="sold" style={{ width: '100%' }} />
-                        </Form.Item>
-
-
-                        <Form.Item
-                            name="description"
-                            label="Thông Tin Sản Phẩm"
-                            rules={[{ required: true }, { whitespace: true, message: '${label} is required!' }]}
-                        >
-                            <Input.TextArea rows={4} placeholder="Description" />
-                        </Form.Item>
-
-
-                    </div>
+                    
                 </Form>
-            </ModalForm> */}
+            </ModalForm> }
         </div>
     )
 }
