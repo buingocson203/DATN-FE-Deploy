@@ -50,7 +50,7 @@ const Routers = () => {
                 <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
                 <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
                 <Route path='/admin/categories' element={<ProtectedRoute element={CategoryManagementPage} />} />
-                <Route path='/admin/categories/add' element={<ProtectedRoute element={AddCategory} />} />
+                {/* <Route path='/admin/categories/add' element={<ProtectedRoute element={AddCategory} />} /> */}
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />

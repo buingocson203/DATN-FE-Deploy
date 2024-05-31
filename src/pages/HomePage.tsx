@@ -36,7 +36,8 @@ const HomePage = (props: Props) => {
             <CarouselNext className='absolute top-1/2 right-4  -translate-y-1/2 z-10' />
           </Carousel>
         </div>
-        <div className='py-16 px-2'>
+        {/* // ẨN DANH MỤC NỔI BẬT */}
+        {/* <div className='py-16 px-2'>
           <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
             Danh mục nổi bật
           </h1>
@@ -86,8 +87,9 @@ const HomePage = (props: Props) => {
               </div>
             </Link>
           </div>
-        </div>
+        </div> */}
       </div>
+      {/* // ẨN MUA 1 TẶNG 1
       <div className="bg-pink-50">
         <div className='app-container bg-pink-50 relative'>
           <div className='py-16 px-2'>
@@ -112,7 +114,7 @@ const HomePage = (props: Props) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <div className='app-container'>
         <div className=' py-16 px-2'>
           <div>
@@ -140,7 +142,8 @@ const HomePage = (props: Props) => {
       <div className="bg-pink-50">
         <div className='app-container bg-pink-50 relative'>
           <div className='py-16 px-2'>
-            <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
+            {/* // ẨN SẢN PHẨM BÁN CHẠY */}
+            {/* <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
               Sản phẩm bán chạy
             </h1>
             <div className='md:px-5 grid md:grid-cols-3 grid-cols-1 gap-5'>
@@ -171,6 +174,14 @@ const HomePage = (props: Props) => {
                 salePrice="1,150,000₫"
                 plusStyle={{ top: '73%', right: '55%' }}
               />
+            </div> */}
+            <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
+              SẢN PHẨM NEW
+            </h1>
+            <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
+              {
+                new Array(8).fill(0).map((_, index) => <ProductItem key={index} />)
+              }
             </div>
           </div>
         </div>
