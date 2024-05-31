@@ -45,9 +45,10 @@ export interface IUser {
     role: string
 }
 
+
 export interface ISize {
     _id?:  string 
     size: string
     slug: string 
-    
+   
 }
