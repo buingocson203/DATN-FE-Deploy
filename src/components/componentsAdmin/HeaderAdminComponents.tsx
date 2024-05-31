@@ -7,27 +7,27 @@ import logo from '../../assets/1-01.png'
 const HeaderAdminComponents = ({ darkMode, toggleDarkMode }: any) => {
     return (
         <header className='hd__admin shadow-xl'>
-            <div className='hd__search'>
+            {/* <div className='hd__search'>
                 <form className='form__search'>
                     <button className='form__search_button' type='submit'>
                         <FaSearch />
                     </button>
                     <input className='form__search_input' type='search' placeholder='Search...' />
                 </form>
-            </div>
+            </div> */}
             <div className='hd__func'>
                 {/* <Switch darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> */}
 
-                <div className='notifycations'>
+                {/* <div className='notifycations'>
                     <div className='notica'>
                         <Icon icon='material-symbols:notifications-outline' />
                     </div>
-                </div>
-                <div className='message'>
+                </div> */}
+                {/* <div className='message'>
                     <div className='mess'>
                         <Icon icon='mi:message' />
                     </div>
-                </div>
+                </div> */}
                 <div className='profile'>
                     <div className='profile--info'>
                         <h2 className='profile-name'>Thomas Anree</h2>
