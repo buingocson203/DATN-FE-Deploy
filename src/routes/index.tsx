@@ -4,7 +4,7 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
 import HomePage from '@/pages/HomePage'
-import ProductDetail from '@/pages/ProductDetail'
+import ProductDetail from '@/pages/ProductDetail/index'
 import ProductsPage from '@/pages/ProductsPage'
 import Signup from '@/pages/auth/Signup'
 import { Route, Routes } from 'react-router-dom'
