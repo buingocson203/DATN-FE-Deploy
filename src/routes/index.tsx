@@ -22,6 +22,8 @@ import Cart from '@/pages/Cart'
 import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
+import PolicyPage from '@/pages/PolicyPage'
+
 
 import ListSize from '@/features/size/_components/ListSize'
 
@@ -42,6 +44,8 @@ const Routers = () => {
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />
+                <Route path='policy/:id' element={<PolicyPage />} />
+
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<ProtectedRoute element={Dashboard} />} />

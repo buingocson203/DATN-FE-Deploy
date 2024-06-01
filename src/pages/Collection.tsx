@@ -31,17 +31,17 @@ const Collection = () => {
                         </div>
                         <div className='flex gap-3 items-center'>
                             <div className='flex-1 md:hidden'>
-                            <Sheet>
-                                <SheetTrigger>
-                                    <button className='outline-none flex gap-2 items-center border border-neutral-200 py-2 px-4 rounded-md text-sm'>
-                                        Bộ Lọc
-                                        <FilterIcon size={16} />
-                                    </button>
-                                </SheetTrigger>
-                                <SheetContent  side={"left"}>
-                                    <FilerSection />
-                                </SheetContent>
-                            </Sheet>
+                                <Sheet>
+                                    <SheetTrigger>
+                                        <button className='outline-none flex gap-2 items-center border border-neutral-200 py-2 px-4 rounded-md text-sm'>
+                                            Bộ Lọc
+                                            <FilterIcon size={16} />
+                                        </button>
+                                    </SheetTrigger>
+                                    <SheetContent side={'left'}>
+                                        <FilerSection />
+                                    </SheetContent>
+                                </Sheet>
                             </div>
                             <div className='flex gap-3 items-center justify-center'>
                                 <p className='text-base relative top-1 flex-1'>Sắp xếp theo</p>
@@ -50,14 +50,19 @@ const Collection = () => {
                                         <SelectValue placeholder='Tên A-Z' />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value='1'>Tên A-Z</SelectItem>
-                                        <SelectItem value='2'>Sản phẩm nổi bật</SelectItem>
-                                        <SelectItem value='3'>Giá tăng dần</SelectItem>
-                                        <SelectItem value='4'>Giá giảm dần</SelectItem>
+                                        <SelectItem value='1'>
+                                            <div className='cursor-pointer hover:text-teal-900'>Tên A-Z</div>
+                                        </SelectItem>
+                                        {/* <SelectItem value='2'>Sản phẩm nổi bật</SelectItem> */}
+                                        <SelectItem value='3'>
+                                            <div className='cursor-pointer hover:text-teal-900'>Giá tăng dần</div>
+                                        </SelectItem>
+                                        <SelectItem value='4'>
+                                            <div className='cursor-pointer hover:text-teal-900'>Giá giảm dần</div>
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
-                            
                         </div>
                     </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
@@ -76,7 +81,7 @@ const FilerSection = () => {
         <>
             <h1 className='text-2xl'>Bộ lọc</h1>
             <div>
-                <Accordion type='single' collapsible defaultValue='1'>
+                {/* <Accordion type='single' collapsible defaultValue='1'>
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>
                             Thương hiệu
@@ -102,22 +107,27 @@ const FilerSection = () => {
                             </div>
                         </AccordionContent>
                     </AccordionItem>
-                </Accordion>
+                </Accordion> */}
                 <Accordion type='single' collapsible defaultValue='1'>
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Khoảng giá</AccordionTrigger>
                         <AccordionContent className='py-4'>
                             <ReactSlider
-                                className="horizontal-slider"
-                                thumbClassName="w-4 h-4 bg-neutral-700 rounded-full hidden"
-                                trackClassName="pt-3"
+                                className='horizontal-slider'
+                                thumbClassName='w-4 h-4 bg-neutral-700 rounded-full hidden'
+                                trackClassName='pt-3'
                                 defaultValue={[0, 100000]}
                                 ariaValuetext={(state: any) => `Thumb value ${state.valueNow}`}
                                 renderThumb={(props: any, state: any) => <div {...props}>{state.valueNow}</div>}
                                 pearling
                                 minDistance={10}
-                                />
-                                <Slider defaultValue={[33]} max={100} step={1} min={20} />
+                            />
+                            <Slider defaultValue={[33]} max={100} step={1} min={20} />
+
+                            <div className='mt-4 flex items-center justify-between'>
+                                <span className='text-sm font-bold'>1.000.000 đ</span>
+                                <span className='text-sm font-bold'>5.000.000 đ</span>
+                            </div>
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
