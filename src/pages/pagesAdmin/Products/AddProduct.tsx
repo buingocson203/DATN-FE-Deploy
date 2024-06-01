@@ -8,6 +8,7 @@ import { Textarea } from '../../../components/ui/textarea'
 import React from 'react'
 import instance from '@/core/api'
 import { useNavigate } from 'react-router-dom'
+import { useFieldArray } from 'react-hook-form'
 
 const AddProduct = () => {
     const navigate = useNavigate()
@@ -24,10 +25,15 @@ const AddProduct = () => {
             navigate('/admin/products')
         }
     })
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: 'IdImages'
+    })
+    console.log('field - ', fields)
     console.log('form - ', form.getValues())
-    const [sizes, setSizes] = React.useState<{ _id: string, size: string }[]>([])
+    const [sizes, setSizes] = React.useState<{ _id: string; size: string }[]>([])
     React.useEffect(() => {
-        ; (async () => {
+        ;(async () => {
             try {
                 const response = await instance.get('api/variant')
                 setSizes(response.data.data)
@@ -124,6 +130,83 @@ const AddProduct = () => {
                             </FormItem>
                         )}
                     ></FormField>
+                    <FormField
+                        control={form.control}
+                        name='importPrice'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className='font-bold'>Gia San Pham nhap khau</FormLabel>
+                                <FormControl>
+                                    <Input type='number' placeholder='Gia san pham nhap khau' {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <FormField
+                        control={form.control}
+                        name='promotionalPrice'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className='font-bold'>Gia San Pham khuyen mai</FormLabel>
+                                <FormControl>
+                                    <Input type='number' placeholder='Gia san phamkhuyen mai' {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <FormField
+                        control={form.control}
+                        name='quanity'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className='font-bold'>So luong san pham</FormLabel>
+                                <FormControl>
+                                    <Input type='number' placeholder='So luong san pham' {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <FormField
+                        control={form.control}
+                        name='status'
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel className='font-bold'>Trang thai san pham</FormLabel>
+                                <FormControl>
+                                    <Input  placeholder='Trang thai san pham' {...field} />
+                                </FormControl>
+                            </FormItem>
+                        )}
+                    ></FormField>
+                    <FormItem>
+                        <div className='flex items-center'>
+                            <FormLabel className='font-bold'>Danh sach hinh anh</FormLabel>{' '}
+                            <button
+                                type='button'
+                                onClick={() => append('')}
+                                className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 ml-10'
+                            >
+                                Add
+                            </button>
+                        </div>
+
+                        {fields.map((field, index) => (
+                            <div key={field.id} className='flex items-center'>
+                                <input
+                                    {...form.register(`IdImages.${index}`)}
+                                    className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+                                />
+                                <button
+                                    type='button'
+                                    onClick={() => remove(index)}
+                                    className='inline-flex items-center justify-center bg-red-500 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-red-400 h-10 px-4 py-2 ml-5'
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        ))}
+                    </FormItem>
+
                     <Button type='submit'>Them</Button>
                 </form>
             </Form>
@@ -132,8 +215,6 @@ const AddProduct = () => {
 }
 
 export default AddProduct
-
-
 
 // import { Button, Form } from 'antd'
 // import FormProduct from './FormProduct'
@@ -194,4 +275,3 @@ export default AddProduct
 // }
 
 // export default AddProduct
-
