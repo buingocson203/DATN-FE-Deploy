@@ -11,5 +11,11 @@ export const formatPrice = (price: number) => {
       currencyDisplay: 'code'
   }).format(price)
   const formattedPriceWithoutVND = formattedPrice.replace('VND', '')
-  return formattedPriceWithoutVND + 'đ'
+  return formattedPriceWithoutVND + '<sup>đ</sup>'
 }
+
+export const range = (start: number, end: number) => {
+  const length = end - start + 1;
+
+  return Array.from({ length }, (_, idx) => idx + start);
+};
