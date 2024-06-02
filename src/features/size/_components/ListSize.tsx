@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useToast } from '../../../components/ui/use-toast';
 import { useSizeMutation } from '@/hooks/useSizeMutation';
 import { getColumns } from './ColumnSize';
 import { DataTable } from './DataTableSize';
 import { useSizeQuery } from '@/hooks/useSizeQuery';
+import { toast } from 'react-toastify';
 
 const ListSize = () => {
-    const { toast } = useToast();
     const { data, isLoading, isError, error } = useSizeQuery();
 
     useEffect(() => {
@@ -21,12 +21,8 @@ const ListSize = () => {
     const { onRemove } = useSizeMutation({
         action: 'DELETE',
         onSuccess: () => {
-            toast({
-                variant: 'success',
-                title: 'Đã xóa thành công',
-                description: 'Dữ liệu sau khi xóa sẽ không thể khôi phục',
-            });
-        },
+            toast.success('Xóa Size Thành Công')
+        }
     });
 
     if (isLoading) return <div>Loading ...</div>;
@@ -34,7 +30,7 @@ const ListSize = () => {
 
     const columns = getColumns(onRemove);
     const tableData = data?.data || []; // Adjusted based on your response structure
-console.log("table",tableData);
+    console.log("table", tableData);
 
     return <DataTable columns={columns} data={tableData} />;
 };
