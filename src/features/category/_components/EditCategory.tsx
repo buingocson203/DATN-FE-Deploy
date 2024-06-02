@@ -1,8 +1,8 @@
 
 import { useParams } from 'react-router-dom'
 import FormCategory from './FormCategory'
-import { useCategoryQuery } from '@/hooks/useAdmCategoryQuery.ts';
-// import FormSlug from './FormSlug'
+import { useCategoryQuery } from '@/hooks/useAdmCategoryQuery';
+
 
 const EditCategory = () => {
     const { id } = useParams()
@@ -14,9 +14,6 @@ const EditCategory = () => {
                 <div>
                     <FormCategory data={data} />
                 </div>
-                {/* <div>
-                    <FormSlug data={data} />
-                </div> */}
             </div>
         </div>
     )

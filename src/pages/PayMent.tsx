@@ -20,11 +20,6 @@ const PayMent = () => {
                     </p>
                 </div>
 
-                <h2 className="my-4 text-[20px] font-normal">Phương thức vận chuyển</h2>
-                <div className=" border-2 border-solid rounded py-4 text-center">
-                    <Icon className='text-[150px] text-gray-500 ml-[230px]' icon="iconamoon:box-thin" />
-                    <p className="text-gray-500 text-[18px]">Không tìm thấy phương thức vận chuyển phù hợp</p>
-                </div>
 
                 <h2 className="mt-8 mb-5 text-[20px] font-normal">Phương thức thanh toán</h2>
                 <div className="border-2 border-solid rounded py-4 ">
