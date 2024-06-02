@@ -1,6 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useReactTable, flexRender, getCoreRowModel } from '@tanstack/react-table';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Icon } from '@iconify/react';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useSizeMutation } from '@/hooks/useSizeMutation';
+import { ToastContainer, toast } from 'react-toastify';
+import { Button } from '@/components/ui/button';
 
 interface DataTableProps<TData> {
     columns: any[];
@@ -14,24 +20,45 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
         getCoreRowModel: getCoreRowModel(),
     });
     const [showModal, setShowModal] = React.useState(false);
+    //add
+    const { form, onSubmit } = useSizeMutation({
+        action: 'ADD',
+        onSuccess: () => {
+            toast.success('Thêm Size Thành Công', {
+
+            })
+            form.reset();
+        }
+    })
+
+    useEffect(() => {
+        const subscription = form.watch((value, { name }) => {
+            if (name === 'size') {
+                form.setValue('slug', value.size);
+            }
+        });
+        return () => subscription.unsubscribe();
+    }, [form]);
     return (
+
         <div className="rounded-md border">
+            <ToastContainer />
             <div>
                 <button
-                    className="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    className="float-right text-white active:bg-pink-600 border-black mt-3 mr-3 border text-sm px-6 py-3 rounded  hover:shadow-lg outline-none focus:outline-none ease-linear transition-all duration-150"
                     type="button"
                     onClick={() => setShowModal(true)}
                 >
-                    Open regular modal
+                    <Icon className='text-black' icon="material-symbols:add" />
                 </button>
                 {showModal ? (
                     <>
                         <div
-                            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+                            className="fixed inset-0 z-50 left-1/3 outline-none focus:outline-none"
                         >
-                            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                            <div className="my-6 mx-auto">
                                 {/*content*/}
-                                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                                <div className="border-0 rounded-lg shadow-lg max-w-screen-sm bg-white focus:outline-none">
                                     {/*header*/}
                                     <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
                                         <h3 className="text-3xl font-semibold">
@@ -41,36 +68,53 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
                                             className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                                             onClick={() => setShowModal(false)}
                                         >
-                                            
+
                                         </button>
                                     </div>
                                     {/*body*/}
                                     <div className="relative p-6 flex-auto">
-                                        <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                                            I always felt like I could do anything. That’s the main
-                                            thing people are controlled by! Thoughts- their perception
-                                            of themselves! They're slowed down by their perception of
-                                            themselves. If you're taught you can’t do anything, you
-                                            won’t do anything. I was taught I could do everything.
-                                        </p>
+                                        <Form {...form}>
+                                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="size"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className='font-bold'>Kích cỡ:</FormLabel>
+                                                            <FormControl>
+                                                                <Input type='number' placeholder="Kích cỡ giày ...." {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                                <div className='hidden'>
+                                                    <FormField
+
+                                                        control={form.control}
+                                                        name="slug"
+                                                        render={({ field }) => (
+                                                            <FormItem >
+                                                                <FormLabel>slug</FormLabel>
+                                                                <FormControl>
+                                                                    <Input type='text' placeholder="Kích cỡ giày ...." {...field} />
+                                                                </FormControl>
+                                                                <FormMessage />
+                                                            </FormItem>
+                                                        )}
+                                                    />
+                                                </div>
+
+                                                <div className='flex justify-end gap-2'>
+                                                    <Button type="submit" className='bg-sky-500 hover:bg-sky-600'>Thêm</Button>
+                                                    <Button type='button' onClick={() => setShowModal(false)}>Đóng</Button>
+                                                </div>
+
+                                            </form>
+                                        </Form>
                                     </div>
                                     {/*footer*/}
-                                    <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                                        <button
-                                            className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                            type="button"
-                                            onClick={() => setShowModal(false)}
-                                        >
-                                            Close
-                                        </button>
-                                        <button
-                                            className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                                            type="button"
-                                            onClick={() => setShowModal(false)}
-                                        >
-                                            Save Changes
-                                        </button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

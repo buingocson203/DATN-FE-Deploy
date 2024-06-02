@@ -24,6 +24,7 @@ import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
 
 import ListSize from '@/features/size/_components/ListSize'
+import Edit from '@/features/size/_components/EditSize'
 
 
 
@@ -55,6 +56,8 @@ const Routers = () => {
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
+                <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
+
             </Route>
         </Routes>
     )
