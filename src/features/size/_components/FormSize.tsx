@@ -19,6 +19,7 @@ type FormControlType = {
 }
 
 const FormSize = ({ data }: SizeFormProps) => {
+    console.log('data size - ', data)
     const [sizeEditStatus, setSizeEditStatus] = useState(false)
     const { form, onSubmit } = useSizeMutation({
         action: 'UPDATE',
@@ -36,6 +37,7 @@ const FormSize = ({ data }: SizeFormProps) => {
         }
     }, [data, form])
     const onHandleSubmit: SubmitHandler<FormControlType> = (values) => {
+        console.log('abc - ', data, values)
         onSubmit({ ...data, ...values })
     }
     return (
