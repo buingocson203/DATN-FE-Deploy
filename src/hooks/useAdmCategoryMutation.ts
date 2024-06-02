@@ -1,19 +1,15 @@
+import { ICategory } from "@/common/type"
+import { addCategory, deleteCategory, updateCategory } from "@/services/category"
+import { joiResolver } from "@hookform/resolvers/joi"
+import Joi from "joi"
+import { SubmitHandler, useForm } from "react-hook-form"
+import { useMutation, useQueryClient } from "react-query"
 
-import { ICategory } from '@/common/type'
-import { addCategory, deleteCategory, updateCategory } from '@/services/category'
-import { joiResolver } from '@hookform/resolvers/joi'
-import Joi from 'joi'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { useMutation, useQueryClient } from 'react-query'
 
 type formControlDataType = {
-    name: string
+    name:  string
     slug: string
-    payload?: {
-        id?: number
-        name?: string
-        slug?: string
-    }
+    
 }
 
 const formSchema = Joi.object({
@@ -22,7 +18,7 @@ const formSchema = Joi.object({
     }),
     slug: Joi.string().trim().messages({
         'any.required': 'Vui lòng không bỏ trống'
-    })
+    }),
 })
 
 type useCategoryMutationProps = {
