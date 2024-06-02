@@ -29,15 +29,7 @@ const items: MenuItem[] = [
         icon: <LineHeightOutlined />,
         children: [{ key: '5', icon: <FontSizeOutlined />, label: <Link to='/admin/size'>Quản lí Size</Link> }]
     },
-    {
-        key: 'sub2',
-        label: 'Quản lí danh mục',
-        icon: <AppstoreOutlined />,
-        children: [
-            { key: '9', icon: <UserOutlined />, label: 'Giày thể thao nam' },
-            { key: '10', icon: <UserOutlined />, label: 'Giày thể thao nữ' }
-        ]
-    },
+    { key: '8', icon: <ProductOutlined />, label: <Link to='/admin/category'>Quản lí danh mục</Link> },
     { key: '11', icon: <TeamOutlined />, label: 'Quản lí tài khoản' },
     { key: '12', icon: <ProfileOutlined />, label: 'Quản lí hóa đơn' },
     { key: '13', icon: <UserSwitchOutlined />, label: 'Tài khoản' },

@@ -15,7 +15,6 @@ import AddProduct from '@/pages/pagesAdmin/Products/AddProduct'
 import EditProduct from '@/pages/pagesAdmin/Products/EditProduct'
 import ListBill from '@/pages/pagesAdmin/ListBill'
 import BillDetail from '@/pages/pagesAdmin/ListBill/BillDetail'
-import CategoryManagementPage from '@/pages/pagesAdmin/Category'
 import ListUser from '@/pages/pagesAdmin/ListUser'
 import ProtectedRoute from './ProtectedRoute'
 import Cart from '@/pages/Cart'
@@ -24,6 +23,8 @@ import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
 
 import ListSize from '@/features/size/_components/ListSize'
+import ListCategory from '@/features/category/_components/ListCategory'
+import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 
 
 
@@ -49,12 +50,13 @@ const Routers = () => {
                 <Route path='/admin/products' element={<ProtectedRoute element={Product} />} />
                 <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
                 <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
-                <Route path='/admin/categories' element={<ProtectedRoute element={CategoryManagementPage} />} />
-                <Route path='/admin/categories/add' element={<ProtectedRoute element={AddCategory} />} />
+                <Route path='/admin/category' element={<ProtectedRoute element={ListCategory} />} />
+                {/* <Route path='/admin/categories/add' element={<ProtectedRoute element={AddCategory} />} /> */}
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
+                <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
             </Route>
         </Routes>
     )

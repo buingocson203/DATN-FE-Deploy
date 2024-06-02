@@ -5,15 +5,15 @@ export const getCategorys = async () => {
     try {
         const response = await instance.get('/api/categories')
         console.log(response.data)
-        return response.data.payload
+        return response.data
     } catch (error) {
         console.log(`['FETCHS_CATEGORYS_ERROR']`, error)
     }
 }
 
-export const getCategory = async (id: number) => {
+export const getCategory = async (_id: string) => {
     try {
-        const response = await instance.get(`/api/categories/6554d04c9c38348cac99f965${id}`)
+        const response = await instance.get(`/api/categories/${_id}`)
         return response.data
     } catch (error) {
         console.log(`['FETCHS_CATEGORY_ERROR']`, error)
@@ -22,28 +22,28 @@ export const getCategory = async (id: number) => {
 
 export const addCategory = async (category: ICategory) => {
     try {
-        const response = await instance.post('/admin/category/create', category)
+        const response = await instance.post('/api/categories', category)
         return response.data
     } catch (error) {
         console.log(`['ADD_CATEGORY_ERROR']`, error)
     }
 }
 
-export const updateCategory = async (category: ICategory) => {
-    console.log(category)
+export const updateCategory = async ({_id,name, slug, ...sizes}: ICategory) => {
+    console.log("data size: ", name)
     try {
-        const response = await instance.put(`/api/categories/6554d0939c38348cac99f968${category?.payload?._id}`, category.payload)
+        const response = await instance.put(`/api/variant/${_id}`, {name, slug})
         console.log(response.data)
 
-        return response.data.payload
+        return response.data
     } catch (error) {
-        console.log(`['UPDATE_CATEGORY_ERROR']`, error)
+        console.log(`['UPDATE_SIZE_ERROR']`, error)
     }
 }
 
 export const deleteCategory = async (category: ICategory) => {
     try {
-        await instance.delete(`/api/categories/6554d0939c38348cac99f968${category._id}`)
+        await instance.delete(`/api/categories/${category._id}`)
     } catch (error) {
         console.log(`['DELETE_CATEGORYS_ERROR']`, error)
     }

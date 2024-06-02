@@ -50,5 +50,10 @@ export interface ISize {
     _id?:  string 
     size: string
     slug: string 
-   
+}
+
+export interface ICategory {
+    _id?:  string 
+    name: string
+    slug: string 
 }
