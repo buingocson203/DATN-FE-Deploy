@@ -13,7 +13,7 @@ export const getSizes = async () => {
 export const getSize = async (_id: string) => {
     try {
         const response = await instance.get(`/api/variant/${_id}`)
-        return response.data
+        return response.data.data
     } catch (error) {
         console.log(`['FETCHS_SIZE_ERROR']`, error)
     }
@@ -28,13 +28,13 @@ export const addSize = async (size: ISize) => {
     }
 }
 
-export const updateSize = async (size: ISize) => {
-    console.log(size)
+export const updateSize = async ({_id,size, slug, ...sizes}: ISize) => {
+    console.log("data size: ", size)
     try {
-        const response = await instance.put(`/api/variant/${size?._id}`, size)
+        const response = await instance.put(`/api/variant/${_id}`, {size, slug})
         console.log(response.data)
 
-        return response.data.payload
+        return response.data
     } catch (error) {
         console.log(`['UPDATE_SIZE_ERROR']`, error)
     }

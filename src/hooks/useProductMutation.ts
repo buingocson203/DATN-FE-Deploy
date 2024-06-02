@@ -1,5 +1,5 @@
 import { addProduct, deleteProduct, updateProduct } from '@/services/product'
-import { IProduct } from '@/common/type' 
+import { IProduct } from '@/common/type'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -12,9 +12,13 @@ type formControlDataType = {
     price: number
     categoryId: string
     sizeId: string[]
-    priceSale: number
     color: string
     description: string
+    importPrice: number
+    promotionalPrice: number
+    IdImages: string[]
+    quanity: string
+    status: string
 }
 
 const formSchema = Joi.object({
@@ -23,9 +27,13 @@ const formSchema = Joi.object({
     price: Joi.number().required().min(0),
     categoryId: Joi.string().required(),
     sizeId: Joi.array().items(Joi.string().required()).required(),
-    priceSale: Joi.number(),
     color: Joi.string().required(),
-    description: Joi.string().required()
+    description: Joi.string().required(),
+    importPrice: Joi.number().required().min(0),
+    promotionalPrice: Joi.number().required().min(0),
+    IdImages: Joi.array().items(Joi.string().required()).required(),
+    quanity: Joi.number().required().min(0),
+    status: Joi.string().required()
 })
 
 type useProductMutationProps = {
@@ -36,7 +44,7 @@ type useProductMutationProps = {
 
 export const useProductMutation = ({
     action,
-    defaultValues = { name: '', price: 0 },
+    defaultValues = { name: '', price: 0, quanity: 0, importPrice: 0, promotionalPrice: 0 },
     onSuccess
 }: useProductMutationProps) => {
     const queryClient = useQueryClient()
@@ -58,6 +66,9 @@ export const useProductMutation = ({
             queryClient.invalidateQueries({
                 queryKey: ['PRODUCT']
             })
+        },
+        onError: () => {
+            console.log('error')
         }
     })
     const form = useForm({

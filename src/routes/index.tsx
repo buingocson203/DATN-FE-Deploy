@@ -4,7 +4,7 @@
 import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
 import HomePage from '@/pages/HomePage'
-import ProductDetail from '@/pages/ProductDetail'
+import ProductDetail from '@/pages/ProductDetail/index'
 import ProductsPage from '@/pages/ProductsPage'
 import Signup from '@/pages/auth/Signup'
 import { Route, Routes } from 'react-router-dom'
@@ -21,10 +21,16 @@ import Cart from '@/pages/Cart'
 import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
+import PolicyPage from '@/pages/PolicyPage'
+
 
 import ListSize from '@/features/size/_components/ListSize'
+
 import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
+
+import Edit from '@/features/size/_components/EditSize'
+
 
 
 
@@ -43,6 +49,8 @@ const Routers = () => {
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />
+                <Route path='policy/:id' element={<PolicyPage />} />
+
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<ProtectedRoute element={Dashboard} />} />
@@ -51,12 +59,14 @@ const Routers = () => {
                 <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
                 <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
                 <Route path='/admin/category' element={<ProtectedRoute element={ListCategory} />} />
-                {/* <Route path='/admin/categories/add' element={<ProtectedRoute element={AddCategory} />} /> */}
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
                 <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
+                <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
+
+
             </Route>
         </Routes>
     )

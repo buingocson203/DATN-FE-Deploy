@@ -20,7 +20,7 @@ export const getProduct = async (id: string) => {
     }
 }
 
-export const updateProduct = async ({_id, ...product}: IProduct) => {
+export const updateProduct = async ({ _id, ...product }: IProduct) => {
     try {
         console.log('ok')
         const response = await instance.put(`api/product/${_id}`, product)
@@ -32,7 +32,7 @@ export const updateProduct = async ({_id, ...product}: IProduct) => {
 
 export const addProduct = async (product: IProduct) => {
     try {
-        const response = await instance.post(`api/product/`, { ...product, priceSale: 0 })
+        const response = await instance.post(`api/product/`, product)
         return response.data
     } catch (error) {
         console.log(`['ADD_PRODUCTS_ERROR']`, error)
