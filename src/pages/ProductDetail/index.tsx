@@ -15,7 +15,6 @@ const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
     const [currentSize, setCurrentSize] = useState(36)
-    const [currentType, setCurrentType] = useState('Thấp cổ')
     const breadcrumb: IBreadCrumb[] = [
         {
             title: 'Giày',
@@ -26,9 +25,8 @@ const ProductDetail = () => {
         }
     ]
     const sizes = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45]
-    const types = ['Thấp cổ']
     // const tabs = ['Mô tả sản phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng', 'Chính sách đổi trả', 'Chính sách bảo hành', 'Câu hỏi thường gặp']
-    const tabs = ['Mô tả sản phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
+    const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -88,41 +86,7 @@ const ProductDetail = () => {
                                     })}
                                 </div>
                             </div>
-                            <div className='flex items-center justify-center mt-5'>
-                                <span className='w-[120px]'>Màu sắc:</span>
-                                <div className='flex-1 flex flex-wrap gap-2'>
-                                    {['#fff'].map((color) => {
-                                        return (
-                                            <span
-                                                className='inline-block w-8 h-8 rounded-full cursor-pointer border border-neutral-300'
-                                                key={color}
-                                                style={{
-                                                    backgroundColor: color
-                                                }}
-                                            ></span>
-                                        )
-                                    })}
-                                </div>
-                            </div>
-                            <div className='flex items-center justify-center mt-5'>
-                                <span className='w-[120px]'>Kiểu dáng:</span>
-                                <div className='flex-1 flex flex-wrap gap-2'>
-                                    {types.map((type) => {
-                                        return (
-                                            <span
-                                                className={cn(
-                                                    'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300',
-                                                    currentType == type && 'item-sale'
-                                                )}
-                                                key={type}
-                                                onClick={() => setCurrentType(type)}
-                                            >
-                                                {type}
-                                            </span>
-                                        )
-                                    })}
-                                </div>
-                            </div>
+                             
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Số lượng:</span>
                                 <div className='flex-1 flex'>
@@ -183,11 +147,11 @@ const ProductDetail = () => {
                             </div> */}
                         </div>
                         <div className='lg:w-[240px] w-full flex flex-col gap-2 md:pt-[70px] text-sm'>
-                            <p className='font-semibold'>Chính sách bán hàng</p>
+                            <p className='font-bold text-[15px]'>Chính sách bán hàng</p>
                             <span className='flex items-center gap-2'>
                                 <img src='/ship.webp' alt='' className='w-8 h-8' />
                                 <p className='flex-1'>
-                                    Miễn phí vận chuyển nội thành HCM cho đơn hàng từ 1.000.000 vnđ
+                                    Miễn phí vận chuyển toàn quốc cho đơn hàng từ 1.000.000 vnđ
                                 </p>
                             </span>
                             <span className='flex items-center gap-2'>
@@ -198,7 +162,7 @@ const ProductDetail = () => {
                                 <img src='/call.webp' alt='' className='w-8 h-8' />
                                 <p className='flex-1'>Miễn phí đổi hàng</p>
                             </span>
-                            <p className='my-2 font-semibold'>Thông tin thêm</p>
+                            <p className='my-2 font-bold text-[15px]'>Thông tin thêm</p>
                             <span className='flex items-center gap-2'>
                                 <img src='/change.webp' alt='' className='w-8 h-8' />
                                 <p className='flex-1'>Đổi hàng trong 30 ngày nếu không hài lòng</p>
