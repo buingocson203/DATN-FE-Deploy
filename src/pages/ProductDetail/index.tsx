@@ -17,7 +17,7 @@ const ProductDetail = () => {
     const [currentSize, setCurrentSize] = useState(36)
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Giày',
+            title: 'Nike',
             link: '/'
         },
         {
@@ -117,9 +117,9 @@ const ProductDetail = () => {
                             </div>
                             {/* ẨN khuyến mại */}
                             <div className='flex items-center justify-center mt-5 gap-2'>
-                                <button className='px-7 py-3 border border-neutral-800 text-white bg-neutral-800 outline-none hover:opacity-90 transition-all rounded-md w-full text-sm'>
-                                    CLICK VÀO ĐÂY ĐỂ NHẬN ƯU ĐÃI
-                                </button>
+                                <p className='px-7 py-3 border border-neutral-800 text-white bg-neutral-800 outline-none hover:opacity-90 transition-all rounded-md w-full text-sm'>
+                                    Bạn sẽ nhận được 1 đôi tất và 1 bình vệ sinh giày sau khi đặt hàng thành công
+                                </p>
                             </div>
                             {/* Ẩn chia sẻ */}
                             {/* <div className='flex items-center justify-center mt-5 gap-2'>
@@ -351,9 +351,9 @@ const ProductDetail = () => {
                         <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2' />
                     </Carousel>
 
-                    <div className='mt-10'>
+                    {/* <div className='mt-10'>
                         <Pagination currentPage={1} totalCount={40} pageSize={10} onPageChange={() => {}} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

@@ -20,7 +20,7 @@ import ProtectedRoute from './ProtectedRoute'
 import Cart from '@/pages/Cart'
 import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
-import Collection from '@/pages/Collection'
+// import Collection from '@/pages/Collection'
 import PolicyPage from '@/pages/PolicyPage'
 
 
@@ -48,7 +48,7 @@ const Routers = () => {
                 <Route path='cart' element={<Cart />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
-                <Route path='collections/:id' element={<Collection />} />
+                {/* <Route path='collections/:id' element={<Collection />} /> */}
                 <Route path='policy/:id' element={<PolicyPage />} />
 
             </Route>
