@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { SubmitHandler } from 'react-hook-form'
 import { Button } from '../../../components/ui/button'
 import { Pencil } from 'lucide-react'
-import { Form, FormControl, FormField, FormItem } from '../../../components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../components/ui/form'
 import { ISize } from '@/common/type'
 import { useSizeMutation } from '@/hooks/useSizeMutation'
 import { toast } from 'react-toastify'
@@ -63,8 +63,9 @@ const FormSize = ({ data }: SizeFormProps) => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input {...field} placeholder='Nhập tên sản phẩm' />
+                                        <Input type='number' {...field} placeholder='Cập nhật kích thước' />
                                     </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />

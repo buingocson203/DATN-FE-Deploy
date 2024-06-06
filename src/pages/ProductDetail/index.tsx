@@ -86,7 +86,7 @@ const ProductDetail = () => {
                                     })}
                                 </div>
                             </div>
-                             
+
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Số lượng:</span>
                                 <div className='flex-1 flex'>
@@ -117,8 +117,8 @@ const ProductDetail = () => {
                             </div>
                             {/* ẨN khuyến mại */}
                             <div className='flex items-center justify-center mt-5 gap-2'>
-                                <p className='px-7 py-3 border border-neutral-800 text-white bg-neutral-800 outline-none hover:opacity-90 transition-all rounded-md w-full text-sm'>
-                                    Bạn sẽ nhận được 1 đôi tất và 1 bình vệ sinh giày sau khi đặt hàng thành công
+                                <p className='px-6 py-2 text-gray-700 transition-all w-full text-sm italic '>
+                                    * Bạn sẽ nhận được 1 đôi tất và 1 bình vệ sinh giày sau khi đặt hàng thành công
                                 </p>
                             </div>
                             {/* Ẩn chia sẻ */}
