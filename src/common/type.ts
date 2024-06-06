@@ -48,8 +48,8 @@ export interface IUser {
 
 export interface ISize {
     _id?:  string 
-    size: string
-    slug: string 
+    size: number
+    slug: number 
 }
 
 export interface ICategory {
