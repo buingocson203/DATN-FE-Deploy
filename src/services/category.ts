@@ -1,7 +1,19 @@
 import { ICategory } from '@/common/type'
 import instance from '../core/api'
 import { toast } from 'react-toastify'
+import { Modal } from 'antd';
 
+const showModal = (title: string, content: string) => {
+    Modal.info({
+      title: title,
+      content: content,
+      className: 'btn btn-primary',
+      onOk() {},
+      okButtonProps: {
+        className: 'bg-sky-400',
+      },
+    });
+  };
 export const getCategorys = async () => {
     try {
         const response = await instance.get('/api/categories')
@@ -53,8 +65,15 @@ export const updateCategory = async ({_id,name, slug, ...category}: ICategory) =
 
 export const deleteCategory = async (category: ICategory) => {
     try {
-        await instance.delete(`/api/categories/${category._id}`)
+        const response = await instance.delete(`/api/categories/${category._id}`)
+        if (response.status === 200) {
+            toast.success('Xóa danh mục thành công')
+        }
     } catch (error) {
-        console.log(`['DELETE_CATEGORYS_ERROR']`, error)
+        if (error.response && error.response.status === 400) {
+            showModal('Lỗi', 'Danh mục không thể xóa vì không có sản phẩm liên quan!');
+        }else {
+            console.log(`['DELETE_CATEGORYS_ERROR']`, error)
+        }   
     }
 }
