@@ -25,9 +25,9 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     const { form, onSubmit } = useCategoryMutation({
         action: 'ADD',
         onSuccess: () => {
-            toast.success('Thêm Thương Hiệu Thành Công', {
+            // toast.success('Thêm Thương Hiệu Thành Công', {
 
-            })
+            // })
             form.reset();
         }
     })
