@@ -20,7 +20,7 @@ const ListCategory = () => {
     const { onRemove } = useCategoryMutation({
         action: 'DELETE',
         onSuccess: () => {
-            toast.success('Xóa Thương Hiệu Thành Công')
+            // toast.success('Xóa Thương Hiệu Thành Công')
         }
     });
 
