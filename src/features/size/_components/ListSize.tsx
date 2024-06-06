@@ -20,9 +20,9 @@ const ListSize = () => {
 
     const { onRemove } = useSizeMutation({
         action: 'DELETE',
-        onSuccess: () => {
-            toast.success('Xóa Size Thành Công')
-        }
+        // onSuccess: () => {
+        //     toast.success('Xóa Size Thành Công')
+        // }
     });
 
     if (isLoading) return <div>Loading ...</div>;

@@ -1,10 +1,8 @@
-
-
 import { useEffect, useState } from 'react'
 import { SubmitHandler } from 'react-hook-form'
 import { Button } from '../../../components/ui/button'
 import { Pencil } from 'lucide-react'
-import { Form, FormControl, FormField, FormItem } from '../../../components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '../../../components/ui/form'
 import { ISize } from '@/common/type'
 import { useSizeMutation } from '@/hooks/useSizeMutation'
 import { toast } from 'react-toastify'
@@ -15,7 +13,7 @@ type SizeFormProps = {
 }
 
 type FormControlType = {
-    size: string
+    size: number
 }
 
 const FormSize = ({ data }: SizeFormProps) => {
@@ -25,14 +23,14 @@ const FormSize = ({ data }: SizeFormProps) => {
         action: 'UPDATE',
         onSuccess: () => {
             setSizeEditStatus(false)
-            toast.success("Cập nhật thành công")
+            toast.success('Cập nhật thành công')
         }
     })
     useEffect(() => {
         if (data && form) {
             form.reset({
-                size: data.size || '',
-                slug: data.slug || '',
+                size: data.size || 0,
+                slug: data.slug || 0
             })
         }
     }, [data, form])
@@ -43,7 +41,7 @@ const FormSize = ({ data }: SizeFormProps) => {
     return (
         <div className='mt-6 border bg-slate-100 rounded-md p-4'>
             <div className='font-medium flex items-center justify-between'>
-                Tên sản phẩm
+                Kích thước
                 <Button variant='ghost' onClick={() => setSizeEditStatus(!sizeEditStatus)}>
                     {sizeEditStatus ? (
                         <>Hủy</>
@@ -65,8 +63,9 @@ const FormSize = ({ data }: SizeFormProps) => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input {...field} placeholder='Nhập tên sản phẩm' />
+                                        <Input type='number' {...field} placeholder='Cập nhật kích thước' />
                                     </FormControl>
+                                    <FormMessage />
                                 </FormItem>
                             )}
                         />
