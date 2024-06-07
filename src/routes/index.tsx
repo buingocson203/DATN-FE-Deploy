@@ -28,7 +28,6 @@ import ListSize from '@/features/size/_components/ListSize'
 
 import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
-
 import Edit from '@/features/size/_components/EditSize'
 
 
