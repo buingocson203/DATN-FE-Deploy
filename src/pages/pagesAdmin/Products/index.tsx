@@ -3,7 +3,6 @@ import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from
 import { Button, Form, Input, Popconfirm, Space, Table, message, Modal } from 'antd'
 import type { FilterDropdownProps } from 'antd/es/table/interface'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import Highlighter from 'react-highlight-words'
 import instance from '@/core/api'
 import dayjs from 'dayjs'
@@ -57,7 +56,7 @@ const Product = () => {
 
     const fetchSizes = async () => {
         try {
-            const response = await instance.get('api/variant')
+            const response = await instance.get('api/size')
             setSizes(response.data.data)
         } catch (error) {
             console.error(error)
@@ -205,7 +204,7 @@ const Product = () => {
             key: 'sizeId',
             width: '10%',
             render: (sizeId: string[]) => (
-                <p>{sizeId.map((item) => sizes.find((i) => i._id === item)?.size || '').join(', ')}</p>
+                <p>{sizeId?.map((item) => sizes.find((i) => i._id === item)?.size || '').join(', ')}</p>
             )
         },
         {
