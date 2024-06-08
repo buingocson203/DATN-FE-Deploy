@@ -24,8 +24,8 @@ const EditProduct = (props: Props) => {
         onSuccess: () => {
             toast({
                 variant: 'success',
-                title: 'Chúc mừng bạn',
-                description: 'Thêm sản phẩm thành công'
+                title: 'Chuc mung thanh nien',
+                description: 'Them san pham thanh cong'
             })
             form.reset()
             navigate('/admin/products')
@@ -68,7 +68,7 @@ const EditProduct = (props: Props) => {
     }, [])
     return (
         <div className='border p-6'>
-            <h2 className='text-xl font-bold'>Sửa</h2>
+            <h2 className='text-xl font-bold'>Sua san pham</h2>
             <Form {...form}>
                 <form
                     onSubmit={form.handleSubmit((value) => {
@@ -76,23 +76,23 @@ const EditProduct = (props: Props) => {
                         if (value.promotionalPrice >= value.price) {
                             toast({
                                 variant: 'destructive',
-                                title: 'Chúc mừng bạn',
-                                description: 'Giá khuyến mại phải thấp hơn hoặc bằng giá gốc'
+                                title: 'Chuc mung thanh nien',
+                                description: 'Gia khuyen mai khong duoc lon hon hoac bang gia goc'
                             })
                         } else {
                             onSubmit({ _id: data?._id, ...value })
                         }
                     })}
-                    className='mt-5 grid grid-cols-2 gap-5'
+                    className='space-y-4'
                 >
                     <FormField
                         control={form.control}
                         name='name'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Tên sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Ten San Pham</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Tên sản phẩm' {...field} />
+                                    <Input placeholder='Ten san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -102,9 +102,9 @@ const EditProduct = (props: Props) => {
                         name='description'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Mô tả sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Mo ta San Pham</FormLabel>
                                 <FormControl>
-                                    <Textarea placeholder='Mô tả sản phẩm' {...field} />
+                                    <Textarea placeholder='Mo ta san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -114,7 +114,7 @@ const EditProduct = (props: Props) => {
                         name='categoryId'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Danh mục</FormLabel>
+                                <FormLabel className='font-bold'>Danh muc</FormLabel>
                                 <FormControl>
                                     <Select {...field} />
                                 </FormControl>
@@ -122,7 +122,7 @@ const EditProduct = (props: Props) => {
                         )}
                     ></FormField>
                     <div>
-                        <FormLabel className='font-bold block'>Kích thước</FormLabel>
+                        <FormLabel className='font-bold block'>Kich thuoc</FormLabel>
                         <div className='flex items-center gap-10 mt-2'>
                             {sizes.map((item) => (
                                 <label key={item._id} className='block'>
@@ -137,33 +137,33 @@ const EditProduct = (props: Props) => {
                         name='image'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Hình ảnh</FormLabel>
+                                <FormLabel className='font-bold'>Hinh anh</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Hình ảnh sản phẩm' {...field} />
+                                    <Input placeholder='Hinh anh san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
                     ></FormField>
-                    {/* <FormField
+                    <FormField
                         control={form.control}
                         name='color'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Màu sắc</FormLabel>
+                                <FormLabel className='font-bold'>Mau sac</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Màu sắc sản phẩm' {...field} />
+                                    <Input placeholder='Mau sac san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
-                    ></FormField> */}
+                    ></FormField>
                     <FormField
                         control={form.control}
                         name='price'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Giá sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Gia San Pham</FormLabel>
                                 <FormControl>
-                                    <Input type='number' placeholder='Giá sản phẩm' {...field} />
+                                    <Input type='number' placeholder='Gia san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -173,9 +173,9 @@ const EditProduct = (props: Props) => {
                         name='importPrice'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Giá nhập của sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Gia San Pham nhap khau</FormLabel>
                                 <FormControl>
-                                    <Input type='number' placeholder='Giá nhập của sản phẩm' {...field} />
+                                    <Input type='number' placeholder='Gia san pham nhap khau' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -185,9 +185,9 @@ const EditProduct = (props: Props) => {
                         name='promotionalPrice'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Giá khuyến mại của sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Gia San Pham khuyen mai</FormLabel>
                                 <FormControl>
-                                    <Input type='number' placeholder='Giá khuyến mại của sản phẩm' {...field} />
+                                    <Input type='number' placeholder='Gia san phamkhuyen mai' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -197,9 +197,9 @@ const EditProduct = (props: Props) => {
                         name='quanity'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Số lượng sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>So luong san pham</FormLabel>
                                 <FormControl>
-                                    <Input type='number' placeholder='Số lượng sản phẩm' {...field} />
+                                    <Input type='number' placeholder='So luong san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
@@ -209,16 +209,16 @@ const EditProduct = (props: Props) => {
                         name='status'
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel className='font-bold'>Trạng thái sản phẩm</FormLabel>
+                                <FormLabel className='font-bold'>Trang thai san pham</FormLabel>
                                 <FormControl>
-                                    <Input placeholder='Trạng thái sản phẩm' {...field} />
+                                    <Input placeholder='Trang thai san pham' {...field} />
                                 </FormControl>
                             </FormItem>
                         )}
                     ></FormField>
                     <FormItem>
                         <div className='flex items-center'>
-                            <FormLabel className='font-bold'>Danh sách hình ảnh</FormLabel>{' '}
+                            <FormLabel className='font-bold'>Danh sach hinh anh</FormLabel>{' '}
                             <button
                                 type='button'
                                 onClick={() => append('')}
@@ -232,7 +232,7 @@ const EditProduct = (props: Props) => {
                             <div key={field.id} className='flex items-center'>
                                 <input
                                     {...form.register(`IdImages.${index}`)}
-                                    className='flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 border-black outline-none'
+                                    className='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
                                 />
                                 <button
                                     type='button'
@@ -244,7 +244,7 @@ const EditProduct = (props: Props) => {
                             </div>
                         ))}
                     </FormItem>
-                    <Button type='submit'>Sửa sản phẩm</Button>
+                    <Button type='submit'>Sua san pham</Button>
                 </form>
             </Form>
         </div>

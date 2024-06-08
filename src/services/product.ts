@@ -33,6 +33,7 @@ export const updateProduct = async ({ _id, ...product }: IProduct) => {
 export const addProduct = async (product: IProduct) => {
     try {
         const response = await instance.post(`api/product/`, product)
+        console.log(response.data)
         return response.data
     } catch (error) {
         console.log(`['ADD_PRODUCTS_ERROR']`, error)

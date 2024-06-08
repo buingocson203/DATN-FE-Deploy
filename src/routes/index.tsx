@@ -23,7 +23,6 @@ import PayMent from '@/pages/PayMent'
 // import Collection from '@/pages/Collection'
 import PolicyPage from '@/pages/PolicyPage'
 
-
 import ListSize from '@/features/size/_components/ListSize'
 
 import ListCategory from '@/features/category/_components/ListCategory'
@@ -31,12 +30,7 @@ import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 
 import Edit from '@/features/size/_components/EditSize'
 
-
-
-
 const Routers = () => {
-
-
     return (
         <Routes>
             <Route path='signup' element={<Signup />} />
@@ -50,7 +44,6 @@ const Routers = () => {
                 <Route path='payment' element={<PayMent />} />
                 {/* <Route path='collections/:id' element={<Collection />} /> */}
                 <Route path='policy/:id' element={<PolicyPage />} />
-
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<ProtectedRoute element={Dashboard} />} />
@@ -65,8 +58,6 @@ const Routers = () => {
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
                 <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
                 <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
-
-
             </Route>
         </Routes>
     )

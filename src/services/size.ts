@@ -1,18 +1,18 @@
 import { ISize } from '@/common/type'
 import instance from '../core/api'
 import { toast } from 'react-toastify'
-import { message, Modal } from 'antd';
+import { message, Modal } from 'antd'
 const showModal = (title: string, content: string) => {
     Modal.info({
-      title: title,
-      content: content,
-      className: 'btn btn-primary',
-      onOk() {},
-      okButtonProps: {
-        className: 'bg-sky-400',
-      },
-    });
-  };
+        title: title,
+        content: content,
+        className: 'btn btn-primary',
+        onOk() {},
+        okButtonProps: {
+            className: 'bg-sky-400'
+        }
+    })
+}
 export const getSizes = async () => {
     try {
         const response = await instance.get('/api/size')
@@ -69,7 +69,7 @@ export const deleteSize = async (size: ISize) => {
     } catch (error) {
         if (error.response && error.response.status === 400) {
             // toast.error('Kích thước không thể xóa!')
-            showModal('Lỗi', 'Kích thước không thể xóa vì có sản phẩm liên quan!');
+            showModal('Lỗi', 'Kích thước không thể xóa vì có sản phẩm liên quan!')
         } else {
             console.log(`['DELETE_SIZE_ERROR']`, error)
         }
