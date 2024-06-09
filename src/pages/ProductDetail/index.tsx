@@ -36,7 +36,7 @@ const ProductDetail = () => {
 
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Nike',
+            title: data?.categoryId?.name,
             link: '/'
         },
         {
@@ -89,19 +89,23 @@ const ProductDetail = () => {
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Kích thước:</span>
                                 <div className='flex-1 flex flex-wrap gap-2'>
-                                    {productDetail?.sizes?.map((size, index) => {
-                                        return (
-                                            <span
-                                                className={cn(
-                                                    'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
-                                                    variant?._id === size._id && 'item-sale'
-                                                )}
-                                                key={index}
-                                                onClick={() => setVariant(size)}
-                                            >
-                                                {size.size}
-                                            </span>
+                                    {productDetail?.sizes
+                                        .filter((size, index, self) =>
+                                            index === self.findIndex((t) => t.size === size.size)
                                         )
+                                        .map((size, index) => {
+                                    return (
+                                        <span
+                                            className={cn(
+                                                'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
+                                                variant?._id === size._id && 'item-sale'
+                                            )}
+                                            key={index}
+                                            onClick={() => setVariant(size)}
+                                        >
+                                            {size.size}
+                                        </span>
+                                    )
                                     })}
 
                                     {!productDetail?.sizes && <p className='text-sm text-sky-500 font-semibold'>Chưa có thông tin kích thước cho sản phẩm này !</p>}
