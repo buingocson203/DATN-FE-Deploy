@@ -1,13 +1,20 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-bar";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { getAllCategory } from "@/services/category/requests";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { normalizeHash } from "@remix-run/router/dist/utils";
 import { ChevronDown } from "lucide";
 import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
 import { useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import logo from "../../assets/1-01.png"
 export default function Header() {
     const [open, setOpen] = useState(false)
+
+
+    const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
 
     return (
         <header>
@@ -149,19 +156,21 @@ export default function Header() {
                     </li>
                     <li>
                         <Link to='/' className='flex items-center justify-center gap-1 item-hover relative'>
-                            <span className='relative  hover:text-neutral-700'>Sản phẩm</span>
+                            <span className='relative  hover:text-neutral-700'>Danh mục</span>
                             <ChevronDownIcon className='w-3 transition-all group-hover:rotate-180 duration-300' />
 
                             <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/adidas'
-                                    >
-                                        Adidas
-                                    </Link>
-                                </li>
-                                <li>
+
+                                {categories?.map(category =>
+                                    <li key={category._id}>
+                                        <Link
+                                            className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
+                                            to={'/collections/' + category._id}
+                                        >
+                                            {category.name}
+                                        </Link>
+                                    </li>)}
+                                {/* <li>
                                     <Link
                                         className='px-5 py-2 flex items-center relative item-hover'
                                         to='/collections/nike'
@@ -211,98 +220,8 @@ export default function Header() {
                                     >
                                         MLB
                                     </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/croon'
-                                    >
-                                        CROON
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/new-balance-fila'
-                                    >
-                                        New Balance - Fila
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/luxury'
-                                    >
-                                        Luxury
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/converse-vans'
-                                    >
-                                        Converse - Vans
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/chinh-hang'
-                                    >
-                                        Chính hãng
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/all'
-                                    >
-                                        <span className='flex-1'>Phụ kiện</span>
-                                        <ChevronRightIcon className='w-3 ml-1' />
-                                        <ul className='item-child-hover absolute top-0 left-full w-[200px] bg-white z-10 py-2 shadow-lg'>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/vo'
-                                                >
-                                                    Vớ
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/non'
-                                                >
-                                                    Nón
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/mat-kinh'
-                                                >
-                                                    Mắt kính
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/dep'
-                                                >
-                                                    Dép
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/khac'
-                                                >
-                                                    Khác
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </Link>
-                                </li>
+                                </li> */}
+
                             </ul>
                         </Link>
                     </li>
@@ -478,3 +397,6 @@ export default function Header() {
         </header>
     )
 }
+
+
+

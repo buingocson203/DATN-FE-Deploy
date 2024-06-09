@@ -3,7 +3,7 @@
 // import Signup from '@/features/auth/_components/Signup'
 import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
-import HomePage from '@/pages/HomePage'
+import HomePage from '@/pages/HomePage/HomePage'
 import ProductDetail from '@/pages/ProductDetail/index'
 import ProductsPage from '@/pages/ProductsPage'
 import Signup from '@/pages/auth/Signup'
@@ -30,6 +30,7 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 
 import Edit from '@/features/size/_components/EditSize'
+import Collection from '@/pages/Collection'
 
 
 
@@ -48,7 +49,7 @@ const Routers = () => {
                 <Route path='cart' element={<Cart />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
-                {/* <Route path='collections/:id' element={<Collection />} /> */}
+                <Route path='collections/:id' element={<Collection />} />
                 <Route path='policy/:id' element={<PolicyPage />} />
 
             </Route>
