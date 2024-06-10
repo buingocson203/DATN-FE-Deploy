@@ -333,6 +333,7 @@
 //   </div>
 // }
 
+<<<<<<< HEAD
 // const HomePageButton = ({ className, children }: {
 //   className?: string,
 //   children?: React.ReactNode
@@ -342,3 +343,14 @@
 //   </button>
 // }
 // export default HomePage
+=======
+const HomePageButton = ({ className, children }: {
+  className?: string,
+  children?: React.ReactNode
+}) => {
+  return <button className={cn('w-full max-w-[400px] mx-auto text-black bg-white rounded-md border border-black py-3 px-8 hover:text-white hover:bg-black transition-all duration-500 block', className)}>
+    {children}
+  </button>
+}
+export default HomePage
+>>>>>>> ac0e4c1dfdea66123b93c670663befa16ad2264c

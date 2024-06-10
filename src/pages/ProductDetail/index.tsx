@@ -2,31 +2,57 @@ import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
 import ProductItem from '@/features/product/_components/product-item'
-import { cn } from '@/lib/utils'
+import { cn, onMutateError } from '@/lib/utils'
 import { FacebookIcon, MessageCircleIcon, MinusIcon, PlusIcon, TwitterIcon, Zap } from 'lucide-react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import ProductComment from './ProductComment'
 import ProductDescription from './ProductDescription'
 import Pagination from '@/components/ui/pagination'
+import { useQuery } from 'react-query'
+import { getProductById, getProductDetailById } from '@/services/product/request'
+import { IProduct, IProductSize } from '@/services/product/types'
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
-    const [currentSize, setCurrentSize] = useState(36)
+    const [variant, setVariant] = useState<IProductSize | undefined>()
+    
+    const { id: productId } = useParams()
+
+    const { data, isFetching } = useQuery<IProduct>({
+        queryFn: () => getProductById(String(productId)),
+        enabled: !!productId,
+        onError: onMutateError
+    })
+
+    const { data: productDetail } = useQuery({
+        queryFn: () => getProductDetailById(String(productId)),
+        queryKey: ['/productDetail', productId],
+        enabled: !!productId,
+        onError: onMutateError
+    })
+
     const breadcrumb: IBreadCrumb[] = [
         {
             title: 'Nike',
             link: '/'
         },
         {
-            title: 'Giày Nike AF1 All Trắng'
+             title: data?.name || ''
         }
     ]
-    const sizes = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45]
+    
     // const tabs = ['Mô tả sản phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng', 'Chính sách đổi trả', 'Chính sách bảo hành', 'Câu hỏi thường gặp']
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
+    
+    console.log('first', productDetail)
+
+    useEffect(() => {
+        if (!productDetail || !productDetail.sizes) return
+        setVariant(productDetail?.sizes?.[0])
+    }, [productDetail])
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -35,33 +61,26 @@ const ProductDetail = () => {
                     <div className='flex-1'>
                         <Carousel>
                             <CarouselContent>
-                                <CarouselItem>
-                                    <img
-                                        src='https://product.hstatic.net/200000690551/product/af1_all_trang_14a353fa01e74fa1a9c1a41460705557_master.png'
-                                        alt='product'
-                                    />
-                                </CarouselItem>
-                                <CarouselItem>
-                                    <img
-                                        src='https://product.hstatic.net/200000690551/product/af1_all_trang_14a353fa01e74fa1a9c1a41460705557_master.png'
-                                        alt='product'
-                                    />
-                                </CarouselItem>
+                            {data?.IdImages?.map((image, index) => (
+                                    <CarouselItem key={index}>
+                                        <img src={image} alt='product' />
+                                    </CarouselItem>
+                                ))}
                             </CarouselContent>
                         </Carousel>
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
                         <div className='flex-1'>
-                            <h1 className='text-2xl font-semibold'>Giày Nike AF1 All Trắng</h1>
+                            <h1 className='text-2xl font-semibold'>{data?.name}</h1>
                             <div className='mt-1 mb-5 text-sm'>
                                 <span>Tình trạng: Còn hàng</span>
                                 <span className='mx-2 text-neutral-200'>|</span>
-                                <span>Thương hiệu: Nike</span>
+                                <span>Thương hiệu: {data?.categoryId?.name}</span>
                             </div>
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
                                 <span className='w-[120px]'>Giá:</span>
-                                <span className='text-red-500 font-medium text-xl mr-2'>450,000₫</span>
-                                <span className='line-through text-neutral-500 mr-4'>950,000₫</span>
+                                <span className='text-red-500 font-medium text-xl mr-2'>{variant?.importPrice || 0}₫</span>
+                                <span className='line-through text-neutral-500 mr-4'>{variant?.promotionalPrice || 0}₫</span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
@@ -70,20 +89,22 @@ const ProductDetail = () => {
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Kích thước:</span>
                                 <div className='flex-1 flex flex-wrap gap-2'>
-                                    {sizes.map((size) => {
+                                    {productDetail?.sizes?.map((size, index) => {
                                         return (
                                             <span
                                                 className={cn(
                                                     'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
-                                                    currentSize == size && 'item-sale'
+                                                    variant?._id === size._id && 'item-sale'
                                                 )}
-                                                key={size}
-                                                onClick={() => setCurrentSize(size)}
+                                                key={index}
+                                                onClick={() => setVariant(size)}
                                             >
-                                                {size}
+                                                {size.size}
                                             </span>
                                         )
                                     })}
+
+                                    {!productDetail?.sizes && <p className='text-sm text-sky-500 font-semibold'>Chưa có thông tin kích thước cho sản phẩm này !</p>}
                                 </div>
                             </div>
 
@@ -196,7 +217,7 @@ const ProductDetail = () => {
                             )
                         })}
                     </ul>
-                    {activeTab == 0 && <ProductDescription />}
+                    {activeTab == 0 && <ProductDescription description={data?.description} />}
                     {activeTab == 1 && <ProductComment />}
                     {activeTab == 2 && (
                         <div className='text-sm'>
