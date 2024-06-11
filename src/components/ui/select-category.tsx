@@ -3,12 +3,12 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 import instance from '@/core/api'
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLSelectElement> { }
+export interface InputProps extends React.InputHTMLAttributes<HTMLSelectElement> {}
 
 const Select = React.forwardRef<HTMLSelectElement, InputProps>(({ className, type, ...props }, ref) => {
-    const [categories, setCategories] = React.useState<{ _id: string, name: string }[]>([])
+    const [categories, setCategories] = React.useState<{ _id: string; name: string }[]>([])
     React.useEffect(() => {
-        ; (async () => {
+        ;(async () => {
             try {
                 const response = await instance.get('api/categories')
                 setCategories(response.data.data)

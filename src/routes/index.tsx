@@ -11,7 +11,7 @@ import { Route, Routes } from 'react-router-dom'
 import Signin from '@/pages/auth/Signin'
 import Dashboard from '@/pages/pagesAdmin/Dashboard'
 import Product from '@/pages/pagesAdmin/Products'
-import AddProduct from '@/pages/pagesAdmin/Products/AddProduct'
+import AddProduct from '@/pages/pagesAdmin/Products/AddProduct/index'
 import EditProduct from '@/pages/pagesAdmin/Products/EditProduct'
 import ListBill from '@/pages/pagesAdmin/ListBill'
 import BillDetail from '@/pages/pagesAdmin/ListBill/BillDetail'
@@ -20,7 +20,7 @@ import ProtectedRoute from './ProtectedRoute'
 import Cart from '@/pages/Cart'
 import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
-// import Collection from '@/pages/Collection'
+
 import PolicyPage from '@/pages/PolicyPage'
 
 import ListSize from '@/features/size/_components/ListSize'
@@ -29,6 +29,7 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 
 import Edit from '@/features/size/_components/EditSize'
+import Collection from '@/pages/collection/Collection'
 
 const Routers = () => {
     return (
@@ -42,7 +43,7 @@ const Routers = () => {
                 <Route path='cart' element={<Cart />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
-                {/* <Route path='collections/:id' element={<Collection />} /> */}
+                <Route path='collections/:id' element={<Collection />} />
                 <Route path='policy/:id' element={<PolicyPage />} />
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>

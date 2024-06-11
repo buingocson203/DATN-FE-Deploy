@@ -1,11 +1,17 @@
 import { IProduct } from '@/common/type'
 import instance from '../core/api'
 import { cachedDataVersionTag } from 'v8'
+import { IQueryParams } from '@/common/interfaces/common'
+import { AxiosRequestConfig } from 'axios'
 
-export const getProducts = async () => {
+export const getProducts = async (query?: IQueryParams) => {
     try {
-        const response = await instance.get('/product')
-        return response.data.datas.docs
+        const response = await instance.get('api/product', {
+            params: query
+        })
+
+        const data = response.data
+        return data
     } catch (error) {
         console.log(`['FETCH_PRODUCTS_ERROR']`, error)
     }
@@ -32,7 +38,7 @@ export const updateProduct = async ({ _id, ...product }: IProduct) => {
 
 export const addProduct = async (product: IProduct) => {
     try {
-        const response = await instance.post(`api/product/`, product)
+        const response = await instance.post(`api/product`, product)
         console.log(response.data)
         return response.data
     } catch (error) {

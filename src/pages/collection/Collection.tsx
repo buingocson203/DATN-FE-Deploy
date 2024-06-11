@@ -1,18 +1,60 @@
+import { useEffect, useState } from 'react'
+
+import { FilterIcon } from 'lucide-react'
+import ReactSlider from 'react-slider'
+
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import Pagination from '@/components/ui/pagination'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
 import ProductItem from '@/features/product/_components/product-item'
-import { FilterIcon } from 'lucide-react'
-import ReactSlider from 'react-slider'
+import { getProducts } from '@/services/product'
+import { IProduct } from '@/common/interfaces/product'
+
+const PAGE_SIZE = 10
 
 const Collection = () => {
+    const [currentPage, setCurrentPage] = useState<number>(1)
+    const [totalCount, setTotalCount] = useState<number>(0)
+    const [products, setProducts] = useState<IProduct[]>([])
+
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Giày Nike2'
+            title: 'Giày Nike'
         }
     ]
+
+    const fetchProducts = async () => {
+        const response = await getProducts({ _page: currentPage, _limit: PAGE_SIZE })
+        setProducts(response.datas.docs)
+        setTotalCount(response.datas.totalDocs)
+    }
+
+    useEffect(() => {
+        fetchProducts()
+    }, [currentPage])
+
+    const renderProductList = () => {
+        if (products.length == 0) return null
+        else
+            return (
+                <>
+                    <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
+                        {products?.map((item, index) => <ProductItem item={item} key={index} />)}
+                    </div>
+                    <br />
+                    <Pagination
+                        totalCount={totalCount}
+                        pageSize={PAGE_SIZE}
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                    />
+                </>
+            )
+    }
+
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -62,11 +104,7 @@ const Collection = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                        {new Array(6).fill(0).map((_, index) => (
-                            <ProductItem key={index} />
-                        ))}
-                    </div>
+                    {renderProductList()}
                 </div>
             </div>
         </div>
