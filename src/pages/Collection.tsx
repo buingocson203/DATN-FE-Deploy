@@ -1,33 +1,106 @@
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
-import ProductItem from '@/features/product/_components/product-item'
-import { Filter } from 'lucide'
-import { FilterIcon } from 'lucide-react'
-import { useState } from 'react'
-import ReactSlider from 'react-slider'
+import { filterCategoryByPrice, getCategoryDetails } from '@/services/category/requests'
+import { IFCATEGORY_DETAIL } from '@/types/category'
+import { EyeIcon, FilterIcon, ShoppingCartIcon } from 'lucide-react'
+import { SetStateAction, useState } from 'react'
+import { useQuery } from 'react-query'
+import { Link, useParams } from 'react-router-dom'
+
+interface IFSlider {
+    sliderVal: number
+    setsliderVal: React.Dispatch<SetStateAction<number>>
+    setListProduct: React.Dispatch<SetStateAction<IFCATEGORY_DETAIL[]>>
+    categoryId: string
+}
 
 const Collection = () => {
+    const { id: categoryId } = useParams()
+    const [sliderVal, setsliderVal] = useState(0)
+    const [listProduct, setListProduct] = useState<IFCATEGORY_DETAIL[]>([])
+
+    const { data } = useQuery({
+        queryFn: () => getCategoryDetails(categoryId!),
+        queryKey: ['/categoryDetail', categoryId],
+        onSuccess: (vals) => {
+            setListProduct(vals)
+        }
+    })
+
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Giày Nike'
+            title: (listProduct && listProduct[0]?.nameCategory) || ''
         }
     ]
+
+    const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
+        return (
+            <Link
+                key={vals.productId}
+                to={`/products/${vals.productDetails[0].productDetailId}`}
+                className='cursor-pointer group'
+            >
+                <div className='pt-6 relative pb-3 overflow-hidden'>
+                    <div className='relative rounded-md overflow-hidden'>
+                        <img
+                            src={
+                                'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
+                            }
+                            alt=''
+                        />
+                        <img
+                            src={
+                                'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
+                            }
+                            alt=''
+                            className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
+                        />
+                    </div>
+                    <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>
+                        <button
+                            className='w-10 h-10 flex items-center justify-center text-neutral-950 bg-white hover:bg-neutral-950 hover:text-white outline-none hover:opacity-90 transition-all rounded-md text-sm leading-none flex-1'
+                            title='Xem nhanh'
+                        >
+                            <ShoppingCartIcon className='size-3 mr-2 text-xs' />
+                            Thêm vào giỏ
+                        </button>
+                        <button
+                            className='w-10 h-10 flex items-center justify-center border border-neutral-800 text-white bg-neutral-800 outline-none hover:opacity-90 transition-all rounded-md text-sm leading-none'
+                            title='Xem nhanh'
+                        >
+                            <EyeIcon></EyeIcon>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <span className='text-xs'>+{vals.productDetails?.length || 0} kích thước</span>
+                    <p className='text-md my-1'>{vals.nameProduct}</p>
+                    <div className='flex items-center gap-2'>
+                        <span className='text-red-500 font-semibold text-sm'>{vals.productDetails[0].price}đ</span>
+                        <span className='text-neutral-300 text-sm line-through'>
+                            {vals.productDetails[0].promotionalPrice}đ
+                        </span>
+                    </div>
+                </div>
+            </Link>
+        )
+    }
+
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
-            <div className='app-container text-[#333] flex gap-10    pt-5'>
+            <div className='app-container text-[#333] flex gap-10 pt-5'>
                 <div className='w-[300px] h-20 md:block hidden'>
-                    <FilerSection />
+                    <FilerSection setsliderVal={setsliderVal} sliderVal={sliderVal} setListProduct={setListProduct} categoryId={categoryId!} />
                 </div>
                 <div className='flex-1'>
                     <div className='flex md:items-center gap-3 flex-col md:flex-row'>
                         <div className='flex-1 flex items-center gap-3'>
-                            <h1 className='text-2xl'>Giày Nike</h1>
-                            <p className='text-sm relative top-1 flex-1'>5 sản phẩm</p>
+                            <h1 className='text-2xl'>{listProduct && listProduct[0]?.nameCategory}</h1>
+                            <p className='text-sm relative top-1 flex-1'>{listProduct?.length || 0} sản phẩm </p>
                         </div>
                         <div className='flex gap-3 items-center'>
                             <div className='flex-1 md:hidden'>
@@ -39,7 +112,12 @@ const Collection = () => {
                                         </button>
                                     </SheetTrigger>
                                     <SheetContent side={'left'}>
-                                        <FilerSection />
+                                        <FilerSection
+                                            setsliderVal={setsliderVal}
+                                            sliderVal={sliderVal}
+                                            setListProduct={setListProduct}
+                                            categoryId={categoryId!}
+                                        />
                                     </SheetContent>
                                 </Sheet>
                             </div>
@@ -66,63 +144,41 @@ const Collection = () => {
                         </div>
                     </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                        {new Array(6).fill(0).map((_, index) => (
-                            <ProductItem key={index} />
-                        ))}
+                        {listProduct?.map((product) => renderItemProduct(product))}
                     </div>
+                    {listProduct && listProduct?.length < 1 && (
+                        <div className='w-full h-[300px] flex justify-center items-center'>No Data</div>
+                    )}
                 </div>
             </div>
         </div>
     )
 }
 
-const FilerSection = () => {
+const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: IFSlider) => {
+    const handleValueCommit = async (e: number[]) => {
+        const data = await filterCategoryByPrice(categoryId!, 0, e[0]);
+        setListProduct(data);
+    }
+
     return (
         <>
             <h1 className='text-2xl'>Bộ lọc</h1>
             <div>
-                {/* <Accordion type='single' collapsible defaultValue='1'>
-                    <AccordionItem value='1' className='border-none'>
-                        <AccordionTrigger className='text-left text-lg hover:no-underline'>
-                            Thương hiệu
-                        </AccordionTrigger>
-                        <AccordionContent className='flex flex-col gap-3 '>
-                            <div className='flex items-center space-x-2'>
-                                <Checkbox id='terms2' />
-                                <label
-                                    htmlFor='terms2'
-                                    className='text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                                >
-                                    Nike
-                                </label>
-                            </div>
-                            <div className='flex items-center space-x-2'>
-                                <Checkbox id='terms3' />
-                                <label
-                                    htmlFor='terms3'
-                                    className='text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                                >
-                                    Khác
-                                </label>
-                            </div>
-                        </AccordionContent>
-                    </AccordionItem>
-                </Accordion> */}
                 <Accordion type='single' collapsible defaultValue='1'>
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Khoảng giá</AccordionTrigger>
                         <AccordionContent className='py-4'>
-                            <ReactSlider
-                                className='horizontal-slider'
-                                thumbClassName='w-4 h-4 bg-neutral-700 rounded-full hidden'
-                                trackClassName='pt-3'
-                                defaultValue={[0, 100000]}
-                                ariaValuetext={(state: any) => `Thumb value ${state.valueNow}`}
-                                renderThumb={(props: any, state: any) => <div {...props}>{state.valueNow}</div>}
-                                pearling
-                                minDistance={10}
+                            <Slider
+                                defaultValue={[sliderVal]}
+                                onValueChange={(e) => {
+                                    setsliderVal(e[0])
+                                }}
+                                onValueCommit={handleValueCommit}
+                                max={1000}
+                                step={1}
+                                min={0}
                             />
-                            <Slider defaultValue={[33]} max={100} step={1} min={20} />
 
                             <div className='mt-4 flex items-center justify-between'>
                                 <span className='text-sm font-bold'>1.000.000 đ</span>
