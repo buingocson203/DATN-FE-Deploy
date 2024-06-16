@@ -28,6 +28,7 @@ import ListSize from '@/features/size/_components/ListSize'
 import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
+import Checkout from '@/pages/Checkout'
 
 const Routers = () => {
     return (
@@ -39,6 +40,7 @@ const Routers = () => {
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
                 <Route path='cart' element={<Cart />} />
+                <Route path='checkout' element={<Checkout />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />

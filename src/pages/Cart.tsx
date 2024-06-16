@@ -219,7 +219,7 @@ const Cart = () => {
                                 <li>Mua thật nhiều nhận nhiều ưu đãi</li>
                             </div>
                             <div className='info--detail-btn bg-red-500 text-center py-2 mt-4'>
-                                <Link to='/formaddress' className='text-white uppercase'>
+                                <Link to='/checkout' className='text-white uppercase'>
                                     Thanh toán
                                 </Link>
                             </div>
