@@ -11,43 +11,66 @@ import ProductComment from './ProductComment'
 import ProductDescription from './ProductDescription'
 import Pagination from '@/components/ui/pagination'
 import { useQuery } from 'react-query'
-import { getProductById, getProductDetailById } from '@/services/product/request'
+import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from '@/services/product/request'
 import { IProduct, IProductSize } from '@/services/product/types'
+import instance from '@/core/api'
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
     const [variant, setVariant] = useState<IProductSize | undefined>()
-    
-    const { id: productId } = useParams()
 
-    const { data, isFetching } = useQuery<IProduct>({
-        queryFn: () => getProductById(String(productId)),
+    const { id: productId, detail: detailID } = useParams()
+
+    const { data: infoProduct } = useQuery({
+        queryFn: () => getInfoProductById(String(productId)),
         enabled: !!productId,
         onError: onMutateError
     })
-
+    const { data: relatedProducts } = useQuery({
+        queryFn: () => getRelatedProductsInfo(String(productId)),
+        enabled: !!productId,
+        queryKey: ['/productDetail/related', detailID],
+        onError: onMutateError
+    })
     const { data: productDetail } = useQuery({
-        queryFn: () => getProductDetailById(String(productId)),
-        queryKey: ['/productDetail', productId],
-        enabled: !!productId,
+        queryFn: () => getProductDetailById(String(detailID)),
+        queryKey: ['/productDetail', detailID],
+        enabled: !!detailID,
         onError: onMutateError
     })
-
+    const getUserID = () => {
+        const storedUser = localStorage.getItem('user')
+        const user = storedUser ? JSON.parse(storedUser) : {}
+        const userID = user?._id || ''
+        return userID
+    }
+    const addToCart = (quantity: number) => {
+        const fetchData = async (dataX: any) => {
+            try {
+                await instance.post(`api/cart`, dataX)
+                alert('Thêm sản phẩm vào giỏ hàng thành công')
+            } catch (error) {
+                console.log(error)
+                alert('Số lượng yêu cầu vượt quá số lượng trong kho')
+            }
+        }
+        fetchData({
+            idUser: getUserID(), //id user
+            productDetailId: variant?.productDetailId, // productDetailId khi getAllProductDetail
+            quantity: quantity
+        })
+    }
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Nike',
+            title: infoProduct?.data?.nameCategory,
             link: '/'
         },
         {
-             title: data?.name || ''
+            title: infoProduct?.data?.nameProduct || ''
         }
     ]
-    
-    // const tabs = ['Mô tả sản phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng', 'Chính sách đổi trả', 'Chính sách bảo hành', 'Câu hỏi thường gặp']
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
-    
-    console.log('first', productDetail)
 
     useEffect(() => {
         if (!productDetail || !productDetail.sizes) return
@@ -58,12 +81,12 @@ const ProductDetail = () => {
             <BreadCrumb links={breadcrumb} />
             <div className='app-container text-[#333]'>
                 <div className='flex flex-col md:flex-row'>
-                    <div className='flex-1'>
+                    <div className='flex-1 img-product-container'>
                         <Carousel>
                             <CarouselContent>
-                            {data?.IdImages?.map((image, index) => (
+                                {infoProduct?.data?.images?.map((image, index) => (
                                     <CarouselItem key={index}>
-                                        <img src={image} alt='product' />
+                                        <img src={image.imageUrl} alt='product' />
                                     </CarouselItem>
                                 ))}
                             </CarouselContent>
@@ -71,16 +94,20 @@ const ProductDetail = () => {
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
                         <div className='flex-1'>
-                            <h1 className='text-2xl font-semibold'>{data?.name}</h1>
+                            <h1 className='text-2xl font-semibold'>{infoProduct?.data?.nameProduct}</h1>
                             <div className='mt-1 mb-5 text-sm'>
                                 <span>Tình trạng: Còn hàng</span>
                                 <span className='mx-2 text-neutral-200'>|</span>
-                                <span>Thương hiệu: {data?.categoryId?.name}</span>
+                                <span>Thương hiệu: {infoProduct?.data?.nameCategory}</span>
                             </div>
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
                                 <span className='w-[120px]'>Giá:</span>
-                                <span className='text-red-500 font-medium text-xl mr-2'>{variant?.importPrice || 0}₫</span>
-                                <span className='line-through text-neutral-500 mr-4'>{variant?.promotionalPrice || 0}₫</span>
+                                <span className='text-red-500 font-medium text-xl mr-2'>
+                                    {variant?.importPrice || 0}₫
+                                </span>
+                                <span className='line-through text-neutral-500 mr-4'>
+                                    {variant?.promotionalPrice || 0}₫
+                                </span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
@@ -89,22 +116,35 @@ const ProductDetail = () => {
                             <div className='flex items-center justify-center mt-5'>
                                 <span className='w-[120px]'>Kích thước:</span>
                                 <div className='flex-1 flex flex-wrap gap-2'>
-                                    {productDetail?.sizes?.map((size, index) => {
-                                        return (
-                                            <span
-                                                className={cn(
-                                                    'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
-                                                    variant?._id === size._id && 'item-sale'
-                                                )}
-                                                key={index}
-                                                onClick={() => setVariant(size)}
-                                            >
-                                                {size.size}
-                                            </span>
-                                        )
-                                    })}
+                                    {infoProduct?.data &&
+                                        infoProduct?.data?.productDetails &&
+                                        infoProduct?.data?.productDetails
+                                            ?.filter(
+                                                (size: any, index: any, self: any) =>
+                                                    index === self.findIndex((t) => t.size === size.size)
+                                            )
+                                            .map((size, index) => {
+                                                return (
+                                                    <span
+                                                        className={cn(
+                                                            'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
+                                                            variant?.sizeId === size.sizeId && 'item-sale'
+                                                        )}
+                                                        key={index}
+                                                        onClick={() => {
+                                                            setVariant(size)
+                                                        }}
+                                                    >
+                                                        {size.size}
+                                                    </span>
+                                                )
+                                            })}
 
-                                    {!productDetail?.sizes && <p className='text-sm text-sky-500 font-semibold'>Chưa có thông tin kích thước cho sản phẩm này !</p>}
+                                    {!infoProduct?.data?.productDetails && (
+                                        <p className='text-sm text-sky-500 font-semibold'>
+                                            Chưa có thông tin kích thước cho sản phẩm này !
+                                        </p>
+                                    )}
                                 </div>
                             </div>
 
@@ -129,7 +169,10 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                             <div className='flex items-center justify-center mt-5 gap-2'>
-                                <button className='px-7 py-3 border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-full'>
+                                <button
+                                    onClick={() => addToCart(quantity)}
+                                    className='px-7 py-3 border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-full'
+                                >
                                     THÊM VÀO GIỎ
                                 </button>
                                 <button className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
@@ -171,9 +214,7 @@ const ProductDetail = () => {
                             <p className='font-bold text-[15px]'>Chính sách bán hàng</p>
                             <span className='flex items-center gap-2'>
                                 <img src='/ship.webp' alt='' className='w-8 h-8' />
-                                <p className='flex-1'>
-                                    Miễn phí vận chuyển toàn quốc cho đơn hàng từ 1.000.000 vnđ
-                                </p>
+                                <p className='flex-1'>Miễn phí vận chuyển toàn quốc cho đơn hàng từ 1.000.000 vnđ</p>
                             </span>
                             <span className='flex items-center gap-2'>
                                 <img src='/insurance.webp' alt='' className='w-8 h-8' />
@@ -217,7 +258,7 @@ const ProductDetail = () => {
                             )
                         })}
                     </ul>
-                    {activeTab == 0 && <ProductDescription description={data?.description} />}
+                    {activeTab == 0 && <ProductDescription description={infoProduct?.data?.descript} />}
                     {activeTab == 1 && <ProductComment />}
                     {activeTab == 2 && (
                         <div className='text-sm'>
@@ -346,27 +387,19 @@ const ProductDetail = () => {
                     <h2 className='text-4xl text-center font-bold mb-10'>Sản phẩm liên quan</h2>
                     <Carousel>
                         <CarouselContent className='-ml-2 md:-ml-4'>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
+                            {relatedProducts?.data?.map((item, index) => {
+                                return (
+                                    <CarouselItem
+                                        key={index}
+                                        className='basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'
+                                    >
+                                        <ProductItem _id={item._id}/>
+                                    </CarouselItem>
+                                )
+                            })}
+                            {/* <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
                                 <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
-                            <CarouselItem className='basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4'>
-                                <ProductItem />
-                            </CarouselItem>
+                            </CarouselItem> */}
                         </CarouselContent>
                         <CarouselPrevious className='absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2' />
                         <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2' />
