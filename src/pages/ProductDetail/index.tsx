@@ -14,6 +14,7 @@ import { useQuery } from 'react-query'
 import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from '@/services/product/request'
 import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
+import { render } from 'react-dom'
 
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1)
@@ -27,6 +28,9 @@ const ProductDetail = () => {
         enabled: !!productId,
         onError: onMutateError
     })
+    console.log(infoProduct);
+    
+
     const { data: relatedProducts } = useQuery({
         queryFn: () => getRelatedProductsInfo(String(productId)),
         enabled: !!productId,
@@ -39,6 +43,7 @@ const ProductDetail = () => {
         enabled: !!detailID,
         onError: onMutateError
     })
+    
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -71,11 +76,10 @@ const ProductDetail = () => {
         }
     ]
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
-
     useEffect(() => {
-        if (!productDetail || !productDetail.sizes) return
-        setVariant(productDetail?.sizes?.[0])
-    }, [productDetail])
+        if (!infoProduct) return
+        setVariant(infoProduct?.data?.productDetails[0])
+    }, [infoProduct])
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -393,7 +397,7 @@ const ProductDetail = () => {
                                         key={index}
                                         className='basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'
                                     >
-                                        <ProductItem _id={item._id}/>
+                                        <ProductItem sizeId={item.productDetails.map(x => x.size)} _id={item._id} name={item.name} price={item.productDetails[0].price} promotionalPrice={item.productDetails[0].promotionalPrice}/>
                                     </CarouselItem>
                                 )
                             })}
