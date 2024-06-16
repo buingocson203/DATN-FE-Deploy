@@ -11,12 +11,12 @@ const PayMent = () => {
 
     const [paymentMethod, setPaymentMethod] = useState<'cod' | 'vnpay'>('cod')
     const exmapleBody = {
-        address: 'Hà Nam',
+        address: 'Nghệ An',
         phone: '0987754123',
         user_id: '66671b3baa76694e64bf608c',
-        productDetails: [
-            { product_id: '666678c9fc5976b672b49918', quantity: 2 },
-            { product_id: '6666f419702342340f63ca6b', quantity: 1 }
+        products: [
+            { product_id: '6665ebfbaeb64196d817c50c', quantity: 2 },
+            { product_id: '666678c9fc5976b672b49918', quantity: 1 }
         ],
         total_price: 200000
         // payment_type: 'cod'
