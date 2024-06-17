@@ -1,3 +1,4 @@
+import instance from '@/core/api'
 import { Icon } from '@iconify/react'
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
@@ -49,6 +50,18 @@ const PayMent = () => {
         }
     }, [transactionStatus])
 
+    const [paymentMethod, setPaymentMethod] = useState<'cod' | 'vnpay'>('cod')
+    const exmapleBody = {
+        address: 'Nghệ An',
+        phone: '0987754123',
+        user_id: '66671b3baa76694e64bf608c',
+        products: [
+            { product_id: '6665ebfbaeb64196d817c50c', quantity: 2 },
+            { product_id: '666678c9fc5976b672b49918', quantity: 1 }
+        ],
+        total_price: 200000
+        // payment_type: 'cod'
+    }
 
 
     return (

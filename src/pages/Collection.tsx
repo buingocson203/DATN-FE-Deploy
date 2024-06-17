@@ -113,7 +113,7 @@ const Collection = () => {
                         <div className='flex-1 flex items-center gap-3'>
                             <h1 className='text-2xl'>{listProduct && listProduct[0]?.nameCategory}</h1>
                             <p className='text-sm relative top-1 flex-1'>{listProduct?.length || 0} sản phẩm </p>
-                        </div>
+                        </div >
                         <div className='flex gap-3 items-center'>
                             <div className='flex-1 md:hidden'>
                                 <Sheet>
@@ -153,10 +153,10 @@ const Collection = () => {
                                 </Select>
                             </div>
                         </div>
-                    </div>
+                    </div >
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
                         {listProduct?.map((product) => renderItemProduct(product))}
-                    </div>
+                    </div >
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>No Data</div>
                     )}
@@ -185,9 +185,9 @@ const Collection = () => {
                             <ChevronRightIcon className='w-4 h-4' />
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     )
 }
 

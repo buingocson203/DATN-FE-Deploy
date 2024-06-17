@@ -11,7 +11,7 @@ const ListCategory = () => {
 
     const { data, isFetching } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
 
-    console.log('categorydata', data)
+    console.log('c', data)
     return (
         <div className='app-container'>
             <div className=' py-16 px-2'>

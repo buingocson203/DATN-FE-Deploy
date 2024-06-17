@@ -1,11 +1,15 @@
-import { IProduct, IProductDetail } from '@/services/product/types'
+import { IProduct } from '@/services/product/types'
 import { EyeIcon, ShoppingCartIcon, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-type Props = {} & Partial<IProductDetail> & Partial<IProduct>
-export default function ProductItem({ _id, IdImages, name, sizes, price, promotionalPrice, importPrice }: Props) {
+type Props = {} & IProduct
+export default function ProductItem({ _id, IdImages, name, sizeId, price, promotionalPrice, importPrice }: Props) {
     return (
-        <Link to={`/products/${_id}`} className='cursor-pointer group'>
+        <Link to={`/products/${_id}`} className='cursor-pointer group' onClick={() => {
+            setTimeout(() => {
+                location.reload()
+            }, 200)
+        }}>
             <div className='pt-6 relative pb-3 overflow-hidden'>
                 {/* <span className='absolute text-xs p-1 px-2 bg-red-500 rounded-full inline-flex item-center gap-1 text-white items-center w-fit top-0 left-2'>
                 <Zap size={10} />
@@ -46,11 +50,11 @@ export default function ProductItem({ _id, IdImages, name, sizes, price, promoti
                 </div>
             </div>
             <div>
-                <span className='text-xs'>+{sizes?.length || 0} kích thước</span>
+                <span className='text-xs'>+{sizeId?.length || 0} kích thước</span>
                 <p className='text-md my-1'>{name}</p>
                 <div className='flex items-center gap-1'>
-                    <span className='text-red-500 text-sm'>{price}đ</span>
-                    <span className='text-neutral-300 text-xs line-through'>{promotionalPrice}đ</span>
+                    <span className='text-red-500 text-sm'>{promotionalPrice}đ</span>
+                    <span className='text-neutral-300 text-xs line-through'>{importPrice}đ</span>
                 </div>
             </div>
         </Link>

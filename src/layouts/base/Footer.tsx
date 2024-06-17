@@ -8,7 +8,7 @@ export default function Footer() {
                 <h3 className="text-lg text-neutral-800 mb-5 font-semibold">Giới thiệu</h3>
                 <p className="text-sm">
                     HỘ KINH DOANH THEBASIC.VN <br />
-                    GPKD số: 41N8155036 do Phòng Tài Chính - Kế Toán UBND Quận Đống Đa cấp ngày 13/ 09/ 2022. <br /> <br />
+                    GPKD số: 41N8155036 do Phòng Tài Chính - Kế Toán UBND Quận Tân Bình cấp ngày 13/ 09/ 2022. <br /> <br />
                     THEBASIC.VN tự hào với nhiều năm kinh doanh về các loại giày sneaker. Uy tín và chất lượng luôn là hai thứ mà TheBasic.vn hướng đến.
                 </p>
                 <div className="flex gap-2  mt-2">
@@ -25,15 +25,15 @@ export default function Footer() {
             </div>
             <div className="text-neutral-500 px-4 md:px-8 md:border-r md:border-neutral-200 py-4 md:py-16">
                 <h3 className="text-lg text-neutral-800 mb-5 font-semibold">Thông tin liên hệ</h3>
-                <p className="text-sm"><strong>Địa chỉ: </strong> Số 456-458 Xã Đàn, Đống Đa, Hà Nội, Việt Nam</p>
+                <p className="text-sm"><strong>Địa chỉ: </strong> Số 788 Cách Mạng Tháng Tám, Phường 5, Quận Tân Bình, Hồ Chí Minh, Việt Nam</p>
                 <p className="text-sm my-2"><strong>Điện thoại: </strong> (+84) 977 826 896</p>
                 <p className="text-sm"><strong>Email:</strong> thebasicvn@gmail.com</p>
-                {/* <p className="text-md mt-3">Phương thức vận chuyển</p>
+                <p className="text-md mt-3">Phương thức vận chuyển</p>
                 <div className="flex gap-3 mt-2">
                     <img className="border border-neutral-200" src="/img-ship-01.webp" alt="" />
                     <img className="border border-neutral-200" src="/img-ship-02.webp" alt="" />
                     <img className="border border-neutral-200" src="/img-ship-03.webp" alt="" />
-                </div> */}
+                </div>
             </div>
             <div className="text-neutral-500 px-4 md:px-8 md:border-r md:border-neutral-200 py-4 md:py-16">
                 <h3 className="text-lg text-neutral-800 mb-5 font-semibold">Chính sách</h3>

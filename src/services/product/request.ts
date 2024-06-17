@@ -22,3 +22,13 @@ export const getProductDetailById = async (id: string): Promise<IProductDetail> 
     const { data } = await instance.get(`api/productDetail/${id}`)
     return data.data?.[0] || {}
 }
+
+export const getInfoProductById = async (id: string) => {
+    const { data } = await instance.get(`api/infoProduct/${id}`)
+    return data;
+}
+
+export const getRelatedProductsInfo = async (id: string) => {
+    const { data } = await instance.get(`api/infoProduct/related/${id}`)
+    return data;
+}

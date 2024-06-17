@@ -1,8 +1,8 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
 import ProductItem from '@/features/product/_components/product-item'
 import { cn } from '@/lib/utils'
-import { getProductDetail } from '@/services/product/request'
-
+import { getNewProducts, getProductDetail } from '@/services/product/request'
+import { IProduct, IProductDetail } from '@/services/product/types'
 import { PlusIcon } from 'lucide-react'
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
@@ -16,7 +16,10 @@ const HomePage = (props: Props) => {
 
     const tabs = ['sản phẩm khuyến mãi', 'sản phẩm nổi bật', 'hàng chính hãng']
 
-    const { data: newProducts } = useQuery({ queryFn: () => getProductDetail({ limit: 8 }), queryKey: '/producst-detai;' })
+    const { data: newProducts } = useQuery({
+        queryFn: () => getProductDetail({ limit: 8 }),
+        queryKey: '/producst-detai;'
+    })
 
     console.log('ff', newProducts)
     return (
@@ -163,7 +166,14 @@ const HomePage = (props: Props) => {
                         <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
                             {newProducts?.map((product, index) => {
                                 const variant = product.sizes?.[0]
-                                return <ProductItem key={index} {...product} {...variant} />
+                                return (
+                                    <ProductItem
+                                        key={index}
+                                        {...product}
+                                        {...variant}
+                                        detailID={product.productDetails[0]?.productDetailId}
+                                    />
+                                )
                             })}
                         </div>
                     </div>
@@ -235,7 +245,7 @@ const HomePage = (props: Props) => {
                         />
                         <div className='flex-1'>
                             <p className='mb-1'>Miễn phí vận chuyển</p>
-                            <p className='text-sm'>Miễn phí vận chuyển nội thành Hà Nội cho đơn hàng từ 1000k</p>
+                            <p className='text-sm'>Miễn phí vận chuyển nội thành HCM cho đơn hàng từ 1000k</p>
                         </div>
                     </div>
                     <div className='flex justify-center items-start gap-3'>
