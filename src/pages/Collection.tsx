@@ -5,7 +5,8 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
 import { arrangeCategory, filterCategoryByPrice, filterCategoryBySize, getCategoryDetails } from '@/services/category/requests'
 import { IFCATEGORY_DETAIL } from '@/types/category'
-import { EyeIcon, FilterIcon, ShoppingCartIcon } from 'lucide-react'
+
+import { EyeIcon, FilterIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { SetStateAction, useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
@@ -21,6 +22,8 @@ const Collection = () => {
     const { id: categoryId } = useParams()
     const [sliderVal, setsliderVal] = useState(0)
     const [listProduct, setListProduct] = useState<IFCATEGORY_DETAIL[]>([])
+    const [currentPage, setCurrentPage] = useState(1)
+    const productsPerPage = 12
 
     const { data } = useQuery({
         queryFn: () => getCategoryDetails(categoryId!),
@@ -38,6 +41,10 @@ const Collection = () => {
     const handArrangeCategory = async (name: string) => {
         const data = await arrangeCategory(categoryId!, name);
         setListProduct(data);
+    }
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page)
     }
 
     const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
@@ -87,7 +94,13 @@ const Collection = () => {
             </Link>
         )
     }
+    // Tính toán chỉ số của sản phẩm đầu tiên và cuối cùng trên trang hiện tại
+    const indexOfLastProduct = currentPage * productsPerPage
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage
+    const currentProducts = listProduct.slice(indexOfFirstProduct, indexOfLastProduct)
 
+    // Tính tổng số trang
+    const totalPages = Math.ceil(listProduct.length / productsPerPage)
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -147,6 +160,31 @@ const Collection = () => {
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>No Data</div>
                     )}
+                    <div className='flex justify-center mt-5'>
+                        <button
+                            className='px-3 py-1 border rounded mx-1 flex items-center'
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                        >
+                            <ChevronLeftIcon className='w-4 h-4' />
+                        </button>
+                        {[...Array(totalPages)].map((_, i) => (
+                            <button
+                                key={i}
+                                className={`px-3 py-1 border rounded mx-1 ${currentPage === i + 1 ? 'bg-gray-300' : ''}`}
+                                onClick={() => handlePageChange(i + 1)}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                        <button
+                            className='px-3 py-1 border rounded mx-1 flex items-center'
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                        >
+                            <ChevronRightIcon className='w-4 h-4' />
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
