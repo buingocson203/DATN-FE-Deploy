@@ -1,4 +1,4 @@
-export interface IFPRODUCT_DETAIL {
+export interface IFProductDetail {
     productDetailId: string
     quantity: number
     price: number
@@ -7,7 +7,7 @@ export interface IFPRODUCT_DETAIL {
     size: number
 }
 
-export interface IFCATEGORY_DETAIL {
+export interface IFProducts {
     nameProduct: string
     productId: string
     categoryId: string
@@ -15,9 +15,8 @@ export interface IFCATEGORY_DETAIL {
     descript: string
     filteredBySize: string
     filteredByCategory: string
-    images: Array<{ imageUrl: string; type: string }>
     filteredByMinPrice: string
     filteredByMaxPrice: string
-    productDetails: Array<IFPRODUCT_DETAIL>
+    images: Array<{ imageUrl: string; type: string }>
+    productDetails: Array<IFProductDetail>
 }
-

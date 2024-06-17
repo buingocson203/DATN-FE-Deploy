@@ -226,6 +226,11 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
+                        <Link to='/products' className='hover:text-neutral-900'>
+                            Sản phẩm
+                        </Link>
+                    </li>
+                    <li>
                         <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>
                             Hàng mới về
                         </Link>

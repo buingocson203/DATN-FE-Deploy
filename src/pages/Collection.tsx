@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
-import { filterCategoryByPrice, getCategoryDetails } from '@/services/category/requests'
+import { arrangeCategory, filterCategoryByPrice, filterCategoryBySize, getCategoryDetails } from '@/services/category/requests'
 import { IFCATEGORY_DETAIL } from '@/types/category'
 import { EyeIcon, FilterIcon, ShoppingCartIcon } from 'lucide-react'
 import { SetStateAction, useState } from 'react'
@@ -35,29 +35,28 @@ const Collection = () => {
             title: (listProduct && listProduct[0]?.nameCategory) || ''
         }
     ]
+    const handArrangeCategory = async (name: string) => {
+        const data = await arrangeCategory(categoryId!, name);
+        setListProduct(data);
+    }
 
     const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
+        const takeTwoImage = vals.images.splice(0, 2);
+        console.log(takeTwoImage)
         return (
             <Link
                 key={vals.productId}
-                to={`/products/${vals.productDetails[0].productDetailId}`}
+                to={`/products/${vals.productId}`}
                 className='cursor-pointer group'
             >
                 <div className='pt-6 relative pb-3 overflow-hidden'>
                     <div className='relative rounded-md overflow-hidden'>
-                        <img
-                            src={
-                                'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
-                            }
-                            alt=''
-                        />
-                        <img
-                            src={
-                                'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
-                            }
-                            alt=''
-                            className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
-                        />
+                        {takeTwoImage.map((itemImage, index) => <img
+                            className={`w-full h-[240px] ${index == 1 ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all' : ''}`}
+                            src={itemImage.imageUrl}
+                            alt='Ảnh không tồn tại'
+                        />)}
+                        {/*  */}
                     </div>
                     <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>
                         <button
@@ -123,19 +122,18 @@ const Collection = () => {
                             </div>
                             <div className='flex gap-3 items-center justify-center'>
                                 <p className='text-base relative top-1 flex-1'>Sắp xếp theo</p>
-                                <Select>
+                                <Select onValueChange={handArrangeCategory}>
                                     <SelectTrigger className='w-[180px]'>
                                         <SelectValue placeholder='Tên A-Z' />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value='1'>
+                                        <SelectItem value='name'>
                                             <div className='cursor-pointer hover:text-teal-900'>Tên A-Z</div>
                                         </SelectItem>
-                                        {/* <SelectItem value='2'>Sản phẩm nổi bật</SelectItem> */}
-                                        <SelectItem value='3'>
+                                        <SelectItem value='asc'>
                                             <div className='cursor-pointer hover:text-teal-900'>Giá tăng dần</div>
                                         </SelectItem>
-                                        <SelectItem value='4'>
+                                        <SelectItem value='desc'>
                                             <div className='cursor-pointer hover:text-teal-900'>Giá giảm dần</div>
                                         </SelectItem>
                                     </SelectContent>
@@ -158,6 +156,11 @@ const Collection = () => {
 const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: IFSlider) => {
     const handleValueCommit = async (e: number[]) => {
         const data = await filterCategoryByPrice(categoryId!, 0, e[0]);
+        setListProduct(data);
+    }
+    const SIZE_SHOE = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+    const handFilterSizeShoe = async (size: number) => {
+        const data = await filterCategoryBySize(size, categoryId);
         setListProduct(data);
     }
 
@@ -191,9 +194,10 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: I
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Size</AccordionTrigger>
                         <AccordionContent className='flex flex-wrap gap-3'>
-                            {[36, 37, 38, 39, 40, 41, 42, 43, 44, 45].map((size, index) => (
+                            {SIZE_SHOE.map((size) => (
                                 <div
-                                    key={index}
+                                    onClick={() => handFilterSizeShoe(size)}
+                                    key={size}
                                     className='flex items-center space-x-2 w-12 h-12 border rounded-md border-neutral-400 justify-center text-neutral-700 cursor-pointer hover:bg-neutral-700 hover:text-white'
                                 >
                                     {size}
