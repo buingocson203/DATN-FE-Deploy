@@ -24,7 +24,7 @@ export const filterCategoryByPrice = async (
     return data.data
 }
 
-export const filterCategoryBySize = async (size: number, categoryId: string) => {
+export const getCategoryBySize = async (size: string, categoryId: string) => {
     const { data } = await instance.get(`api/infoProduct?size=${size}&category=${categoryId}`)
     return data.data
 }

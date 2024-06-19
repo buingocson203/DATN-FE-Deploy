@@ -10,17 +10,21 @@ export const getAllProduct = async (): Promise<IFProducts[]> => {
     const { data } = await instance.get('/api/infoProduct')
     return data.data
 }
-export const filterProductByPrice = async (min: number = 0, max: number = 200): Promise<IFProducts[]> => {
-    const { data } = await instance.get(`/api/infoProduct?minPrice=${min}&maxPrice=${max}`)
-    return data.data
+export const filterProductByPrice = async (
+    currSizeShoe: string | null,
+    min: number = 0,
+    max: number = 200
+): Promise<IFProducts[]> => {
+    if (currSizeShoe) {
+        const { data } = await instance.get(`/api/infoProduct?minPrice=${min}&maxPrice=${max}&size=${currSizeShoe}`)
+        return data.data
+    } else {
+        const { data } = await instance.get(`/api/infoProduct?minPrice=${min}&maxPrice=${max}`)
+        return data.data
+    }
 }
 
 export const arrangeProduct = async (name: string): Promise<IFProducts[]> => {
     const { data } = await instance.get(`/api/infoProduct?sort=${name}`)
-    return data.data
-}
-
-export const filerProductByPrice = async (size: number): Promise<IFProducts[]> => {
-    const { data } = await instance.get(`/api/infoProduct?size=${size}`)
     return data.data
 }

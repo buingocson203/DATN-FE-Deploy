@@ -8,14 +8,19 @@ import { ChevronDown } from "lucide";
 import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/1-01.png"
 export default function Header() {
     const [open, setOpen] = useState(false)
 
 
     const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
+    const navigate = useNavigate();
 
+    const handleCategoryClick = (categoryId: string) => {
+        navigate('/collections/' + categoryId, { replace: true });
+        window.location.reload(); // reload the page
+    };
     return (
         <header>
             <div className='bg-black py-2 text-white text-xs'>
@@ -155,8 +160,8 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/' className='flex items-center justify-center gap-1 item-hover relative'>
-                            <span className='relative  hover:text-neutral-700'>Danh mục</span>
+                        <Link to='/products' className='flex items-center justify-center gap-1 item-hover relative'>
+                            <span className='relative  hover:text-neutral-700'>Sản phẩm</span>
                             <ChevronDownIcon className='w-3 transition-all group-hover:rotate-180 duration-300' />
 
                             <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
@@ -165,7 +170,8 @@ export default function Header() {
                                     <li key={category._id}>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                            to={'/collections/' + category._id}
+                                            to={'#'} // use # to prevent Link default behavior
+                                            onClick={() => handleCategoryClick(category._id)}
                                         >
                                             {category.name}
                                         </Link>
@@ -225,11 +231,11 @@ export default function Header() {
                             </ul>
                         </Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link to='/products' className='hover:text-neutral-900'>
                             Sản phẩm
                         </Link>
-                    </li>
+                    </li> */}
                     <li>
                         <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>
                             Hàng mới về

@@ -1,14 +1,16 @@
+import { sortAtoZ, sortDescending, sortUpAscending } from '@/common/FuctionHandle/arrange'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
-import { arrangeCategory, filterCategoryByPrice, filterCategoryBySize, getCategoryDetails } from '@/services/category/requests'
+import { arrangeCategory, getCategoryBySize, getCategoryDetails } from '@/services/category/requests'
+import { filterCategoryBySize, getAllSize } from '@/services/size/size.requeries'
 import { IFCATEGORY_DETAIL } from '@/types/category'
+import { IFSize } from '@/types/size.type'
 
 import { EyeIcon, FilterIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
-import { SetStateAction, useState } from 'react'
-import { useQuery } from 'react-query'
+import { SetStateAction, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 interface IFSlider {
@@ -20,27 +22,35 @@ interface IFSlider {
 
 const Collection = () => {
     const { id: categoryId } = useParams()
-    const [sliderVal, setsliderVal] = useState(0)
+    const [sliderVal, setsliderVal] = useState(1000000)
     const [listProduct, setListProduct] = useState<IFCATEGORY_DETAIL[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const productsPerPage = 12
 
-    const { data } = useQuery({
-        queryFn: () => getCategoryDetails(categoryId!),
-        queryKey: ['/categoryDetail', categoryId],
-        onSuccess: (vals) => {
+
+    useEffect(() => {
+        getCategoryDetails(categoryId!).then((vals) => {
             setListProduct(vals)
-        }
-    })
+        })
+    }, [])
+
 
     const breadcrumb: IBreadCrumb[] = [
         {
             title: (listProduct && listProduct[0]?.nameCategory) || ''
         }
     ]
-    const handArrangeCategory = async (name: string) => {
-        const data = await arrangeCategory(categoryId!, name);
-        setListProduct(data);
+    const handArrangeCategory = async (nameArrange: string) => {
+        if (nameArrange === "asc") {
+            const data = sortUpAscending(listProduct);
+            setListProduct(data);
+        } else if (nameArrange === "desc") {
+            const data = sortDescending(listProduct);
+            setListProduct(data);
+        } else {
+            const data = sortAtoZ(listProduct);
+            setListProduct(data);
+        }
     }
 
     const handlePageChange = (page: number) => {
@@ -48,8 +58,7 @@ const Collection = () => {
     }
 
     const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
-        const takeTwoImage = vals.images.splice(0, 2);
-        console.log(takeTwoImage)
+        const takeTwoImage = vals.images.slice(0, 2);
         return (
             <Link
                 key={vals.productId}
@@ -158,7 +167,7 @@ const Collection = () => {
                         {listProduct?.map((product) => renderItemProduct(product))}
                     </div >
                     {listProduct && listProduct?.length < 1 && (
-                        <div className='w-full h-[300px] flex justify-center items-center'>No Data</div>
+                        <div className='w-full h-[300px] flex justify-center items-center'>Không có sản phẩm nào </div>
                     )}
                     <div className='flex justify-center mt-5'>
                         <button
@@ -192,15 +201,25 @@ const Collection = () => {
 }
 
 const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: IFSlider) => {
+    const [sizeShoe, setSizeShoe] = useState<IFSize[] | null>(null);
+    const [currSizeShoe, setCurrSizeShoe] = useState<string | null>(null);
+
     const handleValueCommit = async (e: number[]) => {
-        const data = await filterCategoryByPrice(categoryId!, 0, e[0]);
+        const data = await filterCategoryBySize(categoryId!, currSizeShoe, 0, e[0]);
         setListProduct(data);
     }
-    const SIZE_SHOE = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
-    const handFilterSizeShoe = async (size: number) => {
-        const data = await filterCategoryBySize(size, categoryId);
+
+    const handFilterSizeShoe = async (size: string) => {
+        const data = await getCategoryBySize(size, categoryId);
+        setCurrSizeShoe(size)
         setListProduct(data);
     }
+
+    useEffect(() => {
+        getAllSize().then((data) => {
+            setSizeShoe(data)
+        });
+    }, [])
 
     return (
         <>
@@ -216,7 +235,7 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: I
                                     setsliderVal(e[0])
                                 }}
                                 onValueCommit={handleValueCommit}
-                                max={1000}
+                                max={5000000}
                                 step={1}
                                 min={0}
                             />
@@ -232,13 +251,13 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: I
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Size</AccordionTrigger>
                         <AccordionContent className='flex flex-wrap gap-3'>
-                            {SIZE_SHOE.map((size) => (
+                            {sizeShoe && sizeShoe.map((size) => (
                                 <div
-                                    onClick={() => handFilterSizeShoe(size)}
-                                    key={size}
+                                    onClick={() => handFilterSizeShoe(size._id)}
+                                    key={size._id}
                                     className='flex items-center space-x-2 w-12 h-12 border rounded-md border-neutral-400 justify-center text-neutral-700 cursor-pointer hover:bg-neutral-700 hover:text-white'
                                 >
-                                    {size}
+                                    {size.size}
                                 </div>
                             ))}
                         </AccordionContent>

@@ -1,14 +1,16 @@
+import { sortAtoZ, sortDescending, sortUpAscending } from '@/common/FuctionHandle/arrange'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
-import { arrangeProduct, filerProductByPrice, filterProductByPrice, getAllProduct } from '@/services/product/queries'
+import { filterProductByPrice, getAllProduct } from '@/services/product/queries'
+import { getAllSize, getProductbySize } from '@/services/size/size.requeries'
 import { IFProducts } from '@/types/product'
+import { IFSize } from '@/types/size.type'
 import { EyeIcon, FilterIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
-import { SetStateAction, useState } from 'react'
-import { useQuery } from 'react-query'
-import { Link, useParams } from 'react-router-dom'
+import { SetStateAction, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 
 interface IFSlider {
     sliderVal: number
@@ -17,20 +19,17 @@ interface IFSlider {
 }
 
 const ProductsPage = () => {
-    const { id: categoryId } = useParams()
-    const [sliderVal, setsliderVal] = useState(0)
+    const [sliderVal, setsliderVal] = useState(1000000)
     const [listProduct, setListProduct] = useState<IFProducts[]>([])
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentPage, setCurrentPage] = useState(1);
+
     const productsPerPage = 12
 
-    const { data } = useQuery({
-        queryFn: () => getAllProduct(),
-        queryKey: ['/categoryDetail', categoryId, currentPage],
-        onSuccess: (vals) => {
-            console.log(vals);
+    useEffect(() => {
+        getAllProduct().then((vals) => {
             setListProduct(vals)
-        }
-    })
+        })
+    }, [])
 
     const breadcrumb: IBreadCrumb[] = [
         {
@@ -39,8 +38,17 @@ const ProductsPage = () => {
     ]
 
     const handArrangeProduct = async (nameArrange: string) => {
-        const data = await arrangeProduct(nameArrange);
-        setListProduct(data)
+        if (nameArrange === "asc") {
+            const data = sortUpAscending(listProduct);
+            setListProduct(data);
+        } else if (nameArrange === "desc") {
+            const data = sortDescending(listProduct);
+            setListProduct(data);
+        } else {
+            const data = sortAtoZ(listProduct);
+            setListProduct(data);
+        }
+
     }
 
     const handlePageChange = (page: number) => {
@@ -48,7 +56,7 @@ const ProductsPage = () => {
     }
 
     const renderItemProduct = (vals: IFProducts) => {
-        const takeTwoImage = vals.images.splice(0, 2);
+        const takeTwoImage = vals.images.slice(0, 2);
         return (
             <Link
                 key={vals.productId}
@@ -58,6 +66,7 @@ const ProductsPage = () => {
                 <div className='pt-6 relative pb-3 overflow-hidden'>
                     <div className='relative rounded-md overflow-hidden'>
                         {takeTwoImage.map((itemImage, index) => <img
+                            key={index}
                             className={`w-full h-[300px] ${index == 1 ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all' : ''}`}
                             src={itemImage.imageUrl}
                             alt='Ảnh không tồn tại'
@@ -154,7 +163,7 @@ const ProductsPage = () => {
                         </div>
                     </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                        {currentProducts?.map((product) => renderItemProduct(product))}
+                        {listProduct?.map((product) => renderItemProduct(product))}
                     </div>
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>Không tìm thấy</div>
@@ -191,15 +200,24 @@ const ProductsPage = () => {
 }
 
 const FilerSection = ({ setsliderVal, sliderVal, setListProduct }: IFSlider) => {
+    const [sizeShoe, setSizeShoe] = useState<IFSize[] | null>(null);
+    const [currSizeShoe, setCurrSizeShoe] = useState<string | null>(null);
+
     const handleValueCommit = async (e: number[]) => {
-        const data = await filterProductByPrice(0, e[0]);
+        const data = await filterProductByPrice(currSizeShoe, 0, e[0]);
         setListProduct(data);
     }
-    const SIZE_SHOE = [36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
-    const handFilterSizeShoe = async (size: number) => {
-        const data = await filerProductByPrice(size);
+    const handFilterSizeShoe = async (id: string) => {
+        const data = await getProductbySize(id, 0, sliderVal);
+        setCurrSizeShoe(id);
         setListProduct(data);
     }
+
+    useEffect(() => {
+        getAllSize().then((data) => {
+            setSizeShoe(data)
+        });
+    }, [])
 
     return (
         <>
@@ -215,7 +233,7 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct }: IFSlider) => 
                                     setsliderVal(e[0])
                                 }}
                                 onValueCommit={handleValueCommit}
-                                max={1000}
+                                max={5000000}
                                 step={1}
                                 min={0}
                             />
@@ -231,13 +249,13 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct }: IFSlider) => 
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Size</AccordionTrigger>
                         <AccordionContent className='flex flex-wrap gap-3'>
-                            {SIZE_SHOE.map((size) => (
+                            {sizeShoe && sizeShoe.map((itemSize) => (
                                 <div
-                                    onClick={() => handFilterSizeShoe(size)}
-                                    key={size}
+                                    onClick={() => handFilterSizeShoe(itemSize._id)}
+                                    key={itemSize._id}
                                     className='flex items-center space-x-2 w-12 h-12 border rounded-md border-neutral-400 justify-center text-neutral-700 cursor-pointer hover:bg-neutral-700 hover:text-white'
                                 >
-                                    {size}
+                                    {itemSize.size}
                                 </div>
                             ))}
                         </AccordionContent>
