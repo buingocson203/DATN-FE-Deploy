@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 type Inputs = {
     address: string
     phone: string
-    payment_type: 'cod' | 'vnpay'
+    paymentMethod: 'cod' | 'vnpay'
 }
 
 interface CartItem {
@@ -23,6 +23,7 @@ interface CartItem {
     imageProduct: string
     productId: string
     sizeId: string
+    productDetailId: string
 }
 
 interface ICreateOrderBody {
@@ -31,13 +32,16 @@ interface ICreateOrderBody {
     phone: string
     productDetails: {
         productId: string
+        productDetailId: string
         price: number
-        quantity: number
+        quantityOrders: number
         sizeId: string
         image: string
+        productName: string
     }[]
     total_price: number
-    payment_type?: 'cod' | 'vnpay'
+    paymentMethod?: 'cod' | 'vnpay'
+    orderStatus: string
 }
 
 const getUserID = (): string => {
@@ -77,43 +81,34 @@ const Checkout = () => {
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         if (step === 'CHECKOUT') return
-        console.log(data)
 
         const productDetails = cartList.map((it) => ({
             productId: it.productId,
             price: it.price,
-            quantity: it.totalQuantity,
+            quantityOrders: it.totalQuantity,
             sizeId: it.sizeId,
-            image: it.imageProduct
+            image: it.imageProduct,
+            sizeName: it.size.toString(),
+            productDetailId: it.productDetailId,
+            productName: it.nameProduct
         }))
 
         handleCreateOrder({
             ...data,
             user_id: getUserID(),
             total_price: totalPrice,
-            productDetails
+            productDetails,
+            orderStatus: 'pending'
         })
     }
 
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
-            await onDeleteAllCart()
             toast.success('Đặt hàng thành công')
             navigate('/')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
-        }
-    }
-
-    const onDeleteAllCart = async () => {
-        const ids = cartList.map((it) => it.idCart)
-        try {
-            await instance.delete(`api/cart/deteCart`, {
-                data: { idCart: ids }
-            })
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -323,7 +318,7 @@ const Checkout = () => {
                                             // onChange={(e) => {
                                             //     setPaymentMethod(e.target.value as 'cod')
                                             // }}
-                                            {...register('payment_type')}
+                                            {...register('paymentMethod')}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/cod.svg?v=6'
@@ -335,7 +330,7 @@ const Checkout = () => {
                                     <div className='flex items-center gap-2 pt-4 pl-4'>
                                         <input
                                             type='radio'
-                                            {...register('payment_type')}
+                                            {...register('paymentMethod')}
                                             value={'vnpay'}
                                             // onChange={(e) => {
                                             //     setPaymentMethod(e.target.value as 'vnpay')
@@ -377,11 +372,7 @@ const Checkout = () => {
                         {cartList.map((it, index) => (
                             <div className='desc flex gap-4 items-center ml-8 relative mb-6' key={index}>
                                 <div className='oder--item-img w-[100px] h-[100px] overflow-hidden'>
-                                    <img
-                                        src='https://product.hstatic.net/200000690551/product/br4_a36fe1712e2c4fb09fbc18e6de41c154_medium.jpg'
-                                        alt=''
-                                        className='imgfluid rounded-lg'
-                                    />
+                                    <img src={it.imageProduct} alt='' className='imgfluid rounded-lg' />
                                     <p className='absolute bottom-[80px] left-[80px] bg-gray-200 border border-solid border-slate-400 rounded-full flex justify-center text-[16px] px-3 py-1'>
                                         {it.totalQuantity}
                                     </p>
