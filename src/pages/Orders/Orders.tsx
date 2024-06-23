@@ -21,7 +21,7 @@ const Orders = () => {
         return new Date(dateString).toLocaleString()
     }
     const formatMoney = (money: number) => {
-        return money.toLocaleString()
+        return money?.toLocaleString()|| 0
     }
 
     const breadcrumb: IBreadCrumb[] = [
