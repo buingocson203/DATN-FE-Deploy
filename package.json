@@ -35,6 +35,7 @@
     "antd": "^5.17.3",
     "axios": "^1.6.1",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.0.0",
     "context": "^3.0.29",
     "dayjs": "^1.11.11",
