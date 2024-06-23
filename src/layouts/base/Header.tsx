@@ -1,22 +1,13 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-    navigationMenuTriggerStyle
-} from '@/components/ui/navigation-bar'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { ChevronDown } from 'lucide'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import logo from '../../assets/1-01.png'
+import { useLocalStorage } from '@/hooks/useStorage'
 export default function Header() {
     const [open, setOpen] = useState(false)
+    const [user] = useLocalStorage('user', null)
 
     return (
         <header>
@@ -134,17 +125,20 @@ export default function Header() {
                     </div>
                 </div>
                 <div className='flex gap-3'>
-                    <Link
-                        to='/orders'
-                        className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
-                        style={{ marginTop: '4px' }}
-                    >
-                        <p className='hidden md:block'>Đơn hàng</p>
-                    </Link>
-                    <Link to='/signin' className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'>
-                        <User2 size={26} />
-                        <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
-                    </Link>
+                    {user?.userName ? (
+                        <Link
+                            to={user?.role === 'admin' ? '/admin' : '/profile'}
+                            className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
+                        >
+                            <User2 size={26} />
+                            <p className='hidden md:block'>{user?.userName}</p>
+                        </Link>
+                    ) : (
+                        <Link to='/signin' className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'>
+                            <User2 size={26} />
+                            <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
+                        </Link>
+                    )}
                     <div className='relative'>
                         <Link to='/cart'>
                             <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>

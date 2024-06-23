@@ -22,7 +22,6 @@ import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
 import PolicyPage from '@/pages/PolicyPage'
-import Orders from '@/pages/Orders/Orders'
 
 import ListSize from '@/features/size/_components/ListSize'
 
@@ -30,6 +29,11 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
 import Checkout from '@/pages/Checkout'
+import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
+import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
+import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
+import MyProfile from '@/pages/MyProfile'
+import Orders from '@/pages/Orders/Orders'
 
 const Routers = () => {
     return (
@@ -47,6 +51,8 @@ const Routers = () => {
                 <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />
                 <Route path='policy/:id' element={<PolicyPage />} />
+                <Route path='policy/:id' element={<PolicyPage />} />
+                <Route path='profile' element={<ProtectedRoute element={MyProfile} />} />
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<ProtectedRoute element={Dashboard} />} />
@@ -61,6 +67,9 @@ const Routers = () => {
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
                 <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
                 <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
+                <Route path='/admin/account' element={<ProtectedRoute element={ListAccount} />} />
+                <Route path='/admin/account/add' element={<ProtectedRoute element={AddAccount} />} />
+                <Route path='/admin/account/:id/edit' element={<ProtectedRoute element={EditAccount} />} />
             </Route>
         </Routes>
     )
