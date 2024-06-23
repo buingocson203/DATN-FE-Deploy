@@ -22,6 +22,7 @@ import FormAddress from '@/pages/FormAddress'
 import PayMent from '@/pages/PayMent'
 import Collection from '@/pages/Collection'
 import PolicyPage from '@/pages/PolicyPage'
+import Orders from '@/pages/Orders/Orders'
 
 import ListSize from '@/features/size/_components/ListSize'
 
@@ -40,6 +41,7 @@ const Routers = () => {
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
                 <Route path='cart' element={<Cart />} />
+                <Route path='orders' element={<Orders />} />
                 <Route path='checkout' element={<Checkout />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />

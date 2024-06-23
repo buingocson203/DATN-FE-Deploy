@@ -16,6 +16,7 @@ import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
 import { render } from 'react-dom'
 
+
 const ProductDetail = () => {
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
@@ -28,8 +29,7 @@ const ProductDetail = () => {
         enabled: !!productId,
         onError: onMutateError
     })
-    console.log(infoProduct);
-    
+    console.log(infoProduct)
 
     const { data: relatedProducts } = useQuery({
         queryFn: () => getRelatedProductsInfo(String(productId)),
@@ -43,7 +43,7 @@ const ProductDetail = () => {
         enabled: !!detailID,
         onError: onMutateError
     })
-    
+
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -100,7 +100,7 @@ const ProductDetail = () => {
                         <div className='flex-1'>
                             <h1 className='text-2xl font-semibold'>{infoProduct?.data?.nameProduct}</h1>
                             <div className='mt-1 mb-5 text-sm'>
-                                <span>Tình trạng: Còn hàng</span>
+                                <span>Tình trạng: {variant?.quantity > 0 ? 'Còn hàng' : 'Hết hàng'}</span>
                                 <span className='mx-2 text-neutral-200'>|</span>
                                 <span>Thương hiệu: {infoProduct?.data?.nameCategory}</span>
                             </div>
@@ -132,7 +132,8 @@ const ProductDetail = () => {
                                                     <span
                                                         className={cn(
                                                             'inline-block bg-neutral-50 px-5 text-sm py-2 rounded-md cursor-pointer border border-neutral-300 relative',
-                                                            variant?.sizeId === size.sizeId && 'item-sale'
+                                                            variant?.sizeId === size.sizeId && 'item-sale',
+                                                            size.quantity == 0 && 'size-disabled'
                                                         )}
                                                         key={index}
                                                         onClick={() => {
@@ -151,10 +152,9 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                             </div>
-
-                            <div className='flex items-center justify-center mt-5'>
+                            <div className='flex items-center mt-5'>
                                 <span className='w-[120px]'>Số lượng:</span>
-                                <div className='flex-1 flex'>
+                                <div className='flex'>
                                     <div
                                         className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
                                         onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
@@ -166,11 +166,20 @@ const ProductDetail = () => {
                                     </div>
                                     <div
                                         className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                        onClick={() => setQuantity((prev) => prev + 1)}
+                                        onClick={() =>
+                                            setQuantity((prev) => {
+                                                if (prev < variant?.quantity) {
+                                                    return prev + 1
+                                                }
+                                                alert('Không được vượt quá số lượng sản phẩm đang có')
+                                                return prev
+                                            })
+                                        }
                                     >
                                         <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
                                     </div>
                                 </div>
+                                <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                             </div>
                             <div className='flex items-center justify-center mt-5 gap-2'>
                                 <button
@@ -263,7 +272,7 @@ const ProductDetail = () => {
                         })}
                     </ul>
                     {activeTab == 0 && <ProductDescription description={infoProduct?.data?.descript} />}
-                    {activeTab == 1 && <ProductComment />}
+                    {activeTab == 1 && <ProductComment productID={productId} />}
                     {activeTab == 2 && (
                         <div className='text-sm'>
                             <p>1. Điều kiện đổi hàng</p> <br />
@@ -397,7 +406,14 @@ const ProductDetail = () => {
                                         key={index}
                                         className='basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'
                                     >
-                                        <ProductItem sizeId={item.productDetails.map(x => x.size)} _id={item._id} name={item.name} price={item.productDetails[0].price} promotionalPrice={item.productDetails[0].promotionalPrice}/>
+                                        <ProductItem
+                                            IdImages={item.images.map((x) => x.imageUrl)}
+                                            sizeId={item.productDetails.map((x) => x.size)}
+                                            _id={item._id}
+                                            name={item.name}
+                                            price={item.productDetails[0].price}
+                                            promotionalPrice={item.productDetails[0].promotionalPrice}
+                                        />
                                     </CarouselItem>
                                 )
                             })}
