@@ -33,6 +33,7 @@ import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
 import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
 import MyProfile from '@/pages/MyProfile'
+import Orders from '@/pages/Orders/Orders'
 
 const Routers = () => {
     return (
@@ -44,6 +45,7 @@ const Routers = () => {
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
                 <Route path='cart' element={<Cart />} />
+                <Route path='orders' element={<Orders />} />
                 <Route path='checkout' element={<Checkout />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
