@@ -1,11 +1,20 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-bar";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { ChevronDown } from "lucide";
-import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import logo from "../../assets/1-01.png"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import {
+    NavigationMenu,
+    NavigationMenuContent,
+    NavigationMenuIndicator,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    NavigationMenuList,
+    NavigationMenuTrigger,
+    navigationMenuTriggerStyle
+} from '@/components/ui/navigation-bar'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { ChevronDown } from 'lucide'
+import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import logo from '../../assets/1-01.png'
 export default function Header() {
     const [open, setOpen] = useState(false)
 
@@ -154,12 +163,7 @@ export default function Header() {
 
                             <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
                                 <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/adidas'
-                                    >
-                                        Adidas
-                                    </Link>
+                                    <Link to='/collections/adidas'>Adidas</Link>
                                 </li>
                                 <li>
                                     <Link

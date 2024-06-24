@@ -1,19 +1,16 @@
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
 import ProductItem from '@/features/product/_components/product-item'
-import { Filter } from 'lucide'
 import { FilterIcon } from 'lucide-react'
-import { useState } from 'react'
 import ReactSlider from 'react-slider'
 
 const Collection = () => {
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Giày Nike'
+            title: 'Giày Nike2'
         }
     ]
     return (
