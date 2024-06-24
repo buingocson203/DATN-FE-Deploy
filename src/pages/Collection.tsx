@@ -94,9 +94,9 @@ const Collection = () => {
                     <span className='text-xs'>+{vals.productDetails?.length || 0} kích thước</span>
                     <p className='text-md my-1'>{vals.nameProduct}</p>
                     <div className='flex items-center gap-2'>
-                        <span className='text-red-500 font-semibold text-sm'>{vals.productDetails[0].price}đ</span>
+                        <span className='text-red-500 font-semibold text-sm'>{vals.productDetails[0].promotionalPrice}đ</span>
                         <span className='text-neutral-300 text-sm line-through'>
-                            {vals.productDetails[0].promotionalPrice}đ
+                            {vals.productDetails[0].price}đ
                         </span>
                     </div>
                 </div>
