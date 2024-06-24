@@ -19,7 +19,7 @@ export const getColumns = (removeCategory: any): ColumnDef<ICategory>[] => [
         cell: ({ row }) => {
             return (
                 <>
-                    <Button className='text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium  text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-red-90 rounded' to={`/admin/category/${row?.original._id}`}>Chỉnh sửa</Button>
+                    <Link className='text-white bg-sky-700 hover:bg-sky-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium  text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-sky-600 dark:hover:bg-sky-700 dark:focus:ring-red-90 rounded' to={`/admin/category/${row?.original._id}`}>Chỉnh sửa</Link>
                     <Button className='text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-90 ml-3'
                         onClick={() => {
                             window.confirm('Bạn có chắc muốn xóa không?') && removeCategory(row?.original!)

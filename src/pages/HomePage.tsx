@@ -1,12 +1,12 @@
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
-import ProductItem from '@/features/product/_components/product-item'
-import { cn } from '@/lib/utils'
-import { ArrowRight, PlusIcon } from 'lucide-react'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useOnClickOutside } from 'usehooks-ts'
+// import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
+// import ProductItem from '@/features/product/_components/product-item'
+// import { cn } from '@/lib/utils'
+// import { ArrowRight, PlusIcon } from 'lucide-react'
+// import React, { useState } from 'react'
+// import { Link } from 'react-router-dom'
+// import { useOnClickOutside } from 'usehooks-ts'
 
-type Props = {}
+// type Props = {}
 
 const HomePage = (props: Props) => {
   const [activeTab, setActiveTab] = useState(0)

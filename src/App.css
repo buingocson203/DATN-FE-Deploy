@@ -44,3 +44,11 @@
 body {
     font-family: "Roboto Slab", serif;
 }
+.img-product-container * {
+    height: 100%;
+}
+
+.size-disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}

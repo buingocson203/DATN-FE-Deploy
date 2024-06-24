@@ -13,17 +13,13 @@ type formControlDataType = {
 }
 
 const formSchema = Joi.object({
-    name: Joi.string().required().messages({
-        'string.base': 'Danh mục phải là một chuỗi',
-        'string.empty': 'Danh mục không được bỏ trống',
-        'any.required': 'Danh mục không được bỏ trống'
+    name: Joi.string().trim().messages({
+        'any.required': 'Vui lòng không bỏ trống'
     }),
-    slug: Joi.string().required().messages({
-        'string.base': 'Slug phải là một chuỗi',
-        'string.empty': 'Slug không được bỏ trống',
-        'any.required': 'Slug không được bỏ trống'
-    })
-});
+    slug: Joi.string().trim().messages({
+        'any.required': 'Vui lòng không bỏ trống'
+    }),
+})
 
 type useCategoryMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'

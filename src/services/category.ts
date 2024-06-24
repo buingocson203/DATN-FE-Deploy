@@ -1,23 +1,22 @@
 import { ICategory } from '@/common/type'
-import instance from '../core/api'
+import { Modal } from 'antd'
 import { toast } from 'react-toastify'
-import { Modal } from 'antd';
+import instance from '../core/api'
 
 const showModal = (title: string, content: string) => {
     Modal.info({
-      title: title,
-      content: content,
-      className: 'btn btn-primary',
-      onOk() {},
-      okButtonProps: {
-        className: 'bg-sky-400',
-      },
-    });
-  };
+        title: title,
+        content: content,
+        className: 'btn btn-primary',
+        onOk() {},
+        okButtonProps: {
+            className: 'bg-sky-400'
+        }
+    })
+}
 export const getCategorys = async () => {
     try {
         const response = await instance.get('/api/categories')
-        console.log(response.data)
         return response.data
     } catch (error) {
         console.log(`['FETCHS_CATEGORYS_ERROR']`, error)
@@ -26,7 +25,7 @@ export const getCategorys = async () => {
 
 export const getCategory = async (_id: string) => {
     try {
-        const response = await instance.get(`/api/categories/${_id}`)   
+        const response = await instance.get(`/api/categories/${_id}`)
         return response.data
     } catch (error) {
         console.log(`['FETCHS_CATEGORY_ERROR']`, error)
@@ -49,11 +48,10 @@ export const addCategory = async (category: ICategory) => {
     }
 }
 
-
-export const updateCategory = async ({_id,name, slug, ...category}: ICategory) => {
-    console.log("data size: ", name)
+export const updateCategory = async ({ _id, name, slug, ...category }: ICategory) => {
+    console.log('data size: ', name)
     try {
-        const response = await instance.put(`/api/categories/${_id}`, {name, slug})
+        const response = await instance.put(`/api/categories/${_id}`, { name, slug })
         console.log(response.data)
 
         return response.data
@@ -61,7 +59,6 @@ export const updateCategory = async ({_id,name, slug, ...category}: ICategory) =
         console.log(`['UPDATE_SIZE_ERROR']`, error)
     }
 }
-
 
 export const deleteCategory = async (category: ICategory) => {
     try {
@@ -71,9 +68,9 @@ export const deleteCategory = async (category: ICategory) => {
         }
     } catch (error) {
         if (error.response && error.response.status === 400) {
-            showModal('Lỗi', 'Danh mục không thể xóa vì không có sản phẩm liên quan!');
-        }else {
+            showModal('Lỗi', 'Danh mục không thể xóa vì không có sản phẩm liên quan!')
+        } else {
             console.log(`['DELETE_CATEGORYS_ERROR']`, error)
-        }   
+        }
     }
 }

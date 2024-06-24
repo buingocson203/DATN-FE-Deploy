@@ -36,13 +36,13 @@ const Signin = (props: Props) => {
             if (user.role === 'admin') {
                 navigate('/admin')
             } else {
-                navigate('/')
+                window.location.href = '/'
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
                 toast.error('Email hoặc mật khẩu không đúng')
             } else {
-                toast.error('Đã có lỗi xảy ra. Vui lòng thử lại sau.')
+                toast.error(error?.response?.data?.message || 'Đã có lỗi xảy ra. Vui lòng thử lại sau.')
             }
         }
     }
