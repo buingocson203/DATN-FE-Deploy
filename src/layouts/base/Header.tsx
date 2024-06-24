@@ -9,9 +9,11 @@ import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, Shopping
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/1-01.png"
+import logo from "../../assets/1-01.png";
+import { useLocalStorage } from '@/hooks/useStorage';
 export default function Header() {
     const [open, setOpen] = useState(false)
+    const [user] = useLocalStorage('user', null)
 
 
     const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
@@ -137,9 +139,26 @@ export default function Header() {
                     </div>
                 </div>
                 <div className='flex gap-3'>
-                    <Link to='/signin' className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'>
-                        <User2 size={26} />
-                        <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
+                    {user?.userName ? (
+                        <Link
+                            to={user?.role === 'admin' ? '/admin' : '/profile'}
+                            className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
+                        >
+                            <User2 size={26} />
+                            <p className='hidden md:block'>{user?.userName}</p>
+                        </Link>
+                    ) : (
+                        <Link to='/signin' className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'>
+                            <User2 size={26} />
+                            <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
+                        </Link>
+                    )}
+                       <Link
+                        to='/orders'
+                        className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
+                        style={{ marginTop: '4px' }}
+                    >
+                        <p className='hidden md:block'>Đơn hàng</p>
                     </Link>
                     <div className='relative'>
                         <Link to='/cart'>
@@ -408,6 +427,3 @@ export default function Header() {
         </header>
     )
 }
-
-
-
