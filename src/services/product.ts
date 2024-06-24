@@ -3,7 +3,22 @@ import { IAddProductBody, IAddProductResponse, IProduct } from '@/common/interfa
 
 import instance from '../core/api'
 
-export const getProducts = async (query?: IQueryParams) => {
+export interface GetProductsResponse {
+    datas: {
+        docs: IProduct[]
+        hasNextPage: boolean
+        hasPrevPage: boolean
+        limit: number
+        nextPage: number
+        page: number
+        pagingCounter: number
+        prevPage: number | null
+        totalDocs: number
+        totalPages: number
+    }
+}
+
+export const getProducts = async (query?: IQueryParams): Promise<GetProductsResponse> => {
     const response = await instance.get('api/product', {
         params: query
     })

@@ -27,9 +27,9 @@ const Product = () => {
     }
 
     function getLabelSizes(data: IProductAdvanced['productDetails']): string | null {
-        if (Array(data) && data.length !== 0) {
-            const sizes = data.map((item) => item.size)
-            return sizes.join(', ')
+        if (Array(data) && data?.length !== 0) {
+            const sizes = data?.map((item) => item?.size)
+            return sizes?.join(', ')
         }
         return null
     }

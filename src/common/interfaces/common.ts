@@ -1,5 +1,7 @@
 export type ISort = 'asc' | 'desc'
 
+export type IRole = 'admin' | 'user'
+
 export interface IQueryParams {
     _page?: number
     _limit?: number

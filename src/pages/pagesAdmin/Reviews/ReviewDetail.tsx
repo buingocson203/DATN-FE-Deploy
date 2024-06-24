@@ -1,25 +1,24 @@
-import { useEffect } from 'react'
+import { getReview } from '@/services/review'
+import { Card, Col, ColProps, Form, Input, Row, Typography, Upload, UploadFile, UploadProps } from 'antd'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 
-import { IInfoProduct } from '@/common/interfaces/infoProduct'
-import { getInfoProduct } from '@/services/infoProduct'
-import { getProduct } from '@/services/product'
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import {
-    Breadcrumb,
-    Button,
-    Card,
-    Col,
-    ColProps,
-    Form,
-    Input,
-    Row,
-    Typography,
-    Upload,
-    UploadFile,
-    UploadProps
-} from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
 import Detail from '@/components/crud/detail'
+import dayjs from 'dayjs'
+
+interface FieldType {
+    content: string
+    username: string
+    createdAt: string
+    updatedAt: string
+    name: string
+    description: string
+    status: string
+    category: string
+    thumbnail: UploadFile[]
+    gallery: UploadFile[]
+    sizes: any
+}
 
 const colProps: ColProps = {
     xs: 24,
@@ -40,42 +39,20 @@ const uploadProps: UploadProps = {
     beforeUpload: () => false
 }
 
-interface FieldType {
-    name: string
-    description: string
-    status: string
-    category: string
-    thumbnail: UploadFile[]
-    gallery: UploadFile[]
-    sizes: any
-}
-
-const DISABLED_FIELD = true
-
-const DetailProduct = () => {
+const ReviewDetail = () => {
+    const { reviewId } = useParams()
     const [form] = Form.useForm()
-    const { productId } = useParams()
-    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(true)
 
-    const fetchProduct = async () => {
-        const product = await getProduct(productId)
+    const fetchReview = async () => {
+        const response = await getReview(reviewId)
+        if (response?.data) {
+            setIsLoading(false)
+            const data = response?.data
+            const review = data?.review
+            const product = data?.product
 
-        if (product) {
-            form.setFieldsValue({
-                name: product?.name,
-                description: product?.description,
-                status: product?.status,
-                category: product?.categoryId?.name
-            })
-        }
-    }
-
-    const fetchInfoProduct = async () => {
-        const response = await getInfoProduct(productId)
-        const data: IInfoProduct = response?.data
-
-        if (data) {
-            const thumbnail: UploadFile[] = data?.images
+            const thumbnail: UploadFile[] = product?.images
                 ?.filter((item) => item.type === 'thumbnail')
                 .map((e, idx) => {
                     return {
@@ -85,7 +62,7 @@ const DetailProduct = () => {
                     }
                 })
 
-            const gallery: UploadFile[] = data?.images
+            const gallery: UploadFile[] = product?.images
                 ?.filter((item) => item.type === 'gallery')
                 .map((e, idx) => {
                     return {
@@ -95,9 +72,16 @@ const DetailProduct = () => {
                     }
                 })
 
-            const productDetails = data?.productDetails
+            const productDetails = product?.productDetails
 
             form.setFieldsValue({
+                content: review?.content,
+                username: review?.idAccount?.userName,
+                createdAt: review?.createdAt && dayjs(review.createdAt).format('HH:MM DD-MM-YYYY'),
+                updatedAt: review?.updatedAt && dayjs(review.updatedAt).format('HH:MM DD-MM-YYYY'),
+                name: product?.name,
+                description: product?.description,
+                status: product?.status,
                 thumbnail: thumbnail,
                 gallery: gallery,
                 sizes: productDetails
@@ -106,28 +90,40 @@ const DetailProduct = () => {
     }
 
     useEffect(() => {
-        fetchProduct()
+        fetchReview()
     }, [])
 
     useEffect(() => {
-        fetchInfoProduct()
-    }, [])
-
-    const renderForm = () => {
-        return (
+        console.log(form.getFieldsValue())
+    }, [form])
+    return (
+        <Detail name='Đánh giá' isLoading={isLoading}>
             <Form form={form} layout='vertical'>
+                <Form.Item<FieldType> name='content' label='Content'>
+                    <Input.TextArea disabled />
+                </Form.Item>
+                <Form.Item<FieldType> name='username' label='Người đánh giá'>
+                    <Input disabled />
+                </Form.Item>
+                <Form.Item<FieldType> name='createdAt' label='Thời gian tạo'>
+                    <Input disabled />
+                </Form.Item>
+
+                <Form.Item<FieldType> name='updatedAt' label='Thời gian chỉnh sửa'>
+                    <Input disabled />
+                </Form.Item>
                 <Form.Item<FieldType> name='name' label='Tên sản phẩm'>
-                    <Input readOnly disabled={DISABLED_FIELD} />
+                    <Input readOnly disabled />
                 </Form.Item>
                 <Form.Item<FieldType> name='description' label='Mô tả sản phẩm'>
-                    <Input.TextArea readOnly disabled={DISABLED_FIELD} />
+                    <Input.TextArea readOnly disabled />
                 </Form.Item>
                 <Form.Item<FieldType> name='status' label='Trạng thái'>
-                    <Input readOnly disabled={DISABLED_FIELD} />
+                    <Input readOnly disabled />
                 </Form.Item>
-                <Form.Item<FieldType> name='category' label='Danh mục'>
-                    <Input readOnly disabled={DISABLED_FIELD} />
-                </Form.Item>
+                {/* <Form.Item<FieldType> name='category' label='Danh mục'>
+                    <Input readOnly disabled />
+                </Form.Item> */}
                 <Form.Item name='thumbnail' label='Ảnh đại diện' valuePropName='fileList'>
                     <Upload {...uploadProps} />
                 </Form.Item>
@@ -147,22 +143,22 @@ const DetailProduct = () => {
                                     <Row gutter={16}>
                                         <Col {...colProps}>
                                             <Form.Item label='Giá nhập' name={[field.name, 'importPrice']}>
-                                                <Input readOnly disabled={DISABLED_FIELD} />
+                                                <Input readOnly disabled />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
                                             <Form.Item label='Giá niêm yiết' name={[field.name, 'price']}>
-                                                <Input readOnly disabled={DISABLED_FIELD} />
+                                                <Input readOnly disabled />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
                                             <Form.Item label='Giá bán' name={[field.name, 'promotionalPrice']}>
-                                                <Input readOnly disabled={DISABLED_FIELD} />
+                                                <Input readOnly disabled />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
                                             <Form.Item label='Số lượng' name={[field.name, 'quantity']}>
-                                                <Input readOnly disabled={DISABLED_FIELD} />
+                                                <Input readOnly disabled />
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -172,14 +168,8 @@ const DetailProduct = () => {
                     )}
                 </Form.List>
             </Form>
-        )
-    }
-
-    return (
-        <Detail name='Sản phẩm'>
-            <>{renderForm()}</>
         </Detail>
     )
 }
 
-export default DetailProduct
+export default ReviewDetail

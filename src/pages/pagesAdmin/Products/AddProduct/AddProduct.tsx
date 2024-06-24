@@ -151,6 +151,8 @@ const AddProduct: React.FC = () => {
             const product = response?.datas
             const productId = product?._id
 
+            console.log(productId, 'productId')
+            console.log(product)
             if (productId) {
                 message.success(response.message)
                 const thumbnail = values.gallery.map((item) => {

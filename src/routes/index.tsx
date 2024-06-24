@@ -32,6 +32,10 @@ import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
 import Collection from '@/pages/collection/Collection'
 import DetailProduct from '../pages/pagesAdmin/Products/DetailProduct/DetailProduct'
+import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
+import OrderDetail from '@/pages/pagesAdmin/Orders/OrderDetail'
+import ReviewList from '../pages/pagesAdmin/Reviews/ReviewList'
+import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 
 const Routers = () => {
     return (
@@ -62,6 +66,12 @@ const Routers = () => {
                 <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
                 <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
                 <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
+
+                <Route path='/admin/orders' element={<ProtectedRoute element={OrderList} />} />
+                <Route path='/admin/orders/detail/:orderId' element={<ProtectedRoute element={OrderDetail} />} />
+
+                <Route path='/admin/reviews' element={<ProtectedRoute element={ReviewList} />} />
+                <Route path='/admin/reviews/detail/:reviewId' element={<ProtectedRoute element={ReviewDetail} />} />
             </Route>
         </Routes>
     )
