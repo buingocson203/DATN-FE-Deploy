@@ -4,15 +4,24 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
 import ProductItem from '@/features/product/_components/product-item'
+import { getCategory } from '@/services/category/requests'
 import { FilterIcon } from 'lucide-react'
+import { useQuery } from 'react-query'
+import { useParams } from 'react-router-dom'
 import ReactSlider from 'react-slider'
 
 const Collection = () => {
+    const { id: categoryId } = useParams()
+
+
+    const { data } = useQuery({ queryFn: () => getCategory(String(categoryId)), queryKey: ['/category', categoryId], enabled: !!categoryId })
     const breadcrumb: IBreadCrumb[] = [
         {
-            title: 'Giày Nike2'
+            title: data?.name || ''
         }
     ]
+    console.log(data)
+
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
@@ -23,8 +32,8 @@ const Collection = () => {
                 <div className='flex-1'>
                     <div className='flex md:items-center gap-3 flex-col md:flex-row'>
                         <div className='flex-1 flex items-center gap-3'>
-                            <h1 className='text-2xl'>Giày Nike</h1>
-                            <p className='text-sm relative top-1 flex-1'>5 sản phẩm</p>
+                            <h1 className='text-2xl'>{data?.name}</h1>
+                            <p className='text-sm relative top-1 flex-1'>{data?.products?.length || 0} sản phẩm</p>
                         </div>
                         <div className='flex gap-3 items-center'>
                             <div className='flex-1 md:hidden'>
@@ -63,8 +72,8 @@ const Collection = () => {
                         </div>
                     </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                        {new Array(6).fill(0).map((_, index) => (
-                            <ProductItem key={index} />
+                        {data?.products?.map((product, index) => (
+                            <ProductItem key={index} {...product} />
                         ))}
                     </div>
                 </div>

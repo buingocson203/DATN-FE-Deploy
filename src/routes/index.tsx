@@ -3,7 +3,7 @@
 // import Signup from '@/features/auth/_components/Signup'
 import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
-import HomePage from '@/pages/HomePage'
+import HomePage from '@/pages/HomePage/HomePage'
 import ProductDetail from '@/pages/ProductDetail/index'
 
 import Cart from '@/pages/Cart'
@@ -36,6 +36,9 @@ import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
 import OrderDetail from '@/pages/pagesAdmin/Orders/OrderDetail'
 import ReviewList from '../pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
+import Orders from '@/pages/Orders/Orders'
+import Checkout from '@/pages/Checkout'
+import MyProfile from '@/pages/MyProfile'
 
 const Routers = () => {
     return (
@@ -47,10 +50,14 @@ const Routers = () => {
                 <Route path='products' element={<ProductsPage />} />
                 <Route path='products/:id' element={<ProductDetail />} />
                 <Route path='cart' element={<Cart />} />
+                <Route path='orders' element={<Orders />} />
+                <Route path='checkout' element={<Checkout />} />
                 <Route path='formaddress' element={<FormAddress />} />
                 <Route path='payment' element={<PayMent />} />
                 <Route path='collections/:id' element={<Collection />} />
                 <Route path='policy/:id' element={<PolicyPage />} />
+                <Route path='policy/:id' element={<PolicyPage />} />
+                <Route path='profile' element={<ProtectedRoute element={MyProfile} />} />
             </Route>
             <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<ProtectedRoute element={Dashboard} />} />

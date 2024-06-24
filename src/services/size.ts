@@ -1,7 +1,7 @@
 import { ISize } from '@/common/type'
+import { Modal } from 'antd'
 import instance from '../core/api'
 import { toast } from 'react-toastify'
-import { message, Modal } from 'antd'
 const showModal = (title: string, content: string) => {
     Modal.info({
         title: title,
@@ -16,7 +16,6 @@ const showModal = (title: string, content: string) => {
 export const getSizes = async () => {
     try {
         const response = await instance.get('/api/size')
-
         return response.data
     } catch (error) {
         console.log(`['FETCHS_SIZES_ERROR']`, error)
@@ -52,7 +51,6 @@ export const updateSize = async ({ _id, size, slug, ...sizes }: ISize) => {
     console.log('data size: ', size)
     try {
         const response = await instance.put(`/api/size/${_id}`, { size, slug })
-        console.log(response.data)
 
         return response.data
     } catch (error) {
