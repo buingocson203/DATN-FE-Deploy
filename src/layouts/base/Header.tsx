@@ -139,6 +139,13 @@ export default function Header() {
                             <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
                         </Link>
                     )}
+                       <Link
+                        to='/orders'
+                        className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
+                        style={{ marginTop: '4px' }}
+                    >
+                        <p className='hidden md:block'>Đơn hàng</p>
+                    </Link>
                     <div className='relative'>
                         <Link to='/cart'>
                             <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>

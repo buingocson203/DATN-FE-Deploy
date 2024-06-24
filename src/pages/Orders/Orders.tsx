@@ -215,7 +215,7 @@ const Orders = () => {
                                             </h4>
                                             <h3 className='text-right pr-[16px] text-[18px] mb-1'>
                                                 Thành tiền:{' '}
-                                                <span className='text-red-500'>{formatMoney(order.total_amount_paid || order.total_price)}</span>
+                                                <span className='text-red-500'>{formatMoney(order?.total_price || 0)}</span>
                                             </h3>
                                         </div>
                                         <div
