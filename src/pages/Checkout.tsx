@@ -54,6 +54,7 @@ const Checkout = () => {
     const [cartList, setCartList] = useState<CartItem[]>([]);
     const queryParams = new URLSearchParams(location.search)
     const transactionStatus = queryParams.get('vnp_TransactionStatus')
+    const txnRef = queryParams.get('vnp_TxnRef');
 
     const {
         register,
@@ -64,29 +65,13 @@ const Checkout = () => {
     useEffect(() => {
         fetchData();
     }, []);
-
-    useEffect(() => {
-        if (transactionStatus === '00') {
-            // toast.success("Thanh toán thành công")
-            // window.location.href = '/';
-            console.log("HELLO WINDOW");
-        }
-        console.log("HELLO WORLD");
-
-    }, [transactionStatus])
-
     const totalPrice = useMemo(() => {
         const totalPrice = cartList?.reduce((total, item) => {
-            return (total += item.price * item.totalQuantity)
+            return (total += item.promotionalPrice * item.totalQuantity)
         }, 0)
 
         return totalPrice
     }, [cartList?.length])
-
-    const fetchData = async () => {
-        const response = await instance.get(`api/cart/${getUserID()}`)
-        setCartList(response.data.data)
-    }
 
     const convertCart = () => {
         const data = cartList.map((item) => {
@@ -99,31 +84,56 @@ const Checkout = () => {
                 sizeName: `${item.size}`,
                 productDetailId: item.productDetailId,
                 productName: item.nameProduct,
+                promotionalPrice: item.promotionalPrice
             }
         });
         return data
     }
+
+    useEffect(() => {
+        if (transactionStatus === '00') {
+            // toast.success("Thanh toán thành công")
+            // window.location.href = '/';
+            const dataLocal = JSON.parse(localStorage.getItem("dataFormSelf")!);
+            instance.post('http://localhost:8000/api/order/create-order', {
+                address: dataLocal.address,
+                phone: dataLocal.phone,
+                user_id: getUserID(),
+                productDetails: dataLocal.productDetails,
+                codeOrders: txnRef,
+                paymentMethod: 'vnpay',
+                paymentStatus: 'unpaid'
+            }).then(() => {
+                console.log("RUNNING HERE");
+                localStorage.removeItem("dataFormSelf");
+                // toast.success('Đặt hàng thành công');
+                window.location.href = "http://localhost:5173/orders"
+            })
+        }
+    }, [transactionStatus])
+
+    const fetchData = async () => {
+        const response = await instance.get(`api/cart/${getUserID()}`)
+        setCartList(response.data.data)
+    }
+
+
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         if (step === 'CHECKOUT') return
         if (data.payment_type === 'vnpay') {
             try {
+                localStorage.setItem("dataFormSelf", JSON.stringify({ address: data.address, phone: data.phone, productDetails: convertCart(), total_price: totalPrice }));
                 const { data: response } = await instance.post(
                     'api/order/create-order-vnpay',
                     {
-                        address: data.address,
-                        phone: data.phone,
                         user_id: getUserID(),
-                        productDetails: convertCart(),
                         total_price: totalPrice,
-                        paymentMethod: 'vnpay',
-                        orderStatus: 'pending',
-                        paymentStatus: 'unpaid'
                     },
                     {
                         withCredentials: true // Đảm bảo thông tin đăng nhập được bao gồm trong yêu cầu
                     }
                 )
-                window.location.href = response.paymentUrl // Redirect to the VNPAY URL
+                window.location.href = response.url // Redirect to the VNPAY URL
             } catch (error) {
                 console.log('run herere ')
                 console.error('Error creating payment URL:', error)
@@ -306,9 +316,6 @@ const Checkout = () => {
                                             <button
                                                 type='submit'
                                                 className='text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
-                                            // onClick={() => {
-                                            //     paymentMethod === 'cod' ? handleOrder() : handleOrderVnPay()
-                                            // }}
                                             >
                                                 Hoàn tất đơn hàng
                                             </button>

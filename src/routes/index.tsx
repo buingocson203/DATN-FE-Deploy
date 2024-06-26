@@ -30,7 +30,7 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 
 import Edit from '@/features/size/_components/EditSize'
-import Collection from '@/pages/collection/Collection'
+import Collection from '@/pages/Collection'
 import DetailProduct from '../pages/pagesAdmin/Products/DetailProduct/DetailProduct'
 import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
 import OrderDetail from '@/pages/pagesAdmin/Orders/OrderDetail'
