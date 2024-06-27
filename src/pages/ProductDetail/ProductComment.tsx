@@ -13,24 +13,6 @@ const ProductComment = ({ productID }) => {
     }
     return (
         <div>
-            <div className='flex items-center gap-3 mb-5'>
-                <img src='https://picsum.photos/300/300' className='w-11 h-11 rounded-full' alt='' />
-
-                <div className='w-full'>
-                    <form action='' className='w-full flex gap-4'>
-                        <input
-                            type='text'
-                            placeholder='Viết đánh giá của bạn vào đây ....'
-                            className='w-full px-3 py-2 border rounded outline-none'
-                        />
-                        <button>
-                            <Icon className='text-2xl' icon='mingcute:send-plane-fill' />
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <hr className='mb-5 border-dashed' />
-
             <div className='flex flex-col space-y-4'>
                 {comments.length == 0 ? (
                     <div>Chưa có đánh giá nào</div>

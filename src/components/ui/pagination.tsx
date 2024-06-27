@@ -3,8 +3,6 @@ import React from 'react'
 import { DOTS, usePagination } from '../../hooks/usePagination'
 import { Button } from './button'
 
-import { Button as DefaultButton } from 'antd'
-
 type Props = {
     onPageChange: (pageNumber: number) => void
     totalCount: number
@@ -41,7 +39,8 @@ const Pagination = (props: Props) => {
     return (
         <>
             <div className='flex items-center justify-center gap-3 py-3'>
-                <DefaultButton
+                <Button
+                    size={'sm'}
                     onClick={onPrevious}
                     disabled={currentPage === 1}
                     className='stroke-[#333333] px-0 hover:stroke-white lg:px-4'
@@ -49,7 +48,7 @@ const Pagination = (props: Props) => {
                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'>
                         <path d='M15 18L9 12L15 6' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
                     </svg>
-                </DefaultButton>
+                </Button>
 
                 {paginationRange.map((pageNumber, i) => {
                     if (pageNumber === DOTS) {
@@ -61,25 +60,18 @@ const Pagination = (props: Props) => {
                     }
 
                     return (
-                        <DefaultButton
-                            style={{ backgroundColor: pageNumber === currentPage ? '#1677ff' : undefined }}
-                            type={pageNumber === currentPage ? 'primary' : 'default'}
+                        <Button
+                            size={'sm'}
                             key={pageNumber}
+                            className='w-8 px-0 lg:px-5'
                             onClick={() => onPageChange(pageNumber as number)}
                         >
                             {pageNumber}
-                        </DefaultButton>
-                        // <Button
-                        //     size={'sm'}
-                        //     key={pageNumber}
-                        //     className='w-8 px-0 lg:px-5'
-                        //     onClick={() => onPageChange(pageNumber as number)}
-                        // >
-                        //     {pageNumber}
-                        // </Button>
+                        </Button>
                     )
                 })}
-                <DefaultButton
+                <Button
+                    size={'sm'}
                     onClick={onNext}
                     disabled={currentPage === lastPage}
                     className='stroke-[#333333] px-0  hover:stroke-white lg:px-4'
@@ -87,7 +79,7 @@ const Pagination = (props: Props) => {
                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'>
                         <path d='M9 6L15 12L9 18' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
                     </svg>
-                </DefaultButton>
+                </Button>
             </div>
             <p className='text-foreground min-w-[9.375rem] text-center md:hidden'>
                 Page <b>1</b> of <b>10</b>

@@ -1,14 +1,15 @@
-import { IProduct } from '@/common/interfaces/product'
-import { EyeIcon, ShoppingCartIcon } from 'lucide-react'
+import { IProduct } from '@/services/product/types'
+import { EyeIcon, ShoppingCartIcon, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-export interface ProductItemProps {
-    item: IProduct
-}
-export default function ProductItem(props: ProductItemProps) {
-    const { item } = props
+type Props = {} & IProduct
+export default function ProductItem({ _id, IdImages, name, sizeId, price, promotionalPrice, importPrice }: Props) {
     return (
-        <Link to='/products/giay-nike' className='cursor-pointer group'>
+        <Link to={`/products/${_id}`} className='cursor-pointer group' onClick={() => {
+            setTimeout(() => {
+                location.reload()
+            }, 200)
+        }}>
             <div className='pt-6 relative pb-3 overflow-hidden'>
                 {/* <span className='absolute text-xs p-1 px-2 bg-red-500 rounded-full inline-flex item-center gap-1 text-white items-center w-fit top-0 left-2'>
                 <Zap size={10} />
@@ -16,11 +17,17 @@ export default function ProductItem(props: ProductItemProps) {
             </span> */}
                 <div className='relative rounded-md overflow-hidden'>
                     <img
-                        src='https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
+                        src={
+                            IdImages?.[0] ||
+                            'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
+                        }
                         alt=''
                     />
                     <img
-                        src='https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
+                        src={
+                            IdImages?.[1] ||
+                            'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
+                        }
                         alt=''
                         className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
                     />
@@ -43,11 +50,11 @@ export default function ProductItem(props: ProductItemProps) {
                 </div>
             </div>
             <div>
-                <span className='text-xs'>+5 kích thước</span>
-                <p className='text-md my-1'>{item?.name}</p>
+                <span className='text-xs'>+{sizeId?.length || 0} kích thước</span>
+                <p className='text-md my-1'>{name}</p>
                 <div className='flex items-center gap-1'>
-                    <span className='text-red-500 text-sm'>750,000đ</span>
-                    <span className='text-neutral-300 text-xs line-through'>1,500,000đ</span>
+                    <span className='text-red-500 text-sm'>{promotionalPrice}đ</span>
+                    <span className='text-neutral-300 text-xs line-through'>{importPrice}đ</span>
                 </div>
             </div>
         </Link>
