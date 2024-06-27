@@ -6,8 +6,9 @@ export interface IInfoProduct {
     productId: string
     categoryId: string
     nameCategory: string
-    descript: string
-    images: { imageUrl: string; type: IImageType }[]
+    descript?: string
+    description?: string
+    images: { imageUrl: string; type: IImageType; _id?: string }[]
     productDetails: Array<
         Omit<IProductDetail, '_id'> & {
             productDetailID: string

@@ -12,12 +12,22 @@ export interface IProduct {
     promotionalPrice: number
     createdAt: Date
     updatedAt: Date
+    detailID: string
 }
 
 export interface IProductDetail {
     _id: string,
     name: string,
     sizes: IProductSize[]
+    productDetails: IProductDetailInfo[]
+}
+export interface IProductDetailInfo {
+    importPrice: number,
+    price: number,
+    productDetailId: string,
+    promotionalPrice: number
+    quantity: number
+    size: number
 }
 
 export interface IProductSize {
@@ -26,5 +36,6 @@ export interface IProductSize {
     "quantity": number,
     "price": number,
     "importPrice": number,
-    "promotionalPrice": number
+    "promotionalPrice": number,
+    "productDetailId": string
 }

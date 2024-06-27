@@ -1,7 +1,7 @@
 import { ICategory } from '@/common/type'
-import instance from '../core/api'
-import { toast } from 'react-toastify'
 import { Modal } from 'antd'
+import { toast } from 'react-toastify'
+import instance from '../core/api'
 
 const showModal = (title: string, content: string) => {
     Modal.info({
@@ -17,7 +17,6 @@ const showModal = (title: string, content: string) => {
 export const getCategorys = async () => {
     try {
         const response = await instance.get('/api/categories')
-
         return response.data
     } catch (error) {
         console.log(`['FETCHS_CATEGORYS_ERROR']`, error)

@@ -8,48 +8,46 @@ import { useMutation, useQueryClient } from 'react-query'
 type formControlDataType = {
     _id: string
     name: string
-    // image: string
-    // price: number
+    image: string
+    price: number
     categoryId: string
-    // sizeId: string[]
-    // color: string
+    sizeId: string[]
+    color: string
     description: string
-    // importPrice: number
-    // promotionalPrice: number
-    // IdImages: string[]
-    // quanity: string
+    importPrice: number
+    promotionalPrice: number
+    IdImages: string[]
+    quanity: string
     status: string
 }
 
 const formSchema = Joi.object({
     name: Joi.string().min(6).max(50),
-    // image: Joi.string().min(1).required(),
-    // price: Joi.number().required().min(0),
+    image: Joi.string().min(1).required(),
+    price: Joi.number().required().min(0),
     categoryId: Joi.string().required(),
-    // sizeId: Joi.array().items(Joi.string().required()).required(),
-    // color: Joi.string().required(),
+    sizeId: Joi.array().items(Joi.string().required()).required(),
+    color: Joi.string().required(),
     description: Joi.string().required(),
-    // importPrice: Joi.number().required().min(0),
-    // import { message } from 'antd';
-    // promotionalPrice: Joi.number().required().min(0),
-    // IdImages: Joi.array().items(Joi.string().required()).required(),
-    // quanity: Joi.number().required().min(0),
+    importPrice: Joi.number().required().min(0),
+    promotionalPrice: Joi.number().required().min(0),
+    IdImages: Joi.array().items(Joi.string().required()).required(),
+    quanity: Joi.number().required().min(0),
     status: Joi.string().required()
 })
 
 type useProductMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
     defaultValues?: IProduct
-    onSuccess?: (data: { datas: IProduct }) => void
+    onSuccess?: () => void
 }
 
 export const useProductMutation = ({
     action,
-    defaultValues = { name: '', description: '', categoryId: '', status: '' },
+    defaultValues = { name: '', price: 0, quanity: 0, importPrice: 0, promotionalPrice: 0 },
     onSuccess
 }: useProductMutationProps) => {
     const queryClient = useQueryClient()
-
     const { mutate, ...rest } = useMutation({
         mutationFn: async (product: IProduct) => {
             switch (action) {
@@ -63,9 +61,8 @@ export const useProductMutation = ({
                     return null
             }
         },
-        onSuccess: (data) => {
-            console.log('dsf')
-            onSuccess && onSuccess(data)
+        onSuccess: () => {
+            onSuccess && onSuccess()
             queryClient.invalidateQueries({
                 queryKey: ['PRODUCT']
             })
@@ -74,14 +71,12 @@ export const useProductMutation = ({
             console.log('error')
         }
     })
-
     const form = useForm({
         resolver: joiResolver(formSchema),
         defaultValues
     })
-
     const onSubmit: SubmitHandler<formControlDataType> = (values) => {
-        console.log('vo')
+        console.log(values)
         mutate(values)
     }
     const onRemove = (product: IProduct) => {

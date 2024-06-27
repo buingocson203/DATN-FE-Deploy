@@ -30,21 +30,22 @@ const items: MenuItem[] = [
         children: [{ key: '5', icon: <FontSizeOutlined />, label: <Link to='/admin/size'>Quản lí Size</Link> }]
     },
     { key: '8', icon: <ProductOutlined />, label: <Link to='/admin/category'>Quản lí danh mục</Link> },
-    { key: '11', icon: <TeamOutlined />, label: 'Quản lí tài khoản' },
+    {
+        key: '11',
+        icon: <TeamOutlined />,
+        label: <Link to='/admin/account'>Quản lí tài khoản</Link>
+    },
     { key: '12', icon: <ProfileOutlined />, label: 'Quản lí hóa đơn' },
-    { key: '13', icon: <UserSwitchOutlined />, label: 'Tài khoản' },
-    
+    { key: '13', icon: <UserSwitchOutlined />, label: 'Tài khoản' }
 ]
 
 const SidebarAdminComponent: React.FC = () => {
     const [collapsed, setCollapsed] = useState(false)
 
-   
-
     return (
         <div style={{ width: 288 }}>
             <div className=''>
-                <img src={logo} alt=''className='h-24'/>
+                <img src={logo} alt='' className='h-24' />
             </div>
 
             <Menu
@@ -56,7 +57,6 @@ const SidebarAdminComponent: React.FC = () => {
                 items={items}
                 className='h-screen'
             />
-            
         </div>
     )
 }

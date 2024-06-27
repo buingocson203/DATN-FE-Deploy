@@ -1,24 +1,11 @@
 import { useEffect } from 'react'
+import { Card, Col, ColProps, Form, Input, Row, Typography, Upload, UploadFile, UploadProps } from 'antd'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import { IInfoProduct } from '@/common/interfaces/infoProduct'
+import Detail from '@/components/crud/detail'
 import { getInfoProduct } from '@/services/infoProduct'
 import { getProduct } from '@/services/product'
-import { ArrowLeftOutlined } from '@ant-design/icons'
-import {
-    Breadcrumb,
-    Button,
-    Card,
-    Col,
-    ColProps,
-    Form,
-    Input,
-    Row,
-    Typography,
-    Upload,
-    UploadFile,
-    UploadProps
-} from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
 
 const colProps: ColProps = {
     xs: 24,
@@ -73,8 +60,6 @@ const DetailProduct = () => {
         const response = await getInfoProduct(productId)
         const data: IInfoProduct = response?.data
 
-        console.log(response.data)
-
         if (data) {
             const thumbnail: UploadFile[] = data?.images
                 ?.filter((item) => item.type === 'thumbnail')
@@ -113,10 +98,6 @@ const DetailProduct = () => {
     useEffect(() => {
         fetchInfoProduct()
     }, [])
-
-    const goBack = () => {
-        navigate('/admin/products')
-    }
 
     const renderForm = () => {
         return (
@@ -181,23 +162,9 @@ const DetailProduct = () => {
     }
 
     return (
-        <div className='border p-6'>
-            <Breadcrumb
-                items={[
-                    {
-                        title: <a href='/admin/products'>Quản lý sản phẩm</a>
-                    },
-
-                    {
-                        title: 'Chi tiết'
-                    }
-                ]}
-            />
-            <Button type='text' size='large' icon={<ArrowLeftOutlined />} onClick={goBack}>
-                Chi tiết sản phẩm
-            </Button>
-            {renderForm()}
-        </div>
+        <Detail name='Sản phẩm'>
+            <>{renderForm()}</>
+        </Detail>
     )
 }
 

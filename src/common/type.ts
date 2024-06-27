@@ -44,15 +44,23 @@ export interface IUser {
     role: string
 }
 
-
 export interface ISize {
-    _id?:  string 
+    _id?: string
     size: number
-    slug: number 
+    slug: number
 }
 
 export interface ICategory {
-    _id?:  string 
+    _id?: string
     name: string
-    slug: string 
+    slug: string
+}
+
+export interface IAccount {
+    _id?: string
+    userId?: string
+    name: string
+    phone: string
+    gender: string
+    role: string
 }

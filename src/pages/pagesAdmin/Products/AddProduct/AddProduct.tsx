@@ -81,7 +81,6 @@ const uploadProps: UploadProps = {
 }
 
 const normFile = (e: any) => {
-    // console.log('Upload event:', e)
     if (Array.isArray(e)) {
         return e
     }
@@ -95,6 +94,7 @@ const AddProduct: React.FC = () => {
 
     const [categories, setCategories] = useState<ICategory[]>([])
     const [sizes, setSizes] = useState<ISize[]>([])
+    const [showBtnUpload, setShowBtnUpload] = useState(true)
 
     const fetchCategories = async () => {
         const res = await getCategorys()
@@ -198,7 +198,8 @@ const AddProduct: React.FC = () => {
 
                         if (allSuccessful) {
                             form.resetFields()
-                            navigate(-1)
+                            setShowBtnUpload(true)
+                            navigate('/admin/products')
                         }
                     }
                 )
@@ -344,7 +345,18 @@ const AddProduct: React.FC = () => {
                     getValueFromEvent={normFile}
                     rules={[{ required: true, message: 'Vui lòng chọn ảnh' }]}
                 >
-                    <Upload {...uploadProps}>{uploadButton}</Upload>
+                    <Upload
+                        {...uploadProps}
+                        maxCount={1}
+                        multiple={false}
+                        onChange={() => {
+                            if (form.getFieldValue('thumbnail')?.length !== 0 || !form.getFieldValue('thumbnail')) {
+                                setShowBtnUpload(false)
+                            }
+                        }}
+                    >
+                        {showBtnUpload && uploadButton}
+                    </Upload>
                 </Form.Item>
                 <br />
                 <Form.Item<FieldType>
