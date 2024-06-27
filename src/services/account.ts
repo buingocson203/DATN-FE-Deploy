@@ -54,3 +54,12 @@ export const blockAccount = async (userId: string) => {
         console.log(`['BLOCK_ACCOUNT_ERROR']`, error)
     }
 }
+
+export const unblockAccount = async (userId: string) => {
+    try {
+        const response = await instance.put(`api/auth/user-unblock/${userId}`)
+        return response.data
+    } catch (error) {
+        console.log(`['BLOCK_ACCOUNT_ERROR']`, error)
+    }
+}

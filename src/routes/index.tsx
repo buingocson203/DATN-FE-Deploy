@@ -33,8 +33,12 @@ import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
 import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
 import MyProfile from '@/pages/MyProfile'
+
 import Orders from '@/pages/Orders/Orders'
 import OrderDetail from '@/pages/Orders/OrderDetail'
+
+import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
+import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 
 const Routers = () => {
     return (
@@ -63,6 +67,8 @@ const Routers = () => {
                 <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
                 <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
                 <Route path='/admin/category' element={<ProtectedRoute element={ListCategory} />} />
+                <Route path='/admin/account' element={<ProtectedRoute element={ListAccount} />} />
+                <Route path='/admin/account/:id/edit' element={<ProtectedRoute element={EditAccount} />} />
                 <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
                 <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
                 <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />

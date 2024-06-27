@@ -1,4 +1,5 @@
 import instance from '@/core/api'
+import { useLocalStorage } from '@/hooks/useStorage'
 import { Icon } from '@iconify/react'
 import classNames from 'classnames'
 import React, { useEffect, useMemo, useState } from 'react'
@@ -22,7 +23,7 @@ interface CartItem {
     totalPrice: number
     imageProduct: string
     productId: string
-    sizeId: string,
+    sizeId: string
     productDetailId?: string
 }
 
@@ -33,12 +34,16 @@ interface ICreateOrderBody {
     productDetails: {
         productId: string
         price: number
-        quantity: number
+        quantityOrders: number
         sizeId: string
         image: string
+        sizeName: string
+        productDetailId?: string
+        productName: string
+        promotionalPrice: number
     }[]
-    total_price: number
-    payment_type?: 'cod' | 'vnpay'
+    paymentMethod?: 'cod' | 'vnpay'
+    codeOrders?: string
 }
 
 const getUserID = (): string => {
@@ -49,9 +54,10 @@ const getUserID = (): string => {
 }
 
 const Checkout = () => {
+    const [user] = useLocalStorage('user', null)
     const navigate = useNavigate()
     const [step, setStep] = useState<'CHECKOUT' | 'PAYMENT'>('CHECKOUT')
-    const [cartList, setCartList] = useState<CartItem[]>([]);
+    const [cartList, setCartList] = useState<CartItem[]>([])
     const queryParams = new URLSearchParams(location.search)
     const transactionStatus = queryParams.get('vnp_TransactionStatus')
 
@@ -62,17 +68,16 @@ const Checkout = () => {
     } = useForm<Inputs>()
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
 
     useEffect(() => {
         if (transactionStatus === '00') {
             // toast.success("Thanh toán thành công")
             // window.location.href = '/';
-            console.log("HELLO WINDOW");
+            console.log('HELLO WINDOW')
         }
-        console.log("HELLO WORLD");
-
+        console.log('HELLO WORLD')
     }, [transactionStatus])
 
     const totalPrice = useMemo(() => {
@@ -99,8 +104,9 @@ const Checkout = () => {
                 sizeName: `${item.size}`,
                 productDetailId: item.productDetailId,
                 productName: item.nameProduct,
+                promotionalPrice: item.promotionalPrice
             }
-        });
+        })
         return data
     }
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -128,14 +134,21 @@ const Checkout = () => {
                 console.log('run herere ')
                 console.error('Error creating payment URL:', error)
             }
+        } else {
+            handleCreateOrder({
+                phone: data.phone,
+                address: data.address,
+                user_id: getUserID(),
+                productDetails: convertCart(),
+                paymentMethod: 'cod',
+                codeOrders: ''
+            })
         }
-
     }
 
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
-            await onDeleteAllCart()
             toast.success('Đặt hàng thành công')
             navigate('/')
         } catch (error) {
@@ -196,8 +209,8 @@ const Checkout = () => {
                                         </div>
                                         <div className='info__profile'>
                                             <p className='text-gray-600 text-[18px] flex gap-1'>
-                                                <span>Bui Ngoc Son</span>
-                                                <span>(buingocson@fsneaker.com)</span>
+                                                <span>{user.userName}</span>
+                                                <span>({user.email})</span>
                                             </p>
                                             <button className='text-sky-600 text-[16px]'>Đăng xuất</button>
                                         </div>
@@ -285,9 +298,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -306,9 +319,9 @@ const Checkout = () => {
                                             <button
                                                 type='submit'
                                                 className='text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
-                                            // onClick={() => {
-                                            //     paymentMethod === 'cod' ? handleOrder() : handleOrderVnPay()
-                                            // }}
+                                                // onClick={() => {
+                                                //     paymentMethod === 'cod' ? handleOrder() : handleOrderVnPay()
+                                                // }}
                                             >
                                                 Hoàn tất đơn hàng
                                             </button>
@@ -325,11 +338,7 @@ const Checkout = () => {
                         {cartList?.map((it, index) => (
                             <div className='desc flex gap-4 items-center ml-8 relative mb-6' key={index}>
                                 <div className='oder--item-img w-[100px] h-[100px] overflow-hidden'>
-                                    <img
-                                        src={it.imageProduct}
-                                        alt=''
-                                        className='imgfluid rounded-lg'
-                                    />
+                                    <img src={it.imageProduct} alt='' className='imgfluid rounded-lg' />
                                     <p className='absolute bottom-[80px] left-[80px] bg-gray-200 border border-solid border-slate-400 rounded-full flex justify-center text-[16px] px-3 py-1'>
                                         {it.totalQuantity}
                                     </p>
