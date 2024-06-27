@@ -1,9 +1,11 @@
 import { sortAtoZ, sortDescending, sortUpAscending } from '@/common/FuctionHandle/arrange'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import Pagination2 from '@/components/ui/pagination2'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
+import instance from '@/core/api'
 import { filterProductByPrice, getAllProduct } from '@/services/product/queries'
 import { getAllSize, getProductbySize } from '@/services/size/size.requeries'
 import { IFProducts } from '@/types/product'
@@ -22,14 +24,17 @@ const ProductsPage = () => {
     const [sliderVal, setsliderVal] = useState(1000000)
     const [listProduct, setListProduct] = useState<IFProducts[]>([])
     const [currentPage, setCurrentPage] = useState(1);
-
-    const productsPerPage = 12
-
+    const [totalPage, setTotalPage] = useState(1);
+    const [total, setTotal] = useState(0);
     useEffect(() => {
-        getAllProduct().then((vals) => {
-            setListProduct(vals)
+        instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=8`).then(({ data }) => {
+            const currentData = data;
+            setTotalPage(currentData.total)
+            setListProduct(currentData.data)
+            // setTotal(currentData.total); // Save total products separately
         })
-    }, [])
+    }, [currentPage])
+
 
     const breadcrumb: IBreadCrumb[] = [
         {
@@ -51,9 +56,7 @@ const ProductsPage = () => {
 
     }
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-    }
+
 
     const renderItemProduct = (vals: IFProducts) => {
         const takeTwoImage = vals.images.slice(0, 2);
@@ -102,13 +105,6 @@ const ProductsPage = () => {
         )
     }
 
-    // Tính toán chỉ số của sản phẩm đầu tiên và cuối cùng trên trang hiện tại
-    const indexOfLastProduct = currentPage * productsPerPage
-    const indexOfFirstProduct = indexOfLastProduct - productsPerPage
-    const currentProducts = listProduct.slice(indexOfFirstProduct, indexOfLastProduct)
-
-    // Tính tổng số trang
-    const totalPages = Math.ceil(listProduct.length / productsPerPage)
 
     return (
         <div className='pb-10'>
@@ -168,31 +164,7 @@ const ProductsPage = () => {
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>Không tìm thấy</div>
                     )}
-                    <div className='flex justify-center mt-5'>
-                        <button
-                            className='px-3 py-1 border rounded mx-1 flex items-center'
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            <ChevronLeftIcon className='w-4 h-4' />
-                        </button>
-                        {[...Array(totalPages)].map((_, i) => (
-                            <button
-                                key={i}
-                                className={`px-3 py-1 border rounded mx-1 ${currentPage === i + 1 ? 'bg-gray-300' : ''}`}
-                                onClick={() => handlePageChange(i + 1)}
-                            >
-                                {i + 1}
-                            </button>
-                        ))}
-                        <button
-                            className='px-3 py-1 border rounded mx-1 flex items-center'
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            <ChevronRightIcon className='w-4 h-4' />
-                        </button>
-                    </div>
+                    <Pagination2 products={listProduct} productsPerPage={8} setCurrentPage={setCurrentPage} totalPage={totalPage} />
                 </div>
             </div>
         </div>
