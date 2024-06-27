@@ -1,6 +1,3 @@
-// tổng hợp tất cả các đường link
-
-// import Signup from '@/features/auth/_components/Signup'
 import AdminLayout from '@/layouts/AdminLayout'
 import BaseLayout from '@/layouts/BaseLayout'
 import HomePage from '@/pages/HomePage/HomePage'
@@ -24,12 +21,10 @@ import Collection from '@/pages/Collection'
 import PolicyPage from '@/pages/PolicyPage'
 
 import ListSize from '@/features/size/_components/ListSize'
-
 import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
 import Checkout from '@/pages/Checkout'
-import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
 import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
 import MyProfile from '@/pages/MyProfile'
@@ -37,44 +32,44 @@ import MyProfile from '@/pages/MyProfile'
 import Orders from '@/pages/Orders/Orders'
 import OrderDetail from '@/pages/Orders/OrderDetail'
 
+import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
+
 const Routers = () => {
     return (
         <Routes>
-            <Route path='signup' element={<Signup />} />
-            <Route path='signin' element={<Signin />} />
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/signin' element={<Signin />} />
             <Route path='/' element={<BaseLayout />}>
                 <Route index element={<HomePage />} />
-                <Route path='products' element={<ProductsPage />} />
-                <Route path='products/:id' element={<ProductDetail />} />
-                <Route path='cart' element={<Cart />} />
-                <Route path='orders' element={<Orders />} />
-                <Route path='orders/:id' element={<OrderDetail />} />
-                <Route path='checkout' element={<Checkout />} />
-                <Route path='formaddress' element={<FormAddress />} />
-                <Route path='payment' element={<PayMent />} />
-                <Route path='collections/:id' element={<Collection />} />
-                <Route path='policy/:id' element={<PolicyPage />} />
-                <Route path='policy/:id' element={<PolicyPage />} />
-                <Route path='profile' element={<ProtectedRoute element={MyProfile} />} />
+                <Route path='/products' element={<ProductsPage />} />
+                <Route path='/products/:id' element={<ProductDetail />} />
+                <Route path='/cart' element={<Cart />} />
+                <Route path='/orders' element={<Orders />} />
+                <Route path='/orders/:id' element={<OrderDetail />} />
+                <Route path='/checkout' element={<Checkout />} />
+                <Route path='/formaddress' element={<FormAddress />} />
+                <Route path='/payment' element={<PayMent />} />
+                <Route path='/collections/:id' element={<Collection />} />
+                <Route path='/policy/:id' element={<PolicyPage />} />
+                <Route path='/policy/:id' element={<PolicyPage />} />
+                <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
             </Route>
-            <Route path='admin' element={<ProtectedRoute element={AdminLayout} />}>
-                <Route index element={<ProtectedRoute element={Dashboard} />} />
-                <Route path='/admin/dashboard' element={<ProtectedRoute element={Dashboard} />} />
-                <Route path='/admin/products' element={<ProtectedRoute element={Product} />} />
-                <Route path='/admin/products/add' element={<ProtectedRoute element={AddProduct} />} />
-                <Route path='/admin/products/edit/:productId' element={<ProtectedRoute element={EditProduct} />} />
-                <Route path='/admin/category' element={<ProtectedRoute element={ListCategory} />} />
-                <Route path='/admin/account' element={<ProtectedRoute element={ListAccount} />} />
-                <Route path='/admin/account/:id/edit' element={<ProtectedRoute element={EditAccount} />} />
-                <Route path='/admin/user' element={<ProtectedRoute element={ListUser} />} />
-                <Route path='/admin/bill' element={<ProtectedRoute element={ListBill} />} />
-                <Route path='/admin/bill/:id' element={<ProtectedRoute element={BillDetail} />} />
-                <Route path='/admin/size' element={<ProtectedRoute element={ListSize} />} />
-                <Route path='/admin/category/:id' element={<ProtectedRoute element={EditCategory} />} />
-                <Route path='/admin/size/:id' element={<ProtectedRoute element={Edit} />} />
-                <Route path='/admin/account' element={<ProtectedRoute element={ListAccount} />} />
-                <Route path='/admin/account/add' element={<ProtectedRoute element={AddAccount} />} />
-                <Route path='/admin/account/:id/edit' element={<ProtectedRoute element={EditAccount} />} />
+            <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
+                <Route index element={<Dashboard />} />
+                <Route path='/admin/dashboard' element={<Dashboard />} />
+                <Route path='/admin/products' element={<Product />} />
+                <Route path='/admin/products/add' element={<AddProduct />} />
+                <Route path='/admin/products/edit/:productId' element={<EditProduct />} />
+                <Route path='/admin/category' element={<ListCategory />} />
+                <Route path='/admin/account' element={<ListAccount />} />
+                <Route path='/admin/account/:id/edit' element={<EditAccount />} />
+                <Route path='/admin/user' element={<ListUser />} />
+                <Route path='/admin/bill' element={<ListBill />} />
+                <Route path='/admin/bill/:id' element={<BillDetail />} />
+                <Route path='/admin/size' element={<ListSize />} />
+                <Route path='/admin/category/:id' element={<EditCategory />} />
+                <Route path='/admin/size/:id' element={<Edit />} />
+                <Route path='/admin/account/add' element={<AddAccount />} />
             </Route>
         </Routes>
     )
