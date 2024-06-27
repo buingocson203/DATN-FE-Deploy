@@ -7,9 +7,6 @@ import Signup from '@/pages/auth/Signup'
 import { Route, Routes } from 'react-router-dom'
 import Signin from '@/pages/auth/Signin'
 import Dashboard from '@/pages/pagesAdmin/Dashboard'
-import Product from '@/pages/pagesAdmin/Products'
-import AddProduct from '@/pages/pagesAdmin/Products/AddProduct'
-import EditProduct from '@/pages/pagesAdmin/Products/EditProduct'
 import ListBill from '@/pages/pagesAdmin/ListBill'
 import BillDetail from '@/pages/pagesAdmin/ListBill/BillDetail'
 import ListUser from '@/pages/pagesAdmin/ListUser'
@@ -33,6 +30,15 @@ import Orders from '@/pages/Orders/Orders'
 import OrderDetail from '@/pages/Orders/OrderDetail'
 
 import ListAccount from '@/pages/pagesAdmin/Accounts/ListAccount'
+
+import Product from '@/pages/pagesAdmin/Products'
+import AddProduct from '@/pages/pagesAdmin/Products/AddProduct'
+import EditProduct from '@/pages/pagesAdmin/Products/EditProduct'
+import DetailProduct from '@/pages/pagesAdmin/Products/DetailProduct'
+import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
+import OrderDetailAdmin from '@/pages/pagesAdmin/Orders/OrderDetail'
+import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
+import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 
 const Routers = () => {
     return (
@@ -60,6 +66,7 @@ const Routers = () => {
                 <Route path='/admin/products' element={<Product />} />
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/products/edit/:productId' element={<EditProduct />} />
+                <Route path='/admin/products/detail/:productId' element={<ProtectedRoute element={DetailProduct} />} />
                 <Route path='/admin/category' element={<ListCategory />} />
                 <Route path='/admin/account' element={<ListAccount />} />
                 <Route path='/admin/account/:id/edit' element={<EditAccount />} />
@@ -70,6 +77,12 @@ const Routers = () => {
                 <Route path='/admin/category/:id' element={<EditCategory />} />
                 <Route path='/admin/size/:id' element={<Edit />} />
                 <Route path='/admin/account/add' element={<AddAccount />} />
+
+                <Route path='/admin/orders' element={<ProtectedRoute element={OrderList} />} />
+                <Route path='/admin/orders/detail/:orderId' element={<ProtectedRoute element={OrderDetailAdmin} />} />
+
+                <Route path='/admin/reviews' element={<ProtectedRoute element={ReviewList} />} />
+                <Route path='/admin/reviews/detail/:reviewId' element={<ProtectedRoute element={ReviewDetail} />} />
             </Route>
         </Routes>
     )
