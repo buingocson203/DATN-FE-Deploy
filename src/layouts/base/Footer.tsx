@@ -7,9 +7,9 @@ export default function Footer() {
             <div className="text-neutral-500 px-4 md:px-8 md:border-r md:border-neutral-200 py-4 md:py-16">
                 <h3 className="text-lg text-neutral-800 mb-5 font-semibold">Giới thiệu</h3>
                 <p className="text-sm">
-                    HỘ KINH DOANH THEBASIC.VN <br />
-                    GPKD số: 41N8155036 do Phòng Tài Chính - Kế Toán UBND Quận Tân Bình cấp ngày 13/ 09/ 2022. <br /> <br />
-                    THEBASIC.VN tự hào với nhiều năm kinh doanh về các loại giày sneaker. Uy tín và chất lượng luôn là hai thứ mà TheBasic.vn hướng đến.
+                HỘ KINH DOANH THEBASIC.VN <br />
+                GPKD số: 41N8155036 do Phòng Tài Chính - Kế Toán UBND Quận Tân Bình cấp ngày 13/ 09/ 2022. <br /> <br />
+                THEBASIC.VN tự hào với nhiều năm kinh doanh về các loại giày sneaker. Uy tín và chất lượng luôn là hai thứ mà TheBasic.vn hướng đến.
                 </p>
                 <div className="flex gap-2  mt-2">
                     <Link to="/" className="w-8 h-8 border rounded-md border-neutral-200 flex items-center justify-center hover:opacity-90">

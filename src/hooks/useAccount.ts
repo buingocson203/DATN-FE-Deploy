@@ -1,18 +1,10 @@
-import {
-    addAccount,
-    blockAccount,
-    getAccount,
-    getAccounts,
-    unblockAccount,
-    updateAccount,
-    updateUser
-} from '@/services/account'
+import { addAccount, blockAccount, getAccount, getAccounts, updateAccount, updateUser } from '@/services/account'
 import { useQuery } from 'react-query'
 import { useMutation, useQueryClient } from 'react-query'
 import { IAccount } from '@/common/type'
 
 type useAccountMutationProps = {
-    action: 'ADD' | 'UPDATE' | 'BLOCK' | 'USER_UPDATE' | 'UNBLOCK'
+    action: 'ADD' | 'UPDATE' | 'BLOCK' | 'USER_UPDATE'
     defaultValues?: IAccount
     onSuccess?: (res?: any) => void
 }
@@ -42,8 +34,6 @@ export const useAccountMutation = ({ action, onSuccess }: useAccountMutationProp
                     return await updateUser(data)
                 case 'BLOCK':
                     return await blockAccount(data)
-                case 'UNBLOCK':
-                    return await unblockAccount(data)
                 default:
                     return null
             }

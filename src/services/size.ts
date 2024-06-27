@@ -2,7 +2,6 @@ import { ISize } from '@/common/type'
 import { Modal } from 'antd'
 import instance from '../core/api'
 import { toast } from 'react-toastify'
-
 const showModal = (title: string, content: string) => {
     Modal.info({
         title: title,

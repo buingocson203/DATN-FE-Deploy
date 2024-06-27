@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
-import { Link } from 'react-router-dom'
-
 const Orders = () => {
     const [lstOrders, setLstOrders] = useState([])
     const [showReviewForm, setShowReviewForm] = useState(false)
@@ -23,7 +21,7 @@ const Orders = () => {
         return new Date(dateString).toLocaleString()
     }
     const formatMoney = (money: number) => {
-        return money?.toLocaleString() || 0
+        return money?.toLocaleString()|| 0
     }
 
     const breadcrumb: IBreadCrumb[] = [
@@ -47,7 +45,6 @@ const Orders = () => {
     }, [])
 
     const cancelOrder = async (orderID: any) => {
-        event?.stopPropagation()
         try {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: 'cancel'
@@ -61,7 +58,6 @@ const Orders = () => {
     }
 
     const onSelectOrderToReview = (order: any) => {
-        event?.stopPropagation()
         setReviewObj({
             userId: getUserID(),
             orderId: order._id,
@@ -215,14 +211,11 @@ const Orders = () => {
                                         })}
                                         <div className='flex items-center justify-between pl-[16px] mt-3'>
                                             <h4 className='text-[14px] italic'>
-                                                Mã đơn hàng: <b>{order?.codeOrders || 'Chưa có'}</b> - Ngày đặt đơn:{' '}
-                                                {formatDate(order?.createdAt)}
+                                                Ngày đặt đơn: {formatDate(order?.createdAt)}
                                             </h4>
                                             <h3 className='text-right pr-[16px] text-[18px] mb-1'>
                                                 Thành tiền:{' '}
-                                                <span className='text-red-500'>
-                                                    {formatMoney(order?.total_price || 0)}
-                                                </span>
+                                                <span className='text-red-500'>{formatMoney(order.total_amount_paid || order.total_price)}</span>
                                             </h3>
                                         </div>
                                         <div
@@ -273,7 +266,7 @@ const Orders = () => {
                                                                 Đánh giá
                                                             </button>
                                                         )
-                                                    } else if (order.isRated && order.orderStatus == 'done') {
+                                                    } else if (order.isRated) {
                                                         return (
                                                             <div className='text-[14px] text-red-500'>
                                                                 Đơn hàng đã được đánh giá
@@ -281,11 +274,6 @@ const Orders = () => {
                                                         )
                                                     }
                                                 })()}
-                                                <Link to={`/orders/${order._id}`}>
-                                                    <button className='h-[36px] border border-red-500 outline-none bg-red-500 text-white transition-all rounded-md w-[80px] text-[16px]'>
-                                                        Chi tiết
-                                                    </button>
-                                                </Link>
                                             </div>
                                         </div>
                                     </div>

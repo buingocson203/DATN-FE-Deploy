@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { Button, Popconfirm, Space, Table, Tag, message } from 'antd'
-import type { TableProps } from 'antd'
+import type { PopconfirmProps, TableProps } from 'antd'
 
 interface DataType {
     _id: string
@@ -11,7 +11,6 @@ interface DataType {
     role: 'admin' | 'member'
     gender: string
     createdAt: string
-    block: boolean
 }
 
 import styles from './index.module.css'
@@ -24,14 +23,6 @@ const ListAccount = () => {
         action: 'BLOCK',
         onSuccess: () => {
             message.success('Block user thành công')
-            refetch()
-        }
-    })
-
-    const { mutate: onUnblock } = useAccountMutation({
-        action: 'UNBLOCK',
-        onSuccess: () => {
-            message.success('Bỏ chặn user thành công')
             refetch()
         }
     })
@@ -82,27 +73,15 @@ const ListAccount = () => {
             render: (_, record) => (
                 <Space size='middle'>
                     <Link to={`/admin/account/${record._id}/edit`}>Edit</Link>
-                    {record?.block ? (
-                        <Popconfirm
-                            title='Mở khoá tài khoản'
-                            description='Xác nhận mở khoá tài khoản?'
-                            onConfirm={() => onUnblock(record?._id)}
-                            okText='Yes'
-                            cancelText='No'
-                        >
-                            <Button type='primary'>Unlock</Button>
-                        </Popconfirm>
-                    ) : (
-                        <Popconfirm
-                            title='Khoá tài khoản'
-                            description='Xác nhận khoá tài khoản?'
-                            onConfirm={() => confirm(record?._id)}
-                            okText='Yes'
-                            cancelText='No'
-                        >
-                            <Button danger>Lock</Button>
-                        </Popconfirm>
-                    )}
+                    <Popconfirm
+                        title='Khoá tài khoản'
+                        description='Xác nhận khoá tài khoản?'
+                        onConfirm={() => confirm(record?._id)}
+                        okText='Yes'
+                        cancelText='No'
+                    >
+                        <Button danger>Lock</Button>
+                    </Popconfirm>
                 </Space>
             )
         }
