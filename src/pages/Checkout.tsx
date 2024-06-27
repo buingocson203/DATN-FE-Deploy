@@ -23,7 +23,7 @@ interface CartItem {
     totalPrice: number
     imageProduct: string
     productId: string
-    sizeId: string
+    sizeId: string,
     productDetailId?: string
 }
 
@@ -42,8 +42,9 @@ interface ICreateOrderBody {
         productName: string
         promotionalPrice: number
     }[]
-    paymentMethod?: 'cod' | 'vnpay'
-    codeOrders?: string
+    // total_price: number
+    // payment_type?: 'cod' | 'vnpay'
+    codeOrders: string;
 }
 
 const getUserID = (): string => {
@@ -60,6 +61,7 @@ const Checkout = () => {
     const [cartList, setCartList] = useState<CartItem[]>([])
     const queryParams = new URLSearchParams(location.search)
     const transactionStatus = queryParams.get('vnp_TransactionStatus')
+    const txnRef = queryParams.get('vnp_TxnRef');
 
     const {
         register,
@@ -68,30 +70,15 @@ const Checkout = () => {
     } = useForm<Inputs>()
 
     useEffect(() => {
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        if (transactionStatus === '00') {
-            // toast.success("Thanh toán thành công")
-            // window.location.href = '/';
-            console.log('HELLO WINDOW')
-        }
-        console.log('HELLO WORLD')
-    }, [transactionStatus])
-
+        fetchData();
+    }, []);
     const totalPrice = useMemo(() => {
         const totalPrice = cartList?.reduce((total, item) => {
-            return (total += item.price * item.totalQuantity)
+            return (total += item.promotionalPrice * item.totalQuantity)
         }, 0)
 
         return totalPrice
     }, [cartList?.length])
-
-    const fetchData = async () => {
-        const response = await instance.get(`api/cart/${getUserID()}`)
-        setCartList(response.data.data)
-    }
 
     const convertCart = () => {
         const data = cartList.map((item) => {
@@ -106,30 +93,54 @@ const Checkout = () => {
                 productName: item.nameProduct,
                 promotionalPrice: item.promotionalPrice
             }
-        })
+        });
         return data
     }
+
+    useEffect(() => {
+        if (transactionStatus === '00') {
+            // toast.success("Thanh toán thành công")
+            // window.location.href = '/';
+            const dataLocal = JSON.parse(localStorage.getItem("dataFormSelf")!);
+            instance.post('http://localhost:8000/api/order/create-order', {
+                address: dataLocal.address,
+                phone: dataLocal.phone,
+                user_id: getUserID(),
+                productDetails: dataLocal.productDetails,
+                codeOrders: txnRef,
+                paymentMethod: 'vnpay',
+                paymentStatus: 'unpaid'
+            }).then(() => {
+                console.log("RUNNING HERE");
+                localStorage.removeItem("dataFormSelf");
+                // toast.success('Đặt hàng thành công');
+                window.location.href = "http://localhost:5173/orders"
+            })
+        }
+    }, [transactionStatus])
+
+    const fetchData = async () => {
+        const response = await instance.get(`api/cart/${getUserID()}`)
+        setCartList(response.data.data)
+    }
+
+
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         if (step === 'CHECKOUT') return
         if (data.payment_type === 'vnpay') {
             try {
+                localStorage.setItem("dataFormSelf", JSON.stringify({ address: data.address, phone: data.phone, productDetails: convertCart(), total_price: totalPrice }));
                 const { data: response } = await instance.post(
                     'api/order/create-order-vnpay',
                     {
-                        address: data.address,
-                        phone: data.phone,
                         user_id: getUserID(),
-                        productDetails: convertCart(),
                         total_price: totalPrice,
-                        paymentMethod: 'vnpay',
-                        orderStatus: 'pending',
-                        paymentStatus: 'unpaid'
                     },
                     {
                         withCredentials: true // Đảm bảo thông tin đăng nhập được bao gồm trong yêu cầu
                     }
                 )
-                window.location.href = response.paymentUrl // Redirect to the VNPAY URL
+                window.location.href = response.url // Redirect to the VNPAY URL
             } catch (error) {
                 console.log('run herere ')
                 console.error('Error creating payment URL:', error)
@@ -140,17 +151,20 @@ const Checkout = () => {
                 address: data.address,
                 user_id: getUserID(),
                 productDetails: convertCart(),
-                paymentMethod: 'cod',
-                codeOrders: ''
+                // payment_type: 'cod',
+                codeOrders: '',
+                // total_price: totalPrice
             })
         }
+
     }
 
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
+            await onDeleteAllCart()
             toast.success('Đặt hàng thành công')
-            navigate('/')
+            navigate('/orders')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
         }
@@ -298,9 +312,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -319,9 +333,6 @@ const Checkout = () => {
                                             <button
                                                 type='submit'
                                                 className='text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
-                                                // onClick={() => {
-                                                //     paymentMethod === 'cod' ? handleOrder() : handleOrderVnPay()
-                                                // }}
                                             >
                                                 Hoàn tất đơn hàng
                                             </button>
@@ -338,7 +349,11 @@ const Checkout = () => {
                         {cartList?.map((it, index) => (
                             <div className='desc flex gap-4 items-center ml-8 relative mb-6' key={index}>
                                 <div className='oder--item-img w-[100px] h-[100px] overflow-hidden'>
-                                    <img src={it.imageProduct} alt='' className='imgfluid rounded-lg' />
+                                    <img
+                                        src={it.imageProduct}
+                                        alt=''
+                                        className='imgfluid rounded-lg'
+                                    />
                                     <p className='absolute bottom-[80px] left-[80px] bg-gray-200 border border-solid border-slate-400 rounded-full flex justify-center text-[16px] px-3 py-1'>
                                         {it.totalQuantity}
                                     </p>
