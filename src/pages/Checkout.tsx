@@ -11,6 +11,7 @@ type Inputs = {
     address: string
     phone: string
     payment_type: 'cod' | 'vnpay'
+    name: string
 }
 
 interface CartItem {
@@ -23,7 +24,7 @@ interface CartItem {
     totalPrice: number
     imageProduct: string
     productId: string
-    sizeId: string,
+    sizeId: string
     productDetailId?: string
 }
 
@@ -42,9 +43,10 @@ interface ICreateOrderBody {
         productName: string
         promotionalPrice: number
     }[]
+    name: string
     // total_price: number
     // payment_type?: 'cod' | 'vnpay'
-    codeOrders: string;
+    codeOrders: string
 }
 
 const getUserID = (): string => {
@@ -61,7 +63,7 @@ const Checkout = () => {
     const [cartList, setCartList] = useState<CartItem[]>([])
     const queryParams = new URLSearchParams(location.search)
     const transactionStatus = queryParams.get('vnp_TransactionStatus')
-    const txnRef = queryParams.get('vnp_TxnRef');
+    const txnRef = queryParams.get('vnp_TxnRef')
 
     const {
         register,
@@ -70,8 +72,8 @@ const Checkout = () => {
     } = useForm<Inputs>()
 
     useEffect(() => {
-        fetchData();
-    }, []);
+        fetchData()
+    }, [])
     const totalPrice = useMemo(() => {
         const totalPrice = cartList?.reduce((total, item) => {
             return (total += item.promotionalPrice * item.totalQuantity)
@@ -93,7 +95,7 @@ const Checkout = () => {
                 productName: item.nameProduct,
                 promotionalPrice: item.promotionalPrice
             }
-        });
+        })
         return data
     }
 
@@ -101,21 +103,23 @@ const Checkout = () => {
         if (transactionStatus === '00') {
             // toast.success("Thanh toán thành công")
             // window.location.href = '/';
-            const dataLocal = JSON.parse(localStorage.getItem("dataFormSelf")!);
-            instance.post('http://localhost:8000/api/order/create-order', {
-                address: dataLocal.address,
-                phone: dataLocal.phone,
-                user_id: getUserID(),
-                productDetails: dataLocal.productDetails,
-                codeOrders: txnRef,
-                paymentMethod: 'vnpay',
-                paymentStatus: 'unpaid'
-            }).then(() => {
-                console.log("RUNNING HERE");
-                localStorage.removeItem("dataFormSelf");
-                // toast.success('Đặt hàng thành công');
-                window.location.href = "http://localhost:5173/orders"
-            })
+            const dataLocal = JSON.parse(localStorage.getItem('dataFormSelf')!)
+            instance
+                .post('http://localhost:8000/api/order/create-order', {
+                    address: dataLocal.address,
+                    phone: dataLocal.phone,
+                    user_id: getUserID(),
+                    productDetails: dataLocal.productDetails,
+                    codeOrders: txnRef,
+                    paymentMethod: 'vnpay',
+                    paymentStatus: 'unpaid'
+                })
+                .then(() => {
+                    console.log('RUNNING HERE')
+                    localStorage.removeItem('dataFormSelf')
+                    // toast.success('Đặt hàng thành công');
+                    window.location.href = 'http://localhost:5173/orders'
+                })
         }
     }, [transactionStatus])
 
@@ -124,17 +128,24 @@ const Checkout = () => {
         setCartList(response.data.data)
     }
 
-
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
         if (step === 'CHECKOUT') return
         if (data.payment_type === 'vnpay') {
             try {
-                localStorage.setItem("dataFormSelf", JSON.stringify({ address: data.address, phone: data.phone, productDetails: convertCart(), total_price: totalPrice }));
+                localStorage.setItem(
+                    'dataFormSelf',
+                    JSON.stringify({
+                        address: data.address,
+                        phone: data.phone,
+                        productDetails: convertCart(),
+                        total_price: totalPrice
+                    })
+                )
                 const { data: response } = await instance.post(
                     'api/order/create-order-vnpay',
                     {
                         user_id: getUserID(),
-                        total_price: totalPrice,
+                        total_price: totalPrice
                     },
                     {
                         withCredentials: true // Đảm bảo thông tin đăng nhập được bao gồm trong yêu cầu
@@ -151,33 +162,21 @@ const Checkout = () => {
                 address: data.address,
                 user_id: getUserID(),
                 productDetails: convertCart(),
+                name: data.name,
                 // payment_type: 'cod',
-                codeOrders: '',
+                codeOrders: ''
                 // total_price: totalPrice
             })
         }
-
     }
 
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
-            await onDeleteAllCart()
             toast.success('Đặt hàng thành công')
             navigate('/orders')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
-        }
-    }
-
-    const onDeleteAllCart = async () => {
-        const ids = cartList?.map((it) => it.idCart)
-        try {
-            await instance.delete(`api/cart/deteCart`, {
-                data: { idCart: ids }
-            })
-        } catch (error) {
-            console.log(error)
         }
     }
 
@@ -232,6 +231,19 @@ const Checkout = () => {
 
                                     <div className='form__profile'>
                                         <div>
+                                            <div className='relative z-0 w-full mb-5 group border rounded'>
+                                                <input
+                                                    type='text'
+                                                    className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                                                    placeholder=''
+                                                    {...register('name', {
+                                                        required: true
+                                                    })}
+                                                />
+                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
+                                                    Tên người nhận
+                                                </label>
+                                            </div>
                                             <div className='relative z-0 w-full mb-5 group border rounded'>
                                                 <input
                                                     type='text'
@@ -312,9 +324,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -349,11 +361,7 @@ const Checkout = () => {
                         {cartList?.map((it, index) => (
                             <div className='desc flex gap-4 items-center ml-8 relative mb-6' key={index}>
                                 <div className='oder--item-img w-[100px] h-[100px] overflow-hidden'>
-                                    <img
-                                        src={it.imageProduct}
-                                        alt=''
-                                        className='imgfluid rounded-lg'
-                                    />
+                                    <img src={it.imageProduct} alt='' className='imgfluid rounded-lg' />
                                     <p className='absolute bottom-[80px] left-[80px] bg-gray-200 border border-solid border-slate-400 rounded-full flex justify-center text-[16px] px-3 py-1'>
                                         {it.totalQuantity}
                                     </p>
