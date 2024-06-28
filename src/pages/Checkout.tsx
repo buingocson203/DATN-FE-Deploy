@@ -106,6 +106,7 @@ const Checkout = () => {
             const dataLocal = JSON.parse(localStorage.getItem('dataFormSelf')!)
             instance
                 .post('http://localhost:8000/api/order/create-order', {
+                    name: dataLocal.name,
                     address: dataLocal.address,
                     phone: dataLocal.phone,
                     user_id: getUserID(),
@@ -135,6 +136,7 @@ const Checkout = () => {
                 localStorage.setItem(
                     'dataFormSelf',
                     JSON.stringify({
+                        name: data.name,
                         address: data.address,
                         phone: data.phone,
                         productDetails: convertCart(),
@@ -324,9 +326,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
