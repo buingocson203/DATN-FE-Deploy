@@ -33,6 +33,26 @@ const Signup = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
                         <FormField
+                            name='fullName'
+                            control={form.control}
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel className='block text-sm font-medium leading-6 text-gray-900'>
+                                        Họ tên
+                                    </FormLabel>
+                                    <FormControl className='mt-2'>
+                                        <Input
+                                            type='text'
+                                            {...field}
+                                            className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'
+                                            placeholder='Full name'
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
                             name='userName'
                             control={form.control}
                             render={({ field }) => (
