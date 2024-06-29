@@ -114,9 +114,9 @@ const ReviewDetail = () => {
                     <Input disabled />
                 </Form.Item>
 
-                <Form.Item<FieldType> name='updatedAt' label='Thời gian chỉnh sửa'>
+                {/* <Form.Item<FieldType> name='updatedAt' label='Thời gian chỉnh sửa'>
                     <Input disabled />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item<FieldType> name='name' label='Tên sản phẩm'>
                     <Input readOnly disabled />
                 </Form.Item>

@@ -112,7 +112,7 @@ const Product = () => {
             }
         },
         {
-            title: 'Giá bán',
+            title: 'Giá niêm yiết',
             dataIndex: 'productDetails',
             key: 'price',
             width: '10%',
@@ -122,7 +122,7 @@ const Product = () => {
             }
         },
         {
-            title: 'Giá niêm yiết',
+            title: 'Giá bán',
             dataIndex: 'productDetails',
             key: 'promotionalPrice',
             width: '10%',

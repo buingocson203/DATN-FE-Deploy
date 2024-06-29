@@ -107,10 +107,10 @@ const OrderDetail = () => {
                     <Form.Item<FieldType> name='paymentType' label='Hình thức thanh toán'>
                         <Input readOnly disabled />
                     </Form.Item>
-                    <Form.Item<FieldType> name='totalAmountPaid' label='Tổng số tiền thanh toán'>
+                    {/* <Form.Item<FieldType> name='totalAmountPaid' label='Tổng số tiền thanh toán'>
                         <Input readOnly disabled />
-                    </Form.Item>
-                    <Form.Item<FieldType> name='totalPrice' label='Tống số chi trả'>
+                    </Form.Item> */}
+                    <Form.Item<FieldType> name='totalPrice' label='Tống số thanh toán'>
                         <Input readOnly disabled />
                     </Form.Item>
                     <Form.Item<FieldType> name='orderStatus' label='Trạng thái'>
