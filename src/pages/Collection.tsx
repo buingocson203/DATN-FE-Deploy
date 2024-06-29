@@ -183,7 +183,7 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: I
     }
 
     const handFilterSizeShoe = async (size: string) => {
-        const data = await getCategoryBySize(size, categoryId);
+        const data = await getCategoryBySize(size, categoryId, 0, sliderVal);
         setCurrSizeShoe(size)
         setListProduct(data);
     }
