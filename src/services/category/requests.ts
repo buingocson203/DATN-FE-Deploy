@@ -24,10 +24,13 @@ export const filterCategoryByPrice = async (
     return data.data
 }
 
-export const getCategoryBySize = async (size: string, categoryId: string) => {
-    const { data } = await instance.get(`api/infoProduct?size=${size}&category=${categoryId}`)
+export const getCategoryBySize = async (size: string, categoryId: string, min: number, max: number) => {
+    const { data } = await instance.get(
+        `api/infoProduct?size=${size}&category=${categoryId}&minPrice=${min}&maxPrice=${max}`
+    )
     return data.data
 }
+
 export const arrangeCategory = async (id: string, arrange: string): Promise<IFCATEGORY_DETAIL[]> => {
     const { data } = await instance.get(`/api/infoProduct?sort=${arrange}&category=${id}`)
     return data.data
