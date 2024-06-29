@@ -1,28 +1,26 @@
-import React, { useState } from 'react'
 import {
-    AppstoreOutlined,
-    MailOutlined,
-    ProductOutlined,
-    LineHeightOutlined,
     FontSizeOutlined,
-    MenuFoldOutlined,
-    TeamOutlined,
-    UserOutlined,
-    ProfileOutlined,
-    MenuUnfoldOutlined,
-    UserSwitchOutlined,
+    LineHeightOutlined,
     PieChartOutlined,
-    LogoutOutlined
+    ProductOutlined,
+    ProfileOutlined,
+    TeamOutlined,
+    UserSwitchOutlined,
+    OrderedListOutlined,
+    CommentOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Button, Menu } from 'antd'
-import logo from '../../assets/2-01.jpg'
+import { Menu } from 'antd'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import logo from '../../assets/2-01.jpg'
 type MenuItem = Required<MenuProps>['items'][number]
 
 const items: MenuItem[] = [
-    { key: '1', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
-    { key: '2', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lí sản phẩm</Link> },
+    { key: 'dashboard', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
+    { key: 'products', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lí sản phẩm</Link> },
+    { key: 'orders', icon: <OrderedListOutlined />, label: <Link to='/admin/orders'>Quản lí đặt hàng</Link> },
+    { key: 'reviews', icon: <CommentOutlined />, label: <Link to='/admin/reviews'>Quản lí đánh giá</Link> },
     {
         key: 'sub1',
         label: 'Quản lí thuộc tính',
@@ -49,7 +47,7 @@ const SidebarAdminComponent: React.FC = () => {
             </div>
 
             <Menu
-                defaultSelectedKeys={['1']}
+                defaultSelectedKeys={['dashboard']}
                 defaultOpenKeys={['sub1']}
                 mode='inline'
                 theme='dark'
