@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast, ToastContainer } from 'react-toastify'
+import { toast } from 'react-toastify'
 
 type Inputs = {
     address: string
@@ -190,7 +190,6 @@ const Checkout = () => {
 
     return (
         <div className='my-[50px]'>
-            <ToastContainer />
             <div className='max-w-screen-xl m-auto text-[20px]'>
                 <div className='cart grid grid-cols-4 gap-5 my-5 mx-0'>
                     <div className='cart__content col-span-2'>
@@ -259,7 +258,11 @@ const Checkout = () => {
                                                     className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
                                                     placeholder=''
                                                     {...register('phone', {
-                                                        required: true
+                                                        required: true,
+                                                        pattern: {
+                                                            value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+                                                            message: 'Số điện thoại không đúng định dạng'
+                                                        }
                                                     })}
                                                 />
                                                 <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
@@ -333,9 +336,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
