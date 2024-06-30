@@ -101,7 +101,7 @@ const ReviewDetail = () => {
     return (
         <Detail name='Đánh giá' isLoading={isLoading}>
             <Form form={form} layout='vertical'>
-                <Form.Item<FieldType> name='content' label='Content'>
+                <Form.Item<FieldType> name='content' label='Nội dung'>
                     <Input.TextArea disabled />
                 </Form.Item>
                 <Form.Item<FieldType> name='username' label='Người đánh giá'>
@@ -132,10 +132,10 @@ const ReviewDetail = () => {
                 <Form.Item name='thumbnail' label='Ảnh đại diện' valuePropName='fileList'>
                     <Upload {...uploadProps} />
                 </Form.Item>
-                <Form.Item name='gallery' label='Ảnh gallery' valuePropName='fileList'>
+                {/* <Form.Item name='gallery' label='Ảnh gallery' valuePropName='fileList'>
                     <Upload {...uploadProps} />
-                </Form.Item>
-                <Typography>Danh sách size</Typography>
+                </Form.Item> */}
+                {/* <Typography>Danh sách size</Typography> */}
                 <br />
                 <Form.List name='sizes'>
                     {(fields) => (

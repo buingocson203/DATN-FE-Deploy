@@ -80,7 +80,7 @@ const OrderList: React.FC = () => {
             render: (value: IOrder['user_id']) => value && value?.userName
         },
         {
-            title: 'Tổng đơn hàng',
+            title: 'Tổng số tiền thanh toán',
             dataIndex: 'total_price',
             key: 'total_price',
             render: (value: IOrder['total_price']) => value && formatPrice(value)
