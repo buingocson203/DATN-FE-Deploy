@@ -5,7 +5,7 @@ import classNames from 'classnames'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 
 type Inputs = {
     address: string
@@ -118,8 +118,14 @@ const Checkout = () => {
                 .then(() => {
                     console.log('RUNNING HERE')
                     localStorage.removeItem('dataFormSelf')
-                    // toast.success('Đặt hàng thành công');
-                    window.location.href = 'http://localhost:5173/orders'
+                    toast.success('Đặt hàng thành công');
+                    setTimeout(() => {
+                        window.location.href = 'http://localhost:5173/orders'
+
+                    }, 3000);
+                })
+                .catch((error) => {
+                    console.error('Error creating order:', error)
                 })
         }
     }, [transactionStatus])
@@ -184,6 +190,7 @@ const Checkout = () => {
 
     return (
         <div className='my-[50px]'>
+            <ToastContainer />
             <div className='max-w-screen-xl m-auto text-[20px]'>
                 <div className='cart grid grid-cols-4 gap-5 my-5 mx-0'>
                     <div className='cart__content col-span-2'>
@@ -242,7 +249,7 @@ const Checkout = () => {
                                                         required: true
                                                     })}
                                                 />
-                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
+                                                <label className='peer-focus:font-medium absolute  px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
                                                     Tên người nhận
                                                 </label>
                                             </div>
