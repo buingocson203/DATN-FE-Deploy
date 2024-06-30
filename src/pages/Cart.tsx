@@ -3,8 +3,11 @@ import { Icon } from '@iconify/react'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import { Link } from 'react-router-dom'
 import instance from '@/core/api'
+import { useDispatch } from 'react-redux'
+import { removeFromCartStore, decreaseCustomCartQuantityStore } from '../store/actions'
 
 const Cart = () => {
+    const dispatch = useDispatch()
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -74,6 +77,7 @@ const Cart = () => {
         cartList?.forEach((item, index) => {
             if (item.idCart === itemID) {
                 fetchData([itemID])
+                dispatch(removeFromCartStore())
                 const updatedCart = [...cartList] // Create a copy of the cart array
                 updatedCart.splice(index, 1)
                 setCartList(updatedCart)
@@ -82,7 +86,6 @@ const Cart = () => {
         setForceRender(forceRender + 1)
     }
     const handleSelectCart = (event: any, idCart: any) => {
-        console.log(event.target.checked, idCart)
         if (event.target.checked) {
             setLstSelected([...lstSelected, idCart])
         } else {
@@ -92,7 +95,6 @@ const Cart = () => {
             }
             setLstSelected([...lstSelected])
         }
-        console.log(lstSelected)
     }
     const removeCartList = () => {
         const fetchData = async (ids: string[]) => {
@@ -100,13 +102,14 @@ const Cart = () => {
                 await instance.delete(`api/cart/deteCart`, {
                     data: { idCart: ids }
                 })
-                alert('Cart deleted successfully')
+                dispatch(decreaseCustomCartQuantityStore(ids.length))
+                alert('Giỏ hàng đã được xóa thành công')
             } catch (error) {
-                alert('Error deleting')
+                alert('Xóa giỏ hàng thất bại')
             }
         }
         fetchData(lstSelected)
-        setCartList([])
+        setCartList(cartList.filter((x) => !lstSelected.includes(x.idCart)))
         setForceRender(forceRender + 1)
     }
     const totalPrice = useMemo(() => {
@@ -165,9 +168,9 @@ const Cart = () => {
                                                 <h3 className='desc-inf-title'>{item.nameProduct}</h3>
                                                 <p className='mb-4 text-[16px] font-semibold'>Size: {item.size}</p>
                                                 <p className='text-gray-600 font-semibold'>
-                                                    Price: {item.price}đ
+                                                    Price: {item.promotionalPrice}đ
                                                     <strike className='text-[16px] text-gray-400 ml-1'>
-                                                        {item.promotionalPrice}
+                                                        {item.price}đ
                                                     </strike>
                                                 </p>
                                             </div>
@@ -175,7 +178,7 @@ const Cart = () => {
 
                                         <div className='item-desc-price'>
                                             <p className='text-right font-semibold mb-3'>
-                                                {item.price * item.totalQuantity}đ
+                                                {item.promotionalPrice * item.totalQuantity}đ
                                             </p>
                                             <div className='flex items-center space-x-4 border-solid border'>
                                                 <button

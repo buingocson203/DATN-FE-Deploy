@@ -235,15 +235,15 @@ const Orders = () => {
                                                     {(() => {
                                                         switch (order.orderStatus) {
                                                             case 'pending':
-                                                                return 'Đang xử lý'
+                                                                return 'Chờ xác nhận'
                                                             case 'waiting':
-                                                                return 'Đang chờ lấy hàng'
+                                                                return 'Chờ lấy hàng'
                                                             case 'cancel':
-                                                                return 'Đã hủy đơn'
+                                                                return 'Hủy bỏ'
                                                             case 'delivering':
-                                                                return 'Đã giao hàng'
+                                                                return 'Đang giao hàng'
                                                             case 'done':
-                                                                return 'Đã hoàn thành'
+                                                                return 'Đã giao hàng'
                                                             default:
                                                                 return order.orderStatus
                                                         }

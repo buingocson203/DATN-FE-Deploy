@@ -15,9 +15,11 @@ import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from
 import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
 import { render } from 'react-dom'
-
+import { useDispatch } from 'react-redux'
+import { updateCartQuantityStore } from '../../store/actions'
 
 const ProductDetail = () => {
+    const dispatch = useDispatch()
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
     const [variant, setVariant] = useState<IProductSize | undefined>()
@@ -54,6 +56,7 @@ const ProductDetail = () => {
         const fetchData = async (dataX: any) => {
             try {
                 await instance.post(`api/cart`, dataX)
+                dispatch(updateCartQuantityStore(quantity))
                 alert('Thêm sản phẩm vào giỏ hàng thành công')
             } catch (error) {
                 console.log(error)
@@ -107,11 +110,9 @@ const ProductDetail = () => {
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
                                 <span className='w-[120px]'>Giá:</span>
                                 <span className='text-red-500 font-medium text-xl mr-2'>
-                                    {variant?.importPrice || 0}₫
-                                </span>
-                                <span className='line-through text-neutral-500 mr-4'>
                                     {variant?.promotionalPrice || 0}₫
                                 </span>
+                                <span className='line-through text-neutral-500 mr-4'>{variant?.price || 0}₫</span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
@@ -127,6 +128,7 @@ const ProductDetail = () => {
                                                 (size: any, index: any, self: any) =>
                                                     index === self.findIndex((t) => t.size === size.size)
                                             )
+                                            .sort((a, b) => a.size - b.size)
                                             .map((size, index) => {
                                                 return (
                                                     <span

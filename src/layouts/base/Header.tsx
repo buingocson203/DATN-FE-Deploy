@@ -1,28 +1,62 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-bar";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { getAllCategory } from "@/services/category/requests";
-import { ChatBubbleIcon } from "@radix-ui/react-icons";
-import { normalizeHash } from "@remix-run/router/dist/utils";
-import { ChevronDown } from "lucide";
-import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
-import { useState } from "react";
-import { useQuery } from "react-query";
-import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/1-01.png";
-import { useLocalStorage } from '@/hooks/useStorage';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import {NavigationMenu,NavigationMenuContent,NavigationMenuIndicator,NavigationMenuItem,NavigationMenuLink,NavigationMenuList,NavigationMenuTrigger,navigationMenuTriggerStyle
+} from '@/components/ui/navigation-bar'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { getAllCategory } from '@/services/category/requests'
+import { ChatBubbleIcon } from '@radix-ui/react-icons'
+import { normalizeHash } from '@remix-run/router/dist/utils'
+import { ChevronDown } from 'lucide'
+import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useQuery } from 'react-query'
+import { Link, useNavigate } from 'react-router-dom'
+import logo from '../../assets/1-01.png'
+import { useLocalStorage } from '@/hooks/useStorage'
+import { useSelector } from 'react-redux'
+import instance from '@/core/api'
+import { useDispatch } from 'react-redux'
+import { updateAllCartQuantityStore } from '../../store/actions'
+
 export default function Header() {
+    const dispatch = useDispatch()
+    const cartQuantity = useSelector((state) => state.cart)
+    const getUserID = () => {
+        const storedUser = localStorage.getItem('user')
+        const user = storedUser ? JSON.parse(storedUser) : {}
+        const userID = user?._id || ''
+        return userID
+    }
+    interface CartItem {
+        idCart: string
+        nameProduct: string
+        price: number
+        promotionalPrice: number
+        totalQuantity: number
+        size: number
+        totalPrice: number
+        imageProduct: string
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await instance.get(`api/cart/${getUserID()}`)
+            let quantity = response.data.data.reduce((total, item) => {
+                return total + item.totalQuantity
+            }, 0)
+            dispatch(updateAllCartQuantityStore(quantity))
+        }
+        fetchData()
+    }, [])
     const [open, setOpen] = useState(false)
     const [user] = useLocalStorage('user', null)
 
-
     const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     const handleCategoryClick = (categoryId: string) => {
-        navigate('/collections/' + categoryId, { replace: true });
-        window.location.reload(); // reload the page
-    };
+        navigate('/collections/' + categoryId, { replace: true })
+        window.location.reload() // reload the page
+    }
     return (
         <header>
             <div className='bg-black py-2 text-white text-xs'>
@@ -163,7 +197,7 @@ export default function Header() {
                     <div className='relative'>
                         <Link to='/cart'>
                             <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>
-                                1
+                                {cartQuantity}
                             </span>
                             <ShoppingBagIcon size={26} />
                         </Link>
@@ -184,8 +218,7 @@ export default function Header() {
                             <ChevronDownIcon className='w-3 transition-all group-hover:rotate-180 duration-300' />
 
                             <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
-
-                                {categories?.map(category =>
+                                {categories?.map((category) => (
                                     <li key={category._id}>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
@@ -194,7 +227,8 @@ export default function Header() {
                                         >
                                             {category.name}
                                         </Link>
-                                    </li>)}
+                                    </li>
+                                ))}
                                 {/* <li>
                                     <Link
                                         className='px-5 py-2 flex items-center relative item-hover'
@@ -246,7 +280,6 @@ export default function Header() {
                                         MLB
                                     </Link>
                                 </li> */}
-
                             </ul>
                         </Link>
                     </li>

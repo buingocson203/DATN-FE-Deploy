@@ -6,10 +6,10 @@ type Props = {} & IProduct
 export default function ProductItem({ _id, IdImages, name, sizeId, price, promotionalPrice, importPrice }: Props) {
     return (
         <Link to={`/products/${_id}`} className='cursor-pointer group' onClick={() => {
-            setTimeout(() => {
-                location.reload()
-            }, 200)
-        }}>
+                setTimeout(() => {
+                    location.reload()
+                }, 200)
+            }}>
             <div className='pt-6 relative pb-3 overflow-hidden'>
                 {/* <span className='absolute text-xs p-1 px-2 bg-red-500 rounded-full inline-flex item-center gap-1 text-white items-center w-fit top-0 left-2'>
                 <Zap size={10} />
@@ -22,6 +22,7 @@ export default function ProductItem({ _id, IdImages, name, sizeId, price, promot
                             'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
                         }
                         alt=''
+                        className='!h-[245px]'
                     />
                     <img
                         src={
