@@ -12,6 +12,7 @@ type Inputs = {
     phone: string
     payment_type: 'cod' | 'vnpay'
     name: string
+
 }
 
 interface CartItem {
@@ -162,7 +163,7 @@ const Checkout = () => {
                 window.location.href = response.url // Redirect to the VNPAY URL
             } catch (error) {
                 console.log('run herere ')
-                console.error('Error creating payment URL:', error)
+                // console.error('Error creating payment URL:', error)
             }
         } else {
             handleCreateOrder({
@@ -336,9 +337,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('payment_type')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -384,7 +385,7 @@ const Checkout = () => {
                                         <p className='mb-4 text-[16px] font-normal text-gray-500'>{it.size}</p>
                                     </div>
                                     <p className='text-gray-600 font-medium text-[16px] ml-auto'>
-                                        {it.price * it.totalQuantity}
+                                        {it.promotionalPrice * it.totalQuantity}
                                     </p>
                                 </div>
                             </div>

@@ -115,7 +115,7 @@ const Cart = () => {
     const totalPrice = useMemo(() => {
         let count = 0
         cartList?.forEach((item) => {
-            count += item.price * item.totalQuantity
+            count += item.promotionalPrice * item.totalQuantity
         })
         return count
     }, [cartList])

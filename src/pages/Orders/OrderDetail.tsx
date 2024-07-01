@@ -227,13 +227,13 @@ const OrderDetail = () => {
                                         <span className="font-bold">
                                             Họ và tên:{" "}
                                         </span>
-                                        {detailOrder?.user_id?.userName}
+                                        {detailOrder?.name}
                                     </p>
                                     <p className="text-[16px]">
                                         <span className="font-bold">
                                             Số điện thoại:{" "}
                                         </span>
-                                        {detailOrder?.phone}
+                                        {detailOrder?.phone && `0${detailOrder.phone}`}
                                     </p>
                                     <p className="text-[16px]">
                                         <span className="font-bold">
@@ -260,7 +260,7 @@ const OrderDetail = () => {
                                             Trạng thái:{" "}
                                             {(() => {
                                                 switch (
-                                                    detailOrder?.orderStatus
+                                                detailOrder?.orderStatus
                                                 ) {
                                                     case "pending":
                                                         return "Đang xử lý";

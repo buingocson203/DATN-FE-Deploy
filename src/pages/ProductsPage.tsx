@@ -27,7 +27,7 @@ const ProductsPage = () => {
     const [totalPage, setTotalPage] = useState(1);
     const [total, setTotal] = useState(0);
     useEffect(() => {
-        instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=8`).then(({ data }) => {
+        instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=2`).then(({ data }) => {
             const currentData = data;
             setTotalPage(currentData.total)
             setListProduct(currentData.data)
@@ -164,7 +164,7 @@ const ProductsPage = () => {
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>Không tìm thấy</div>
                     )}
-                    <Pagination2 products={listProduct} productsPerPage={8} setCurrentPage={setCurrentPage} totalPage={totalPage} />
+                    <Pagination2 products={listProduct} productsPerPage={2} setCurrentPage={setCurrentPage} totalPage={totalPage} />
                 </div>
             </div>
         </div>
