@@ -29,12 +29,13 @@ const Cart = () => {
     const [forceRender, setForceRender] = useState(0)
     const [lstSelected, setLstSelected] = useState([])
 
+    const fetchDataCart = async () => {
+        const response = await instance.get(`api/cart/${getUserID()}`)
+        console.log(response, 'sdfdsf')
+        setCartList(response.data.data)
+    }
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await instance.get(`api/cart/${getUserID()}`)
-            setCartList(response.data.data)
-        }
-        fetchData()
+        fetchDataCart()
     }, [])
     const breadcrumb: IBreadCrumb[] = [
         {
@@ -50,6 +51,7 @@ const Cart = () => {
                     quantity: newQuantity
                 })
             } catch (error) {
+                fetchDataCart()
                 alert('Số lượng yêu cầu vượt quá số lượng trong kho')
             }
         }
