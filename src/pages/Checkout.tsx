@@ -10,9 +10,8 @@ import { toast } from 'react-toastify'
 type Inputs = {
     address: string
     phone: string
-    payment_type: 'cod' | 'vnpay'
+    paymentMethod: 'cod' | 'vnpay'
     name: string
-
 }
 
 interface CartItem {
@@ -46,7 +45,7 @@ interface ICreateOrderBody {
     }[]
     name: string
     // total_price: number
-    // payment_type?: 'cod' | 'vnpay'
+    paymentMethod?: 'cod' | 'vnpay'
     codeOrders: string
 }
 
@@ -69,7 +68,7 @@ const Checkout = () => {
     const {
         register,
         handleSubmit,
-        formState: { isValid }
+        formState: { isValid, errors }
     } = useForm<Inputs>()
 
     useEffect(() => {
@@ -119,11 +118,10 @@ const Checkout = () => {
                 .then(() => {
                     console.log('RUNNING HERE')
                     localStorage.removeItem('dataFormSelf')
-                    toast.success('Đặt hàng thành công');
+                    toast.success('Đặt hàng thành công')
                     setTimeout(() => {
                         window.location.href = 'http://localhost:5173/orders'
-
-                    }, 3000);
+                    }, 3000)
                 })
                 .catch((error) => {
                     console.error('Error creating order:', error)
@@ -137,8 +135,12 @@ const Checkout = () => {
     }
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
-        if (step === 'CHECKOUT') return
-        if (data.payment_type === 'vnpay') {
+        if (step === 'CHECKOUT') {
+            setStep('PAYMENT')
+            return
+        }
+
+        if (data.paymentMethod === 'vnpay') {
             try {
                 localStorage.setItem(
                     'dataFormSelf',
@@ -172,7 +174,7 @@ const Checkout = () => {
                 user_id: getUserID(),
                 productDetails: convertCart(),
                 name: data.name,
-                // payment_type: 'cod',
+                paymentMethod: 'cod',
                 codeOrders: ''
                 // total_price: totalPrice
             })
@@ -240,62 +242,80 @@ const Checkout = () => {
 
                                     <div className='form__profile'>
                                         <div>
-                                            <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                <input
-                                                    type='text'
-                                                    className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                                                    placeholder=''
-                                                    {...register('name', {
-                                                        required: true
-                                                    })}
-                                                />
-                                                <label className='peer-focus:font-medium absolute  px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                    Tên người nhận
-                                                </label>
+                                            <div className='mb-5'>
+                                                <div className='relative z-0 w-full group border rounded'>
+                                                    <input
+                                                        type='text'
+                                                        className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                                                        placeholder=''
+                                                        {...register('name', {
+                                                            required: 'Vui lòng nhập họ tên'
+                                                        })}
+                                                    />
+                                                    <label className='peer-focus:font-medium absolute  px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
+                                                        Tên người nhận
+                                                    </label>
+                                                </div>
+                                                {errors?.name?.message && (
+                                                    <p className='text-red-500 text-sm mb-3 mt-1'>
+                                                        {errors?.name?.message}
+                                                    </p>
+                                                )}
                                             </div>
-                                            <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                <input
-                                                    type='text'
-                                                    className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                                                    placeholder=''
-                                                    {...register('phone', {
-                                                        required: true,
-                                                        pattern: {
-                                                            value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
-                                                            message: 'Số điện thoại không đúng định dạng'
-                                                        }
-                                                    })}
-                                                />
-                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                    Số điện thoại
-                                                </label>
+
+                                            <div className='mb-5'>
+                                                <div className='relative z-0 w-full group border rounded'>
+                                                    <input
+                                                        type='text'
+                                                        className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                                                        placeholder=''
+                                                        {...register('phone', {
+                                                            required: 'Vui lòng nhập số điện thoại',
+                                                            pattern: {
+                                                                value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
+                                                                message: 'Số điện thoại không đúng định dạng'
+                                                            }
+                                                        })}
+                                                    />
+                                                    <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
+                                                        Số điện thoại
+                                                    </label>
+                                                </div>
+                                                {errors?.phone?.message && (
+                                                    <p className='text-red-500 text-sm mb-3 mt-1'>
+                                                        {errors?.phone?.message}
+                                                    </p>
+                                                )}
                                             </div>
-                                            <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                <input
-                                                    type='text'
-                                                    className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                                                    placeholder=''
-                                                    {...register('address', {
-                                                        required: true
-                                                    })}
-                                                />
-                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                    Địa chỉ
-                                                </label>
+
+                                            <div className='mb-5'>
+                                                <div className='relative z-0 w-full group border rounded'>
+                                                    <input
+                                                        type='text'
+                                                        className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
+                                                        placeholder=''
+                                                        {...register('address', {
+                                                            required: 'Vui lòng nhập địa chỉ'
+                                                        })}
+                                                    />
+                                                    <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
+                                                        Địa chỉ
+                                                    </label>
+                                                </div>
+                                                {errors?.address?.message && (
+                                                    <p className='text-red-500 text-sm mb-3 mt-1'>
+                                                        {errors?.address?.message}
+                                                    </p>
+                                                )}
                                             </div>
+
                                             <div className='pay__router flex justify-between items-center mt-4'>
                                                 <Link to='/cart' className='text-sky-600 text-[18px]'>
                                                     Giỏ hàng
                                                 </Link>
                                                 <button
-                                                    disabled={!isValid}
-                                                    onClick={() => setStep('PAYMENT')}
-                                                    type='button'
                                                     className={classNames(
-                                                        'text-white bg-sky-700 px-5 py-3 rounded text-[18px]',
-                                                        {
-                                                            'opacity-50': !isValid
-                                                        }
+                                                        'text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
                                                     )}
                                                 >
                                                     Tiếp tục đến phương thức thanh toán
@@ -323,7 +343,7 @@ const Checkout = () => {
                                             // onChange={(e) => {
                                             //     setPaymentMethod(e.target.value as 'cod')
                                             // }}
-                                            {...register('payment_type')}
+                                            {...register('paymentMethod')}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/cod.svg?v=6'
@@ -335,11 +355,11 @@ const Checkout = () => {
                                     <div className='flex items-center gap-2 pt-4 pl-4'>
                                         <input
                                             type='radio'
-                                            {...register('payment_type')}
+                                            {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
