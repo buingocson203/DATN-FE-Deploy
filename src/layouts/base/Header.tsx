@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import { ChevronDown, Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
@@ -10,7 +10,18 @@ import logo from '../../assets/1-01.png'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { getAllCategory } from '@/services/category/requests'
+import debounce from 'lodash.debounce' // Import debounce from lodash
 
+// Định nghĩa kiểu dữ liệu cho sản phẩm
+interface Product {
+    productId: string;
+    nameProduct: string;
+    images: { imageUrl: string }[];
+    productDetails: {
+        importPrice: number;
+        price: number;
+    }[];
+}
 export default function Header() {
     const dispatch = useDispatch()
     const cartQuantity = useSelector((state) => state.cart)
@@ -41,28 +52,53 @@ export default function Header() {
     }
 
     // Trạng thái mới cho chức năng tìm kiếm
+
     const [searchTerm, setSearchTerm] = useState('')
-    const [searchResults, setSearchResults] = useState([])
+    const [searchResults, setSearchResults] = useState<Product[]>([]);
     const [loading, setLoading] = useState(false)
 
-    // Hàm xử lý thay đổi trong khung tìm kiếm
-    const handleSearchChange = (event) => {
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(event.target.value)
+        debouncedSearch(event.target.value)
     }
 
-    // Hàm xử lý khi nhấn nút tìm kiếm
-    const handleSearch = async (event) => {
-        event.preventDefault()
+    // Sử dụng debounce cho hàm tìm kiếm
+    const fetchSearchResults = async (term: any) => {
         setLoading(true)
         try {
-            const response = await instance.get(`/api/infoProduct?name=${searchTerm}`)
+            const response = await instance.get(`/api/infoProduct?name=${term}`)
             setSearchResults(response.data.data)
-            console.log("data", SearchResults)
         } catch (error) {
             console.error('Lỗi khi tìm kiếm sản phẩm:', error)
         }
         setLoading(false)
     }
+
+    //Debounce hàm tìm kiếm với delay 700ms
+    const debouncedSearch = useCallback(debounce((term: any) => fetchSearchResults(term), 700), [])
+
+    useEffect(() => {
+        if (!searchTerm) {
+            setSearchResults([])
+        }
+    }, [searchTerm])
+
+    const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!searchTerm) {
+            setSearchResults([]);
+            return;
+        }
+        setLoading(true);
+        try {
+            const response = await instance.get(`/api/infoProduct?name=${searchTerm}`);
+            setSearchResults(response.data.data);
+        } catch (error) {
+            console.error('Lỗi khi tìm kiếm sản phẩm:', error);
+        }
+        setLoading(false);
+    };
+
 
     return (
         <header>
@@ -150,10 +186,10 @@ export default function Header() {
                     </form>
                     {loading && <p className='text-sm text-gray-500'>Loading...</p>}
                     {searchResults.length > 0 && (
-                        <div className='border border-gray-300 bg-white rounded-lg mt-2 p-4'>
+                        <div className='border border-gray-300 bg-white rounded-lg mt-2 p-4 absolute z-50 w-full max-w-4xl'>
                             <ul>
                                 {searchResults.map((product) => (
-                                    <li key={product.productId} className='flex justify-between items-center border-b border-gray-200 py-2'>
+                                    <li key={product.productId} className='flex justify-between items-center border-b border-gray-200 py-1'>
                                         <div>
                                             <Link to={`/products/${product.productId}`} className='cursor-pointer' onClick={() => {
                                                 setTimeout(() => {
