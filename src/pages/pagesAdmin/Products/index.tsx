@@ -183,7 +183,7 @@ const Product = () => {
         <>
             <div className='flex justify-between items-center mx-[50px] my-4'>
                 <div>
-                    <p className='text-[26px] uppercase font-semibold'>Quản lí sản phẩm</p>
+                    <p className='text-[26px] uppercase font-semibold'>Quản lý sản phẩm</p>
                 </div>
                 <div className='flex justify-end mb-2'>
                     <Button

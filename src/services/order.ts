@@ -19,11 +19,20 @@ export const getOrder = async (orderId: string) => {
 
 export interface UpdateOrderBody {
     orderStatus?: IOrderStatus
-    paymentStatus?: IPaymentStatus
+    // paymentStatus?: IPaymentStatus
 }
 
 export const updateOrder = async (orderId: string, order: UpdateOrderBody) => {
-    const response = await instance.patch(`api/order/update-order/${orderId}`, order)
+    // const response = await instance.patch(`api/order/update-order/${orderId}`, order)
+    // return response.data
+    const newOrder =
+        order.orderStatus == 'done'
+            ? {
+                  orderStatus: order.orderStatus,
+                  paymentStatus: 'paid'
+              }
+            : order
+    const response = await instance.patch(`api/order/update-order/${orderId}`, newOrder)
     return response.data
 }
 

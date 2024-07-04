@@ -3,7 +3,8 @@ import { IOderHistory } from '@/common/interfaces/product'
 import Detail from '@/components/crud/detail'
 import { ORDER_PAYMENT_NAMES, ORDER_PAYMENT_STATUS_NAMES, ORDER_STATUS_NAMES } from '@/constants/data'
 import { formatPrice } from '@/lib/utils'
-import { getOrder, getOrderHistory } from '@/services/order'
+import { getOrder, getOrderHistory, updateOrder } from '@/services/order'
+import { getOrderStatusOptions } from '@/utils/getOrderStatusOptions'
 import { AntDesignOutlined } from '@ant-design/icons'
 import {
     Avatar,
@@ -12,17 +13,16 @@ import {
     Form,
     Input,
     List,
+    Modal,
+    Select,
     StepProps,
     Steps,
-    Timeline,
-    Typography
+    Typography,
+    message
 } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { ClockCircleOutlined } from '@ant-design/icons'
-import { subscribe } from 'diagnostics_channel'
-import { X } from 'lucide-react'
 interface FieldType {
     code: string
     createdAt: string
@@ -33,13 +33,16 @@ interface FieldType {
     orderStatus: string
     paymentStatus: string
     address: string
+    name: strings
 }
 
 const OrderDetail = () => {
     const { orderId } = useParams()
     const [form] = Form.useForm()
+    const [formOrderStatus] = Form.useForm()
 
     const [data, setData] = useState<IOrder>()
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const [history, setHistory] = useState<IOderHistory[]>([])
 
@@ -50,6 +53,7 @@ const OrderDetail = () => {
             const data: IOrder = res.data
             setData(data)
             form.setFieldsValue({
+                name: data.name,
                 code: data.codeOrders,
                 createdAt: data?.createdAt && dayjs(data.createdAt).format('HH:MM DD-MM-YYYY'),
                 updatedAt: data?.updatedAt && dayjs(data.updatedAt).format('HH:MM DD-MM-YYYY'),
@@ -59,6 +63,8 @@ const OrderDetail = () => {
                 orderStatus: data?.orderStatus && ORDER_STATUS_NAMES[data.orderStatus],
                 paymentStatus: data?.paymentStatus && ORDER_PAYMENT_STATUS_NAMES[data.paymentStatus]
             })
+
+            formOrderStatus.setFieldValue('newStatus', data?.orderStatus && ORDER_STATUS_NAMES[data.orderStatus])
         }
     }
 
@@ -94,16 +100,51 @@ const OrderDetail = () => {
         }
     ]
 
+    const handlePressEditStatus = () => {
+        setIsModalOpen(true)
+    }
+
+    const handleOk = async () => {
+        const newStatus: IOrderStatus = formOrderStatus.getFieldValue('newStatus')
+
+        try {
+            const response = await updateOrder(data._id, {
+                orderStatus: newStatus
+            })
+            const newOrderData: IOrder = response?.data
+
+            if (newOrderData) {
+                form.setFieldsValue({
+                    orderStatus: ORDER_STATUS_NAMES[newOrderData.orderStatus],
+                    paymentStatus: ORDER_PAYMENT_STATUS_NAMES[newOrderData.paymentStatus]
+                })
+                const newData = { ...data, orderStatus: newOrderData.orderStatus } as IOrder
+                setData(newData)
+                setIsModalOpen(false)
+                fetchOrderHistory()
+            }
+        } catch (error: any) {
+            message.error(error?.message)
+            handleCancel()
+        }
+    }
+
+    const handleCancel = () => {
+        setIsModalOpen(false)
+        formOrderStatus.setFieldValue('newStatus', ORDER_STATUS_NAMES[data?.orderStatus as IOrderStatus])
+    }
+
     const renderForm = () => {
         return (
             <>
                 <Form form={form} layout='vertical'>
+                    <Form.Item<FieldType> name='name' label='Người nhận hàng'>
+                        <Input readOnly disabled />
+                    </Form.Item>
                     <Form.Item<FieldType> name='createdAt' label='Ngày tạo đơn'>
                         <Input readOnly disabled />
                     </Form.Item>
-                    {/* <Form.Item<FieldType> name='updatedAt' label='Ngày chỉnh sửa'>
-                        <Input readOnly disabled />
-                    </Form.Item> */}
+
                     <Form.Item<FieldType> name='paymentType' label='Hình thức thanh toán'>
                         <Input readOnly disabled />
                     </Form.Item>
@@ -114,8 +155,15 @@ const OrderDetail = () => {
                         <Input readOnly disabled />
                     </Form.Item>
                     <Form.Item<FieldType> name='orderStatus' label='Trạng thái'>
-                        <Input readOnly disabled />
+                        <Input
+                            readOnly
+                            disabled
+                            addonAfter={
+                                <Typography.Link onClick={handlePressEditStatus}>Thay đổi trạng thái</Typography.Link>
+                            }
+                        />
                     </Form.Item>
+
                     <Steps progressDot current={0} status={getStatus} items={steps} />
                     <br />
                     <br />
@@ -185,8 +233,23 @@ const OrderDetail = () => {
                 title={`Chi tiết đơn hàng: ${data?.codeOrders ?? ''}`}
                 items={items}
             />
-
             {renderForm()}
+            {isModalOpen && (
+                <Modal title='Trạng thái đơn hàng' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <Form form={formOrderStatus} layout='vertical'>
+                        <Form.Item name='newStatus'>
+                            <Select
+                                fieldNames={{
+                                    value: 'value',
+                                    label: 'text'
+                                }}
+                                options={data && getOrderStatusOptions(data)}
+                                placeholder='Vui lòng chọn'
+                            />
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            )}
         </Detail>
     )
 }
