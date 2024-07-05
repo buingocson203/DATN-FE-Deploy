@@ -20,17 +20,20 @@ const ProductComment = ({ productID }) => {
                     comments.map((cmt) => {
                         return (
                             <>
-                                <div className='flex items-center'>
-                                    <img
-                                        src='https://picsum.photos/300/300'
-                                        className='w-11 h-11 rounded-full'
-                                        alt=''
-                                    />
+                                <div className='flex justify-between items-center'>
+                                    <div className='flex items-center'>
+                                        <img
+                                            src='https://picsum.photos/300/300'
+                                            className='w-11 h-11 rounded-full'
+                                            alt=''
+                                        />
 
-                                    <div className='flex-1 ml-3'>
-                                        <h3 className='text-base font-semibold'>{cmt.idAccount.userName}</h3>
-                                        <div className='text-sm'>{cmt.content}</div>
+                                        <div className='flex-1 ml-3'>
+                                            <h3 className='text-base font-semibold'>{cmt.idAccount.userName}</h3>
+                                            <div className='text-sm'>{cmt.content}</div>
+                                        </div>
                                     </div>
+                                    <p>{new Date(cmt?.createdAt).toLocaleString()}</p>
                                 </div>
                                 <hr />
                             </>

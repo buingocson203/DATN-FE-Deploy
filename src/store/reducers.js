@@ -1,9 +1,25 @@
 import { combineReducers } from 'redux'
 
-const cartReducer = (state = 0, action) => {
+const cartReducer = (
+    state = {
+        items: [],
+        badge: 0
+    },
+    action
+) => {
     switch (action.type) {
         case 'ADD_TO_CART':
-            return state + 1
+            const productId = action.payload
+
+            const isIdExist = state.find((item) => (item = productId))
+
+            if (!isIdExist) {
+                return (state = {
+                    items: [...state.items, productId],
+                    badge: ++state.badge
+                })
+            }
+
         case 'REMOVE_FROM_CART':
             return state - 1
         case 'REMOVE_ALL_CART':
@@ -13,7 +29,13 @@ const cartReducer = (state = 0, action) => {
         case 'UPDATE_CART_QUANTITY':
             return state + action.payload.quantity
         case 'UPDATE_ALL_QUANTITY':
-            return action.payload.quantity
+            console.log(action.payload, 'vo')
+            const productIds = action.payload
+            return (state = {
+                items: productIds,
+                badge: productIds?.length
+            })
+
         default:
             return state
     }

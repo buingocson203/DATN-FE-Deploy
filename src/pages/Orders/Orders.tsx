@@ -48,6 +48,12 @@ const Orders = () => {
 
     const cancelOrder = async (orderID: any) => {
         event?.stopPropagation()
+        let userConfirm = confirm(
+            'Khi đồng ý hủy đơn hàng bạn sẽ không được hoàn tiền của đơn hàng đã đặt. Bạn có chắc chắn muốn hủy không?'
+        )
+        if (!userConfirm) {
+            return
+        }
         try {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: 'cancel'
@@ -56,7 +62,13 @@ const Orders = () => {
             fetchData()
         } catch (error) {
             console.log(error)
-            alert('Có lỗi xảy ra')
+            let messageX = error?.response?.data?.message
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
+            alert(
+                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${
+                    messageX.split(' ')[curStateIndex]
+                }`
+            )
         }
     }
 
@@ -252,7 +264,7 @@ const Orders = () => {
                                             </div>
                                             <div className='order-box__tool--btn flex gap-x-[12px]'>
                                                 {(() => {
-                                                    if (['pending', 'waiting'].includes(order.orderStatus)) {
+                                                    if (['pending'].includes(order.orderStatus)) {
                                                         return (
                                                             <button
                                                                 onClick={() => cancelOrder(order._id)}

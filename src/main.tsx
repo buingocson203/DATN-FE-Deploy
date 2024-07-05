@@ -1,13 +1,13 @@
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
-import store from './store/store'
 import App from './App.tsx'
 import './index.css'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { Toaster } from './components/ui/toaster.tsx'
 import { AuthProvider } from './hooks/AuthContext.js'
+import { store } from './store/store'
 const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>

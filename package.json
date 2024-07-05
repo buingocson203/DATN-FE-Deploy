@@ -30,6 +30,7 @@
     "@radix-ui/react-slider": "^1.1.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-toast": "^1.1.5",
+    "@reduxjs/toolkit": "^2.2.6",
     "@tanstack/react-query-devtools": "^5.8.2",
     "@tanstack/react-table": "^8.10.7",
     "antd": "^5.17.3",

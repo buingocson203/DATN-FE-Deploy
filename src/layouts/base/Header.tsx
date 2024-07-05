@@ -1,17 +1,18 @@
-import { useState, useEffect, useCallback } from 'react'
-import { useQuery } from 'react-query'
-import { Link, useNavigate } from 'react-router-dom'
-import { ChevronDown, Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
-import instance from '@/core/api'
-import { useLocalStorage } from '@/hooks/useStorage'
-import { updateAllCartQuantityStore } from '../../store/actions.js'
-import logo from '../../assets/1-01.png'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import instance from '@/core/api'
+import { useLocalStorage } from '@/hooks/useStorage'
 import { getAllCategory } from '@/services/category/requests'
-import debounce from 'lodash.debounce' // Import debounce from lodash
-
+import { cartActions, selectBadge } from '@/store/slices/cartSlice'
+import { useAppSelector } from '@/store/store'
+import { Bell, ChevronDownIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
+import { useEffect, useState, useCallback} from 'react'
+import { useQuery } from 'react-query'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import logo from '../../assets/1-01.png'
+import { Badge, Typography } from 'antd'
+import debounce from 'lodash.debounce'
 // Định nghĩa kiểu dữ liệu cho sản phẩm
 interface Product {
     productId: string;
@@ -24,7 +25,7 @@ interface Product {
 }
 export default function Header() {
     const dispatch = useDispatch()
-    const cartQuantity = useSelector((state) => state.cart)
+    const cartQuantity = useAppSelector(selectBadge)
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -34,11 +35,12 @@ export default function Header() {
     useEffect(() => {
         const fetchData = async () => {
             const response = await instance.get(`api/cart/${getUserID()}`)
-            let quantity = response.data.data.reduce((total, item) => total + item.totalQuantity, 0)
-            dispatch(updateAllCartQuantityStore(quantity))
+            const data = response?.data?.data
+            const ids = data?.map((item) => item.productDetailId)
+            dispatch(cartActions.replaceAll(ids))
         }
         fetchData()
-    }, [dispatch])
+    }, [])
 
     const [open, setOpen] = useState(false)
     const [user] = useLocalStorage('user', null)
@@ -192,9 +194,9 @@ export default function Header() {
                                     <li key={product.productId} className='flex justify-between items-center border-b border-gray-200 py-1'>
                                         <div>
                                             <Link to={`/products/${product.productId}`} className='cursor-pointer' onClick={() => {
-                                                setTimeout(() => {
-                                                    location.reload()
-                                                }, 200)
+                                                    setTimeout(() => {
+                                                        location.reload()
+                                                    }, 200)
                                             }}>
                                                 <span>{product.nameProduct}</span>
                                                 <div>
@@ -247,9 +249,11 @@ export default function Header() {
                     </Link>
                     <div className='relative'>
                         <Link to='/cart'>
-                            <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>
-                                {cartQuantity}
-                            </span>
+                            {cartQuantity && (
+                                <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>
+                                    {cartQuantity}
+                                </span>
+                            )}
                             <ShoppingBagIcon size={26} />
                         </Link>
                     </div>

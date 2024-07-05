@@ -17,6 +17,7 @@ import instance from '@/core/api'
 import { render } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { updateCartQuantityStore } from '../../store/actions'
+import { cartActions } from '@/store/slices/cartSlice'
 
 const ProductDetail = () => {
     const dispatch = useDispatch()
@@ -56,7 +57,8 @@ const ProductDetail = () => {
         const fetchData = async (dataX: any) => {
             try {
                 await instance.post(`api/cart`, dataX)
-                dispatch(updateCartQuantityStore(quantity))
+
+                variant?.productDetailId && dispatch(cartActions.addToCart(variant?.productDetailId))
                 alert('Thêm sản phẩm vào giỏ hàng thành công')
             } catch (error) {
                 console.log(error)
@@ -81,7 +83,13 @@ const ProductDetail = () => {
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     useEffect(() => {
         if (!infoProduct) return
-        setVariant(infoProduct?.data?.productDetails[0])
+        for (let index = 0; index < infoProduct?.data?.productDetails.length; index++) {
+            const element = infoProduct?.data?.productDetails[index]
+            if (element.quantity > 0) {
+                setVariant(element)
+                break
+            }
+        }
     }, [infoProduct])
     return (
         <div className='pb-10'>
@@ -139,7 +147,9 @@ const ProductDetail = () => {
                                                         )}
                                                         key={index}
                                                         onClick={() => {
-                                                            setVariant(size)
+                                                            if (size.quantity > 0) {
+                                                                setVariant(size)
+                                                            }
                                                         }}
                                                     >
                                                         {size.size}

@@ -1,10 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { Icon } from '@iconify/react'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
-import { Link } from 'react-router-dom'
 import instance from '@/core/api'
+import { Icon } from '@iconify/react'
+import { useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { removeFromCartStore, decreaseCustomCartQuantityStore } from '../store/actions'
+import { Link } from 'react-router-dom'
+
+import { cartActions } from '@/store/slices/cartSlice'
 
 const Cart = () => {
     const dispatch = useDispatch()
@@ -31,8 +32,11 @@ const Cart = () => {
 
     const fetchDataCart = async () => {
         const response = await instance.get(`api/cart/${getUserID()}`)
-        console.log(response, 'sdfdsf')
         setCartList(response.data.data)
+        const data = response?.data?.data
+        const ids = data?.map((item) => item.productDetailId)
+
+        dispatch(cartActions.replaceAll(ids))
     }
     useEffect(() => {
         fetchDataCart()
@@ -79,7 +83,7 @@ const Cart = () => {
         cartList?.forEach((item, index) => {
             if (item.idCart === itemID) {
                 fetchData([itemID])
-                dispatch(removeFromCartStore())
+                dispatch(cartActions.removeItem(item.productDetailId))
                 const updatedCart = [...cartList] // Create a copy of the cart array
                 updatedCart.splice(index, 1)
                 setCartList(updatedCart)
@@ -104,7 +108,7 @@ const Cart = () => {
                 await instance.delete(`api/cart/deteCart`, {
                     data: { idCart: ids }
                 })
-                dispatch(decreaseCustomCartQuantityStore(ids.length))
+                dispatch(cartActions.removeAll())
                 alert('Giỏ hàng đã được xóa thành công')
             } catch (error) {
                 alert('Xóa giỏ hàng thất bại')
