@@ -205,9 +205,11 @@ const Orders = () => {
                                                             className='h-[86px] w-[86px] '
                                                         />
                                                         <div className='order-detail-info__content ml-5'>
+                                                        <Link to={`/products/${product.productId}`} className='text-[16px] custom-focus'>
                                                             <h3 className='font-bold text-[18px]'>
                                                                 {product.productName}
                                                             </h3>
+                                                        </Link>
                                                             <p className='text-[16px]'>
                                                                 Phân loại hàng: {product.sizeName}
                                                             </p>

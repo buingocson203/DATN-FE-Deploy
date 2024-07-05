@@ -48,6 +48,9 @@ body {
 }
 
 .size-disabled {
-    background-color: gray !important;
+    background-color: #ecebeb !important;
     cursor: not-allowed !important;
+}
+.custom-focus:hover {
+    text-decoration: underline;
 }
