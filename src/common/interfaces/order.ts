@@ -6,21 +6,15 @@ export type IPaymentStatus = 'unpaid' | 'paid'
 
 export interface IOrder {
     _id: string
+    name: string
     address: string
-    codeOrders: string
-    createdAt: Date
-    orderStatus: IOrderStatus
-    paymentMethod: IPaymentMethod
-    paymentStatus: IPaymentStatus
     phone: number
-    total_amount_paid: number
-    total_price: number
-    updatedAt: Date
     user_id: {
         email: string
         userName: string
         _id: string
     }
+    isRated: boolean
     productDetails: {
         image: string
         price: number
@@ -31,4 +25,12 @@ export interface IOrder {
         sizeId: string
         sizeName: string
     }[]
+    codeOrders: string
+    createdAt: Date
+    orderStatus: IOrderStatus
+    paymentMethod: IPaymentMethod
+    paymentStatus: IPaymentStatus
+    total_amount_paid: number
+    total_price: number
+    updatedAt: Date
 }

@@ -7,10 +7,11 @@ import {
 } from '@/constants/data'
 import { formatPrice } from '@/lib/utils'
 import { getOrders, updateOrder } from '@/services/order'
+import { getOrderStatusOptions } from '@/utils/getOrderStatusOptions'
 import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Badge, Button, Form, Modal, Select, Space, Table, TableProps, Tag, message } from 'antd'
 import dayjs from 'dayjs'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 const ORDER_PAYMENT_COLORS: Record<IPaymentMethod, string> = {
@@ -160,13 +161,17 @@ const OrderList: React.FC = () => {
             const response = await updateOrder(orderEdit._id, {
                 orderStatus: newStatus
             })
-            if (response?.data) {
+
+            const newOrderData: IOrder = response?.data
+            if (newOrderData) {
                 handleCancel()
+
                 const newArr: IOrder[] = data.map((item) => {
                     if (item._id === orderEdit?._id) {
                         return {
                             ...item,
-                            orderStatus: newStatus
+                            orderStatus: newOrderData.orderStatus,
+                            paymentStatus: newOrderData.paymentStatus
                         }
                     }
                     return item
@@ -182,25 +187,6 @@ const OrderList: React.FC = () => {
     const handleCancel = () => {
         setIsModalOpen(false)
     }
-
-    const options = useMemo(() => {
-        return ORDER_STATUS_FILTERS.map((e) => {
-            const validTransitions: Record<IOrderStatus, IOrderStatus[]> = {
-                pending: ['waiting'],
-                waiting: ['delivering', 'cancel'],
-                delivering: ['done'],
-                done: [],
-                cancel: []
-            }
-
-            const disabled = !(orderEdit && validTransitions[orderEdit.orderStatus].includes(e.value))
-
-            return {
-                ...e,
-                disabled: disabled
-            }
-        })
-    }, [orderEdit])
 
     const navigateToDetail = (id: string) => {
         navigate(`/admin/orders/detail/${id}`)
@@ -224,7 +210,7 @@ const OrderList: React.FC = () => {
                                 value: 'value',
                                 label: 'text'
                             }}
-                            options={options}
+                            options={orderEdit && getOrderStatusOptions(orderEdit)}
                             placeholder='Vui lòng chọn'
                         />
                     </Form.Item>
