@@ -1,27 +1,48 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
 import ProductItem from '@/features/product/_components/product-item'
 import { cn } from '@/lib/utils'
-import { getNewProducts, getProductDetail } from '@/services/product/request'
-import { IProduct, IProductDetail } from '@/services/product/types'
-import { PlusIcon } from 'lucide-react'
-import React, { useState } from 'react'
+import { getAllNewProduct, getProductDetail } from '@/services/product/request'
+import { IFNewOutStand, IProduct, IProductDetail } from '@/services/product/types'
+import { EyeIcon, PlusIcon, ShoppingCartIcon } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import { useOnClickOutside } from 'usehooks-ts'
 import ListCategory from './ListCategory'
+import { getAllCategory } from '@/services/category/requests'
+import instance from '@/core/api'
+import { Link } from 'react-router-dom'
 
 type Props = {}
 
 const HomePage = (props: Props) => {
-    const [activeTab, setActiveTab] = useState(0)
+    const [activeTab, setActiveTab] = useState(0);
+    const [productCate, setProductCate] = useState([]);
+    const [category, setCategory] = useState([]);
+    const [outStProducts, setOutStProducts] = useState([]);
 
-    const tabs = ['sản phẩm khuyến mãi', 'sản phẩm nổi bật', 'hàng chính hãng']
+    const tabs = ['sản phẩm nổi bật']
 
     const { data: newProducts } = useQuery({
-        queryFn: () => getProductDetail({ limit: 8 }),
-        queryKey: '/producst-detai;'
+        queryFn: () => getAllNewProduct(),
+        queryKey: '/product-new;'
     })
+    useEffect(() => {
+        getAllCategory().then((data) => {
+            setCategory(data)
+            instance.get(`/api/infoProduct?category=${data[0]._id}&limit=12`).then(({ data }) => {
+                setProductCate(data.data);
+            });
+        })
+        instance.get("api/order/product-best-seller").then(({ data }) => {
+            setOutStProducts(data.data);
+        })
+    }, [])
 
-    console.log('ff', newProducts)
+    const handgetProduct = async (id: string) => {
+        const { data } = await instance.get(`/api/infoProduct?category=${id}&limit=12`);
+        setProductCate(data.data);
+    }
+
     return (
         <main className=''>
             <div className='app-container'>
@@ -45,123 +66,12 @@ const HomePage = (props: Props) => {
                         <CarouselNext className='absolute top-1/2 right-4  -translate-y-1/2 z-10' />
                     </Carousel>
                 </div>
-                {/* // ẨN DANH MỤC NỔI BẬT */}
-                {/* <div className='py-16 px-2'>
-          <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
-            Danh mục nổi bật
-          </h1>
-          <div className='grid lg:grid-cols-4 md:grid-cols-2 gap-4'>
-            <Link to="/collections/nike" className='relative group'>
-              <div className='h-fit overflow-hidden'>
-                <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_1_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
-              </div>
-              <div className='absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center bg-white/60'>
-                <p className='flex-1'>Nike</p>
-                <button className='w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-neutral-900 hover:text-white'>
-                  <ArrowRight size={24} />
-                </button>
-              </div>
-            </Link>
-            <Link to="/collections/new-balance-fila" className='relative group'>
-              <div className='h-fit overflow-hidden'>
-                <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_2_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' /> 
-              </div>
-              <div className='absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center bg-white/60'>
-                <p className='flex-1'>New Balance</p>
-                <button className='w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-neutral-900 hover:text-white'>
-                  <ArrowRight size={24} />
-                </button>
-              </div>
-            </Link>
-            <Link to="/collections/adidas" className='relative group'>
-              <div className='h-fit overflow-hidden'>
-                <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_3_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
-              </div>
-              <div className='absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center bg-white/60'>
-                <p className='flex-1'>Adidas</p>
-                <button className='w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-neutral-900 hover:text-white'>
-                  <ArrowRight size={24} />
-                </button>
-              </div>
-            </Link>
-            <Link to="/collections/mlb" className='relative group'>
-              <div className='h-fit overflow-hidden'>
-                <img src="https://theme.hstatic.net/200000690551/1001033677/14/home_category_4_img.jpg?v=292" alt="" className='group-hover:scale-125 transition-all duration-300' />
-              </div>
-              <div className='absolute bottom-0 left-0 right-0 px-5 py-4 flex items-center justify-center bg-white/60'>
-                <p className='flex-1'>MLB</p>
-                <button className='w-10 h-10 rounded-full bg-white flex items-center justify-center hover:bg-neutral-900 hover:text-white'>
-                  <ArrowRight size={24} />
-                </button>
-              </div>
-            </Link>
-          </div>
-        </div> */}
             </div>
-            {/* // ẨN MUA 1 TẶNG 1
-      <div className="bg-pink-50">
-        <div className='app-container bg-pink-50 relative'>
-          <div className='py-16 px-2'>
-            <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
-              <span className="animate-ping inline-flex w-2 h-2 rounded-full bg-yellow-500 opacity-75 align-middle relative bottom-1 mr-5"></span>
-              Mua 1 tặng 1
-            </h1>
-            <div className='px-5'>
-              <Carousel>
-                <CarouselContent className="-ml-2 md:-ml-4">
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                  <CarouselItem className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-2 md:pl-4"><ProductItem /></CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious className='absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2' />
-                <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2' />
-              </Carousel>
-            </div>
-          </div>
-        </div>
-      </div> */}
-            <ListCategory />
+            <ListCategory data={productCate} category={category} handgetProduct={handgetProduct} />
 
             <div className='bg-pink-50'>
                 <div className='app-container bg-pink-50 relative'>
                     <div className='py-16 px-2'>
-                        {/* // ẨN SẢN PHẨM BÁN CHẠY */}
-                        {/* <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>
-              Sản phẩm bán chạy
-            </h1>
-            <div className='md:px-5 grid md:grid-cols-3 grid-cols-1 gap-5'>
-              <SellProduct
-                img="https://theme.hstatic.net/200000690551/1001033677/14/home_set_combo_1_img.jpg?v=292"
-                tooltipImg="https://product.hstatic.net/200000690551/product/liner_den_d4f3ec1946f844d68eeacc9dfff3091f_small.png"
-                name="Giày MLB Chunky Liner Đen"
-                price="750,000₫"
-                collection="MLB LINER"
-                salePrice="1,150,000₫"
-                plusStyle={{ top: '73%', right: '55%' }}
-              />
-              <SellProduct
-                img="https://theme.hstatic.net/200000690551/1001033677/14/home_set_combo_2_img.jpg?v=292"
-                tooltipImg="https://product.hstatic.net/200000690551/product/af1_black_swoosh_817e5e5312f54235a925fa3c9a9f6aae_small.png"
-                name="Giày Nike AF1 Black Swoosh"
-                price="750,000₫"
-                collection="NIKE AIRFORCE 1"
-                salePrice="1,090,000₫"
-                plusStyle={{ top: '73%', right: '55%' }}
-              />
-              <SellProduct
-                img="https://theme.hstatic.net/200000690551/1001033677/14/home_set_combo_3_img.jpg?v=292"
-                tooltipImg="https://product.hstatic.net/200000690551/product/liner_trang_426bd25c95ec41d69f77dc2b47abd908_small.png"
-                name="Giày MLB Chunky Liner Trắng"
-                price="750,000₫"
-                collection="MLB LINER"
-                salePrice="1,150,000₫"
-                plusStyle={{ top: '73%', right: '55%' }}
-              />
-            </div> */}
                         <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>SẢN PHẨM NEW</h1>
                         <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
                             {newProducts?.map((product, index) => {
@@ -169,7 +79,7 @@ const HomePage = (props: Props) => {
                                 return (
                                     <ProductItem
                                         key={index}
-                                        {...product}
+                                        product={product}
                                         {...variant}
                                         detailID={product.productDetails[0]?.productDetailId}
                                     />
@@ -198,11 +108,61 @@ const HomePage = (props: Props) => {
                         </ul>
                     </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                        {activeTab == 0 && new Array(4).fill(0).map((_, index) => <ProductItem key={index} />)}
-                        {activeTab == 1 && new Array(6).fill(0).map((_, index) => <ProductItem key={index} />)}
-                        {activeTab == 2 && new Array(8).fill(0).map((_, index) => <ProductItem key={index} />)}
+                        {
+                            outStProducts.length > 0 && outStProducts.map((itemOutStProducts: IFNewOutStand) => {
+                                return <Link to={`/products/${itemOutStProducts.productId}`} className='cursor-pointer group' onClick={() => {
+                                    setTimeout(() => {
+                                        location.reload()
+                                    }, 200)
+                                }}>
+                                    <div className='pt-6 relative pb-3 overflow-hidden'>
+                                        <div className='relative rounded-md overflow-hidden'>
+                                            <img
+                                                src={
+                                                    itemOutStProducts.image ||
+                                                    'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
+                                                }
+                                                alt=''
+                                                className='!h-[245px]'
+                                            />
+                                            <img
+                                                src={
+                                                    itemOutStProducts.image ||
+                                                    'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
+                                                }
+                                                alt=''
+                                                className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
+                                            />
+                                        </div>
+                                        {/* Another image show opacity when hover */}
+                                        <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>
+                                            <button
+                                                className='w-10 h-10 flex items-center justify-center text-neutral-950 bg-white hover:bg-neutral-950 hover:text-white outline-none hover:opacity-90 transition-all rounded-md text-sm leading-none flex-1'
+                                                title='Xem nhanh'
+                                            >
+                                                <ShoppingCartIcon className='size-3 mr-2 text-xs' />
+                                                Thêm vào giỏ
+                                            </button>
+                                            <button
+                                                className='w-10 h-10 flex items-center justify-center border border-neutral-800 text-white bg-neutral-800 outline-none hover:opacity-90 transition-all rounded-md text-sm leading-none'
+                                                title='Xem nhanh'
+                                            >
+                                                <EyeIcon></EyeIcon>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p className='text-md my-1'>{itemOutStProducts.productName}</p>
+                                        <div className='flex items-center gap-1'>
+                                            <span className='text-red-500 text-sm'>{itemOutStProducts.promotionalPrice}đ</span>
+                                            <span className='text-neutral-300 text-xs line-through'>{itemOutStProducts.price}đ</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            })
+                        }
                     </div>
-                    <HomePageButton className='mt-10'>Xem tất cả&nbsp;{tabs[activeTab]}</HomePageButton>
+                    {/* <HomePageButton className='mt-10'>Xem tất cả&nbsp;{tabs[activeTab]}</HomePageButton> */}
                 </div>
                 <div className='py-16 px-2'>
                     <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>Bài viết mới nhất</h1>

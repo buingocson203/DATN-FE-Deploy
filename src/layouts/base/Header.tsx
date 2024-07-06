@@ -259,7 +259,7 @@ export default function Header() {
             <div className='app-container md:flex justify-center text-neutral-700 my-2 hidden text-[15px]'>
                 <ul className='flex justify-center items-center gap-8'>
                     <li>
-                        <Link to='/collections/croon' className='hover:text-neutral-900'>Hàng mới về</Link>
+                        <Link to='/collections/croon' className='hover:text-neutral-900'>Trang chủ</Link>
                     </li>
                     <li>
                         <Link to='/products' className='flex items-center justify-center gap-1 item-hover relative'>
@@ -281,10 +281,10 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>Mua 1 tặng 1</Link>
+                        <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>Blog</Link>
                     </li>
                     <li>
-                        <Link to='/pages/lien-he' className='hover:text-neutral-900'>Hệ thống cửa hàng</Link>
+                        <Link to='/pages/lien-he' className='hover:text-neutral-900'>Giới thiệu</Link>
                     </li>
                     <li>
                         <Link to='/pages/chinh-sach-doi-tra-1' className='flex items-center justify-center gap-1 item-hover relative'>
