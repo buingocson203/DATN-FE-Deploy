@@ -68,12 +68,20 @@ const Checkout = () => {
     const {
         register,
         handleSubmit,
-        formState: { isValid, errors }
+        formState: { errors },
+        reset
     } = useForm<Inputs>()
 
     useEffect(() => {
         fetchData()
     }, [])
+
+    useEffect(() => {
+        reset({
+            name: user?.fullName
+        })
+    }, [user])
+
     const totalPrice = useMemo(() => {
         const totalPrice = cartList?.reduce((total, item) => {
             return (total += item.promotionalPrice * item.totalQuantity)
@@ -184,8 +192,7 @@ const Checkout = () => {
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
-            toast.success('Đặt hàng thành công')
-            navigate('/orders')
+            navigate('/payment-success')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
         }
@@ -233,7 +240,7 @@ const Checkout = () => {
                                         </div>
                                         <div className='info__profile'>
                                             <p className='text-gray-600 text-[18px] flex gap-1'>
-                                                <span>{user.userName}</span>
+                                                <span>{user.fullName}</span>
                                                 <span>({user.email})</span>
                                             </p>
                                             <button className='text-sky-600 text-[16px]'>Đăng xuất</button>

@@ -39,6 +39,7 @@ import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
 import OrderDetailAdmin from '@/pages/pagesAdmin/Orders/OrderDetail'
 import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
+import PaymentSuccess from '@/pages/PaymentSuccess'
 
 const Routers = () => {
     return (
@@ -59,6 +60,7 @@ const Routers = () => {
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
+                <Route path='/payment-success' element={<PaymentSuccess />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
