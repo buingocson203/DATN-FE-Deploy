@@ -126,10 +126,10 @@ const Checkout = () => {
                 .then(() => {
                     console.log('RUNNING HERE')
                     localStorage.removeItem('dataFormSelf')
-                    toast.success('Đặt hàng thành công')
+                    // toast.success('Đặt hàng thành công')
                     setTimeout(() => {
-                        window.location.href = 'http://localhost:5173/orders'
-                    }, 3000)
+                        window.location.href = 'http://localhost:5173/payment-success'
+                    }, 1000)
                 })
                 .catch((error) => {
                     console.error('Error creating order:', error)
@@ -364,9 +364,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
