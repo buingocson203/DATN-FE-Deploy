@@ -1,5 +1,5 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
-import ProductItem from '@/features/product/_components/product-item'
+import ProductItem from '@/features/product/_components/product-item2'
 import { cn } from '@/lib/utils'
 import { getAllNewProduct, getProductDetail } from '@/services/product/request'
 import { IFNewOutStand, IProduct, IProductDetail } from '@/services/product/types'
@@ -117,22 +117,27 @@ const HomePage = (props: Props) => {
                                 }}>
                                     <div className='pt-6 relative pb-3 overflow-hidden'>
                                         <div className='relative rounded-md overflow-hidden'>
+                                            {/* {takeTwoImage.map((itemImage, index) => <img
+                                            className={`w-full h-[240px] ${index == 1 ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all' : ''}`}
+                                            src={itemImage.imageUrl}
+                                            alt='Ảnh không tồn tại'
+                                        />)} */}
                                             <img
                                                 src={
                                                     itemOutStProducts.image ||
                                                     'https://product.hstatic.net/200000690551/product/mule_outfit3_ad305b65207844f38ea799b8e69b0d24_large.png'
                                                 }
                                                 alt=''
-                                                className='!h-[245px]'
+                                                className='h-[240px] w-full top-0 left-0 right-0 bottom-0 object-cover opacity-98 group-hover:opacity-100 duration-500  transition-all'
                                             />
-                                            <img
+                                            {/* <img
                                                 src={
                                                     itemOutStProducts.image ||
                                                     'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
                                                 }
                                                 alt=''
                                                 className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
-                                            />
+                                            /> */}
                                         </div>
                                         {/* Another image show opacity when hover */}
                                         <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>

@@ -1,4 +1,4 @@
-import ProductItem from '@/features/product/_components/product-item'
+import ProductItem from '@/features/product/_components/product-item2'
 import { cn } from '@/lib/utils'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
