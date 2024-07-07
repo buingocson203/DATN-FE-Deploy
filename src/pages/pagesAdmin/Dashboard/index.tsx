@@ -1,8 +1,86 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import logo from '../../../assets/logoFSneaker.png'
+import { Table, TableProps } from 'antd'
+import { getReviews } from '@/services/review'
+import { log } from 'util'
+import { getOrders } from '@/services/order'
 type Props = {}
 
 const Dashboard = (props: Props) => {
+    interface IStatisticOrder {
+        statusName: String
+        statusQuantity: Number
+    }
+    const columns: TableProps<IStatisticOrder>['columns'] = [
+        {
+            title: 'Trạng thái đơn hàng',
+            dataIndex: 'statusName',
+            key: 'statusName'
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'statusQuantity',
+            key: 'statusQuantity',
+            render: (value: any) => value
+        }
+    ]
+    const [isLoading, setIsLoading] = useState(false)
+    const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
+
+    const countOrderStatus = (orderList) => {
+        const orderStatusCount = {}
+
+        // Duyệt qua từng object trong danh sách
+        for (const order of orderList) {
+            const orderStatus = order.orderStatus
+
+            // Kiểm tra xem orderStatus đã có trong orderStatusCount chưa
+            if (orderStatusCount[orderStatus]) {
+                orderStatusCount[orderStatus] += 1
+            } else {
+                orderStatusCount[orderStatus] = 1
+            }
+        }
+
+        // Chuyển đổi orderStatusCount thành danh sách
+        const result = []
+        for (const [statusName, statusQuantity] of Object.entries(orderStatusCount)) {
+            let parseName = '';
+            console.log(statusName)
+            switch(statusName){
+                case 'pending':
+                    parseName = 'Chờ xác nhận'
+                    break;
+                case 'done':
+                    parseName = 'Đã hoàn thành'
+                    break;
+                case 'waiting':
+                    parseName = 'Chờ lấy hàng'
+                    break;
+                default:
+                    parseName = statusName
+                    break;
+            }
+            result.push({ statusName: parseName, statusQuantity })
+        }
+
+        return result
+    }
+
+    const fetchOrders = async () => {
+        setIsLoading(true)
+        const response = await getOrders()
+        const data = response?.data?.filter((item) => item)
+        let resultResolve = countOrderStatus(data)
+        if (resultResolve) {
+            setStatisticOrder(resultResolve)
+        }
+        setIsLoading(false)
+    }
+
+    useEffect(() => {
+        fetchOrders()
+    }, [])
     return (
         <main>
             <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
@@ -265,7 +343,7 @@ const Dashboard = (props: Props) => {
                                 className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
                             >
                                 <div className='relative h-14 w-14 rounded-full'>
-                                    `   <img src={logo} alt='User' />
+                                    ` <img src={logo} alt='User' />
                                     <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
                                 </div>
 
@@ -342,6 +420,10 @@ const Dashboard = (props: Props) => {
                                 </div>
                             </a>
                         </div>
+                    </div>
+                    {/* Thống kê đơn hàng */}
+                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px]'>
+                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} />
                     </div>
                 </div>
             </div>
