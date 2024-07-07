@@ -22,18 +22,7 @@ const items: MenuItem[] = [
         key: 'dashboard',
         label: 'Thống kê',
         icon: <PieChartOutlined />,
-        children: [
-            {
-                key: 'product-stats',
-                icon: <ProductOutlined />,
-                label: 'Thống kê sản phẩm',
-                children: [
-                    { key: 'top-selling', label: <Link to='/admin/dashboard/products/top-selling'>Top 5 bán chạy</Link> },
-                    { key: 'top-revenue', label: <Link to='/admin/dashboard/products/top-revenue'>Top 5 doanh thu</Link> },
-                    { key: 'top-profit', label: <Link to='/admin/dashboard/products/top-profit'>Top 5 lợi nhuận</Link> }
-                ]
-            }
-        ]
+        children: [{ key: '1', icon: <FontSizeOutlined />, label: <Link to='/admin/dashboard/products'>Thống kê sản phẩm</Link> }]
     },
     { key: 'products', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lí sản phẩm</Link> },
     { key: 'orders', icon: <OrderedListOutlined />, label: <Link to='/admin/orders'>Quản lí đặt hàng</Link> },

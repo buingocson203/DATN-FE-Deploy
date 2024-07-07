@@ -39,9 +39,7 @@ import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
 import OrderDetailAdmin from '@/pages/pagesAdmin/Orders/OrderDetail'
 import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
-import ProductStatistical from '@/pages/pagesAdmin/Statistical/Products/ProductStatistical'
-import ProductsRevenue from '@/pages/pagesAdmin/Statistical/Products/TopRevenue'
-import ProductsProfit from '@/pages/pagesAdmin/Statistical/Products/TopProfit'
+import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
 
 const Routers = () => {
     return (
@@ -66,9 +64,7 @@ const Routers = () => {
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />
-                <Route path='/admin/dashboard/products/top-selling' element={<ProductStatistical />} />
-                <Route path='/admin/dashboard/products/top-revenue' element={<ProductsRevenue />} />
-                <Route path='/admin/dashboard/products/top-profit' element={<ProductsProfit />} />
+                <Route path='/admin/dashboard/products' element={<StatisticalProduct />} />
                 <Route path='/admin/products' element={<Product />} />
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/products/edit/:productId' element={<EditProduct />} />
