@@ -11,7 +11,10 @@ export const getProductById = async (id: string) => {
     const { data } = await instance.get(`api/product/${id}`)
     return data.datas
 }
-
+export const getAllNewProduct = async (): Promise<IProductDetail[]> => {
+    const { data } = await instance.get(`api/infoProduct?latest=true`)
+    return data.data
+}
 
 export const getProductDetail = async (params: any): Promise<IProductDetail[]> => {
     const { data } = await instance.get(`api/productDetail`)
