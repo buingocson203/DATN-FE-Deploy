@@ -55,7 +55,7 @@ const Dashboard = (props: Props) => {
                     parseName = 'Đã hoàn thành'
                     break;
                 case 'waiting':
-                    parseName = 'Chờ lấy hàng'
+                    parseName = 'Đã xác nhận'
                     break;
                 default:
                     parseName = statusName
