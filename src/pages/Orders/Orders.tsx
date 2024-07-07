@@ -251,7 +251,7 @@ const Orders = () => {
                                                             case 'pending':
                                                                 return 'Chờ xác nhận'
                                                             case 'waiting':
-                                                                return 'Chờ lấy hàng'
+                                                                return 'Đã xác nhận'
                                                             case 'cancel':
                                                                 return 'Hủy bỏ'
                                                             case 'delivering':
