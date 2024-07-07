@@ -30,7 +30,12 @@ const Dashboard = (props: Props) => {
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
 
     const countOrderStatus = (orderList) => {
-        const orderStatusCount = {}
+        const orderStatusCount = {
+            pending: 0,
+            waiting: 0,
+            delivering: 0,
+            done: 0,
+        }
 
         // Duyệt qua từng object trong danh sách
         for (const order of orderList) {
@@ -53,11 +58,14 @@ const Dashboard = (props: Props) => {
                 case 'pending':
                     parseName = 'Chờ xác nhận'
                     break;
-                case 'done':
-                    parseName = 'Đã hoàn thành'
-                    break;
                 case 'waiting':
                     parseName = 'Đã xác nhận'
+                    break;
+                case 'delivering':
+                    parseName = 'Đang giao hàng'
+                    break;
+                case 'done':
+                    parseName = 'Đã hoàn thành'
                     break;
                 default:
                     parseName = statusName
