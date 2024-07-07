@@ -95,6 +95,10 @@ const Dashboard = (props: Props) => {
         <>
             <main>
                 <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
+                    {/* Thống kê đơn hàng */}
+                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px]'>
+                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} />
+                    </div>
                     <RevenueStatistics />
 
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
@@ -360,8 +364,7 @@ const Dashboard = (props: Props) => {
                                         <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
                                     </div>
 
-                                </div>
-                            </a>
+                                </a>
                             <a
                                 href='messages.html'
                                 className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
@@ -446,10 +449,7 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
-                    {/* Thống kê đơn hàng */}
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px]'>
-                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} />
-                    </div>
+                    
                 </div>
             </main>
         </>
