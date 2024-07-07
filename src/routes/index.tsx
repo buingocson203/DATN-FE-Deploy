@@ -39,6 +39,8 @@ import OrderList from '@/pages/pagesAdmin/Orders/OrderList'
 import OrderDetailAdmin from '@/pages/pagesAdmin/Orders/OrderDetail'
 import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
+import PaymentSuccess from '@/pages/PaymentSuccess'
+import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
 
 const Routers = () => {
     return (
@@ -59,10 +61,12 @@ const Routers = () => {
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
+                <Route path='/payment-success' element={<PaymentSuccess />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />
+                <Route path='/admin/dashboard/products' element={<StatisticalProduct />} />
                 <Route path='/admin/products' element={<Product />} />
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/products/edit/:productId' element={<EditProduct />} />

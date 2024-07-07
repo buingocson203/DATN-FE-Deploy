@@ -68,12 +68,20 @@ const Checkout = () => {
     const {
         register,
         handleSubmit,
-        formState: { isValid, errors }
+        formState: { errors },
+        reset
     } = useForm<Inputs>()
 
     useEffect(() => {
         fetchData()
     }, [])
+
+    useEffect(() => {
+        reset({
+            name: user?.fullName
+        })
+    }, [user])
+
     const totalPrice = useMemo(() => {
         const totalPrice = cartList?.reduce((total, item) => {
             return (total += item.promotionalPrice * item.totalQuantity)
@@ -118,10 +126,10 @@ const Checkout = () => {
                 .then(() => {
                     console.log('RUNNING HERE')
                     localStorage.removeItem('dataFormSelf')
-                    toast.success('Đặt hàng thành công')
+                    // toast.success('Đặt hàng thành công')
                     setTimeout(() => {
-                        window.location.href = 'http://localhost:5173/orders'
-                    }, 3000)
+                        window.location.href = 'http://localhost:5173/payment-success'
+                    }, 1000)
                 })
                 .catch((error) => {
                     console.error('Error creating order:', error)
@@ -184,8 +192,7 @@ const Checkout = () => {
     const handleCreateOrder = async (data: ICreateOrderBody) => {
         try {
             await instance.post('/api/order/create-order', data)
-            toast.success('Đặt hàng thành công')
-            navigate('/orders')
+            navigate('/payment-success')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
         }
@@ -233,7 +240,7 @@ const Checkout = () => {
                                         </div>
                                         <div className='info__profile'>
                                             <p className='text-gray-600 text-[18px] flex gap-1'>
-                                                <span>{user.userName}</span>
+                                                <span>{user.fullName}</span>
                                                 <span>({user.email})</span>
                                             </p>
                                             <button className='text-sky-600 text-[16px]'>Đăng xuất</button>
@@ -357,9 +364,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
