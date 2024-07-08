@@ -40,6 +40,7 @@ export interface IUser {
     firstName: string
     lastName: string
     password: string
+    address: string
     confirmPassword: string
     role: string
 }
