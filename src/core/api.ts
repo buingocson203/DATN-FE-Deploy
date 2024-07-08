@@ -10,8 +10,8 @@ instance.interceptors.request.use(function (config) {
     const user = storedUser ? JSON.parse(storedUser) : {}
     const token = user?.accessToken || ''
 
-    // const token2 =
-    //     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdlZTgyMTBjZTE3ZDU1YzEzNDMxOTAiLCJpYXQiOjE3MjAwNzEyODMsImV4cCI6MTcyMDE1NzY4M30.rajLJVdLHdLdZ4FQiQyv7FoRcaA-b3h5CYfsk3yrkms'
+    const token2 =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdlZTgyMTBjZTE3ZDU1YzEzNDMxOTAiLCJpYXQiOjE3MjA0MjU4MjgsImV4cCI6MTcyMDUxMjIyOH0.lMWFJpZQkY5IREah8S-FPUSxb8H55m6KD7dmJOdkt2c'
     config.headers['Authorization'] = `Bearer ${token}`
     return config
 })

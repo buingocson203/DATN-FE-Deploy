@@ -17,8 +17,8 @@ const ORDER_STATUS_FILTERS: StatusFilterItem[] = [
 export const getOrderStatusOptions = (currentOrder: IOrder) => {
     return ORDER_STATUS_FILTERS.map((e) => {
         const validTransitions: Record<IOrderStatus, IOrderStatus[]> = {
-            pending: ['waiting'],
-            waiting: ['delivering', 'cancel'],
+            pending: ['waiting', 'cancel'],
+            waiting: ['delivering'],
             delivering: ['done'],
             done: [],
             cancel: []

@@ -163,8 +163,7 @@ const OrderDetail = () => {
                             }
                         />
                     </Form.Item>
-
-                    <Steps progressDot current={0} status={getStatus} items={steps} />
+                    <Steps direction='vertical' progressDot current={0} status={getStatus} items={steps} />
                     <br />
                     <br />
                     <Form.Item<FieldType> name='paymentStatus' label='Trạng thái thanh toán'>
