@@ -78,7 +78,8 @@ const Checkout = () => {
 
     useEffect(() => {
         reset({
-            name: user?.fullName
+            name: user?.fullName,
+            address: user?.address
         })
     }, [user])
 
@@ -364,9 +365,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
