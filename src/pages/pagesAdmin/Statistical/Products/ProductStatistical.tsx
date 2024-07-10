@@ -15,6 +15,7 @@ const BestSellingProducts = ({ products }) => {
                             <img className="w-12 h-12 object-cover rounded mr-4" src={product.image} alt={product.name} />
                             <div className="flex-grow">
                                 <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+                                <p className="text-sm text-gray-600">Size: {product.size}</p>
                             </div>
                             <div className="text-lg font-bold text-right text-green-700">
                                 {product.sales}
