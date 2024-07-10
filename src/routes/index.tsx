@@ -41,6 +41,7 @@ import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 import PaymentSuccess from '@/pages/PaymentSuccess'
 import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
+import { ProfitStatistics } from '@/pages/pagesAdmin/ProfitStatistics/ProfitStatistics'
 
 const Routers = () => {
     return (
@@ -87,6 +88,8 @@ const Routers = () => {
 
                 <Route path='/admin/reviews' element={<ProtectedRoute element={ReviewList} />} />
                 <Route path='/admin/reviews/detail/:reviewId' element={<ProtectedRoute element={ReviewDetail} />} />
+
+                <Route path='/admin/profitStatistics' element={<ProtectedRoute element={ProfitStatistics} />} />
             </Route>
         </Routes>
     )

@@ -34,3 +34,16 @@ export interface IOrder {
     total_price: number
     updatedAt: Date
 }
+
+export interface IOderByDateRange {
+    productId: string
+    productDetailId: string
+    productName: string
+    totalQuantity: number
+    price: number
+    promotionalPrice: number
+    importPrice: number
+    image: string
+    date: Date
+    profit: number
+}
