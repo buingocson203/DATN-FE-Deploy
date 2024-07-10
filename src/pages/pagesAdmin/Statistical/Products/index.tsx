@@ -1,30 +1,36 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
+import axios from 'axios';
 import BestSellingProducts from './ProductStatistical';
 import HighestRevenueProducts from './TopRevenue';
 import HighestProfitProducts from './TopProfit';
+import instance from '@/core/api';
 
-const allProducts = {
-    bestSelling: [
-        { name: 'Sản phẩm 1', size: 37, image: 'https://via.placeholder.com/150', sales: 120, date: '2024-01-01' },
-        { name: 'Sản phẩm 2', size: 37, image: 'https://via.placeholder.com/150', sales: 100, date: '2024-01-01' },
-        { name: 'Sản phẩm 3', size: 37, image: 'https://via.placeholder.com/150', sales: 80, date: '2024-01-01' },
-        { name: 'Sản phẩm 4', size: 37, image: 'https://via.placeholder.com/150', sales: 70, date: '2024-01-01' },
-        { name: 'Sản phẩm 5', size: 37, image: 'https://via.placeholder.com/150', sales: 50, date: '2024-01-01' },
-    ],
-    highestRevenue: [
-        { name: 'Sản phẩm A', image: 'https://via.placeholder.com/150', revenue: 500000, date: '2024-07-01' },
-        { name: 'Sản phẩm B', image: 'https://via.placeholder.com/150', revenue: 400000, date: '2024-06-25' },
-        { name: 'Sản phẩm C', image: 'https://via.placeholder.com/150', revenue: 300000, date: '2024-05-30' },
-        { name: 'Sản phẩm D', image: 'https://via.placeholder.com/150', revenue: 200000, date: '2024-03-20' },
-        { name: 'Sản phẩm E', image: 'https://via.placeholder.com/150', revenue: 100000, date: '2024-01-15' },
-    ],
-    highestProfit: [
-        { name: 'Sản phẩm X', image: 'https://via.placeholder.com/150', profit: 80000, date: '2024-07-01' },
-        { name: 'Sản phẩm Y', image: 'https://via.placeholder.com/150', profit: 70000, date: '2024-06-25' },
-        { name: 'Sản phẩm Z', image: 'https://via.placeholder.com/150', profit: 60000, date: '2024-05-30' },
-        { name: 'Sản phẩm W', image: 'https://via.placeholder.com/150', profit: 50000, date: '2024-03-20' },
-        { name: 'Sản phẩm V', image: 'https://via.placeholder.com/150', profit: 40000, date: '2024-01-15' },
-    ],
+const fetchProducts = async (selectedCategory, filterBy, year, month, week) => {
+    const endpointMap = {
+        bestSelling: 'api/order/top-5-product-best-seller',
+        highestRevenue: 'api/order/top-revenue-product',
+        highestProfit: 'api/order/topProfitableProducts',
+    };
+
+    let url = `${endpointMap[selectedCategory]}?filterBy=${filterBy}&year=${year}`;
+    if (filterBy === 'month') {
+        url += `&month=${month}`;
+    } else if (filterBy === 'week') {
+        url += `&week=${week}`;
+    }
+
+    // const { data } = await instance.get(url);
+    // console.log(`Data fetched for ${selectedCategory}:`, data);
+    // return data;
+    try {
+        const { data } = await instance.get(url);
+        console.log(`Data fetched for ${selectedCategory}:`, data);
+        return data;
+    } catch (error) {
+        console.error(`Error fetching data for ${selectedCategory}:`, error);
+        throw new Error(error.response?.data?.message || 'Error fetching data');
+    }
 };
 
 const StatisticalProduct = () => {
@@ -42,48 +48,35 @@ const StatisticalProduct = () => {
         setTimeFrame(event.target.value);
     };
 
-    const filterProductsByTimeFrame = (products) => {
-        const now = new Date();
-        switch (timeFrame) {
-            case 'week':
-                if (week && year) {
-                    const startDate = new Date(year, 0, (week - 1) * 7 + 1);
-                    const endDate = new Date(year, 0, week * 7);
-                    return products.filter(product => {
-                        const productDate = new Date(product.date);
-                        return productDate >= startDate && productDate <= endDate;
-                    });
-                }
-                break;
-            case 'month':
-                if (month && year) {
-                    const startDate = new Date(year, month - 1, 1);
-                    const endDate = new Date(year, month, 0);
-                    return products.filter(product => {
-                        const productDate = new Date(product.date);
-                        return productDate >= startDate && productDate <= endDate;
-                    });
-                }
-                break;
-            case 'year':
-                if (year) {
-                    const startDate = new Date(year, 0, 1);
-                    const endDate = new Date(year, 11, 31);
-                    return products.filter(product => {
-                        const productDate = new Date(product.date);
-                        return productDate >= startDate && productDate <= endDate;
-                    });
-                }
-                break;
-            default:
-                return products;
+    const { data: products, isLoading } = useQuery(
+        ['products', selectedCategory, timeFrame, year, month, week],
+        () => fetchProducts(selectedCategory, timeFrame, year, month, week),
+        {
+            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
         }
-        return products;
-    };
+    );
+    console.log('Products:', products);
 
     const renderComponent = () => {
-        let products = allProducts[selectedCategory];
-        products = filterProductsByTimeFrame(products);
+        const [isLoading, setIsLoading] = useState(true);
+        const [dataAvailable, setDataAvailable] = useState(true); // Ban đầu giả định dữ liệu có sẵn
+
+        useEffect(() => {
+            if (products && Array.isArray(products.data) && products.data.length === 0) {
+                setDataAvailable(false); // Không có dữ liệu
+            }
+            setIsLoading(false); // Ngừng loading khi đã có dữ liệu trả về hoặc không có dữ liệu
+        }, [products]);
+
+        // Kiểm tra xem có dữ liệu không và có bị lỗi không
+        if (!dataAvailable) {
+            return <div>No data available</div>;
+        }
+
+        if (isLoading) {
+            return <div>Loading...</div>;
+        }
+
         return (
             <>
                 {selectedCategory === 'bestSelling' && <BestSellingProducts products={products} />}

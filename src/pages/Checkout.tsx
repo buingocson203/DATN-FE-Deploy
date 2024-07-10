@@ -26,6 +26,7 @@ interface CartItem {
     productId: string
     sizeId: string
     productDetailId?: string
+    importPrice: number
 }
 
 interface ICreateOrderBody {
@@ -42,6 +43,7 @@ interface ICreateOrderBody {
         productDetailId?: string
         productName: string
         promotionalPrice: number
+        importPrice: number
     }[]
     name: string
     // total_price: number
@@ -93,7 +95,8 @@ const Checkout = () => {
                 sizeName: `${item.size}`,
                 productDetailId: item.productDetailId,
                 productName: item.nameProduct,
-                promotionalPrice: item.promotionalPrice
+                promotionalPrice: item.promotionalPrice,
+                importPrice: item.importPrice
             }
         })
         return data
@@ -357,9 +360,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
