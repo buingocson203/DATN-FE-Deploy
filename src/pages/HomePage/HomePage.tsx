@@ -33,7 +33,7 @@ const HomePage = (props: Props) => {
                 setProductCate(data.data);
             });
         })
-        instance.get("api/order/product-best-seller").then(({ data }) => {
+        instance.get("api/order/product-best-seller?startDate=2024-06-01&endDate=2024-12-30").then(({ data }) => {
             setOutStProducts(data.data);
         })
     }, [])
@@ -169,7 +169,7 @@ const HomePage = (props: Props) => {
                     </div>
                     {/* <HomePageButton className='mt-10'>Xem tất cả&nbsp;{tabs[activeTab]}</HomePageButton> */}
                 </div>
-                <div className='py-16 px-2'>
+                {/* <div className='py-16 px-2'>
                     <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>Bài viết mới nhất</h1>
                     <div className='px-5'>
                         <Carousel>
@@ -200,7 +200,7 @@ const HomePage = (props: Props) => {
                             <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 z-10' />
                         </Carousel>
                     </div>
-                </div>
+                </div> */}
                 <div className='py-16 px-2 grid lg:grid-cols-4 md:grid-cols-2 gap-4'>
                     <div className='flex justify-center items-start gap-3'>
                         <img

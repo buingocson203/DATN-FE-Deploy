@@ -17,13 +17,13 @@ import logo from '../../assets/2-01.jpg'
 type MenuItem = Required<MenuProps>['items'][number]
 
 const items: MenuItem[] = [
-    // { key: 'dashboard', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
-    {
-        key: 'dashboard',
-        label: 'Thống kê',
-        icon: <PieChartOutlined />,
-        children: [{ key: '1', icon: <FontSizeOutlined />, label: <Link to='/admin/dashboard/products'>Thống kê sản phẩm</Link> }]
-    },
+    { key: 'dashboard', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
+    // {
+    //     key: 'dashboard',
+    //     label: 'Thống kê',
+    //     icon: <PieChartOutlined />,
+    //     children: [{ key: '1', icon: <FontSizeOutlined />, label: <Link to='/admin/dashboard/products'>Thống kê sản phẩm</Link> }]
+    // },
     { key: 'products', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lý sản phẩm</Link> },
     { key: 'orders', icon: <OrderedListOutlined />, label: <Link to='/admin/orders'>Quản lý đặt hàng</Link> },
     { key: 'reviews', icon: <CommentOutlined />, label: <Link to='/admin/reviews'>Quản lý đánh giá</Link> },

@@ -43,6 +43,7 @@ interface ICreateOrderBody {
         productDetailId?: string
         productName: string
         promotionalPrice: number
+        importPrice: number
     }[]
     name: string
     // total_price: number
@@ -367,9 +368,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'

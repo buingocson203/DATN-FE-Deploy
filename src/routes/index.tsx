@@ -67,7 +67,7 @@ const Routers = () => {
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
                 <Route path='/admin/dashboard' element={<Dashboard />} />
-                <Route path='/admin/dashboard/products' element={<StatisticalProduct />} />
+                {/* <Route path='/admin/dashboard/products' element={<StatisticalProduct />} /> */}
                 <Route path='/admin/products' element={<Product />} />
                 <Route path='/admin/products/add' element={<AddProduct />} />
                 <Route path='/admin/products/edit/:productId' element={<EditProduct />} />
