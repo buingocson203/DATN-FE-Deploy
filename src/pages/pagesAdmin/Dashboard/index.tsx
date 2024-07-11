@@ -200,7 +200,7 @@ const Dashboard = (props: Props) => {
             <main>
                 <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
                     {/* Thống kê đơn hàng */}
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px] mb-12'>
+                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 mb-4'>
                         <Space className='p-[12px]'>
                             <Select value={type} onChange={setType}>
                                 <Option value="date">Ngày</Option>
