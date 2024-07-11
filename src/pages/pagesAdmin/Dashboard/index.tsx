@@ -5,6 +5,7 @@ import { getReviews } from '@/services/review'
 import { log } from 'util'
 import { getOrders } from '@/services/order'
 import RevenueStatistics from './RevenueStatistics'
+import StatisticalProduct from '../Statistical/Products'
 
 type Props = {}
 
@@ -54,7 +55,7 @@ const Dashboard = (props: Props) => {
         for (const [statusName, statusQuantity] of Object.entries(orderStatusCount)) {
             let parseName = '';
             console.log(statusName)
-            switch(statusName){
+            switch (statusName) {
                 case 'pending':
                     parseName = 'Chờ xác nhận'
                     break;
@@ -101,6 +102,7 @@ const Dashboard = (props: Props) => {
                     </div>
                     <RevenueStatistics />
 
+                    <StatisticalProduct />
                     <div className='grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5'>
                         <div className='rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark'>
                             <div className='flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4'>
@@ -365,14 +367,14 @@ const Dashboard = (props: Props) => {
                                     </div>
 
                                 </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    ` <img src={logo} alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
-                                </div>
+                                <a
+                                    href='messages.html'
+                                    className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
+                                >
+                                    <div className='relative h-14 w-14 rounded-full'>
+                                        ` <img src={logo} alt='User' />
+                                        <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
+                                    </div>
 
                                     <div className='flex flex-1 items-center justify-between'>
                                         <div>
@@ -449,7 +451,7 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
             </main>
         </>
