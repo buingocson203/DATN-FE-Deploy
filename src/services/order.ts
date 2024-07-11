@@ -41,12 +41,26 @@ export const getOrderHistory = async (orderId: string) => {
     return response.data
 }
 
+interface IProductBestSellerResponse {
+    message: string
+    data: {
+        date: string
+        totalRevenue: number
+    }[]
+}
+
 /**
  *
  * @param startDate YYYY-MM-DD
  * @param endDate YYYY-MM-DD
  */
-export const getOrdersByDateRange = async ({ startDate, endDate }: { startDate: string; endDate: string }) => {
+export const getOrdersByDateRange = async ({
+    startDate,
+    endDate
+}: {
+    startDate: string
+    endDate: string
+}): Promise<IProductBestSellerResponse> => {
     const response = await instance.get(`api/order/product-best-seller`, {
         params: {
             startDate,
