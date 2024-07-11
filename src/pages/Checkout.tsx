@@ -26,6 +26,7 @@ interface CartItem {
     productId: string
     sizeId: string
     productDetailId?: string
+    importPrice: number
 }
 
 interface ICreateOrderBody {
@@ -102,7 +103,8 @@ const Checkout = () => {
                 sizeName: `${item.size}`,
                 productDetailId: item.productDetailId,
                 productName: item.nameProduct,
-                promotionalPrice: item.promotionalPrice
+                promotionalPrice: item.promotionalPrice,
+                importPrice: item.importPrice
             }
         })
         return data
