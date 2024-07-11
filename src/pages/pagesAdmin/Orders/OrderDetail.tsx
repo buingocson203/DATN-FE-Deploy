@@ -209,15 +209,22 @@ const OrderDetail = () => {
     }, [history])
 
     const steps = useMemo(() => {
-        return history?.map((item) => {
+        const reversedHistory = [...history].reverse();  
+        const stepsData = reversedHistory.map((item, index) => {
+            const previousStatus = index > 0 ? reversedHistory[index - 1].status : 'Chờ xác nhận';
             return {
-                title: ORDER_STATUS_NAMES[item.status],
-                subTitle: item.adminName,
-                description: dayjs(item?.timeStamp).format('HH:MM DD-MM-YYYY')
-            }
-        })
-    }, [history])
-
+                title: `${previousStatus !== 'Chờ xác nhận' ? ORDER_STATUS_NAMES[previousStatus] : previousStatus} --> ${ORDER_STATUS_NAMES[item.status]}`,
+                description: (
+                    <div>
+                        <div>Thời gian: {dayjs(item?.timeStamp).format('HH:MM DD-MM-YYYY')}</div>
+                        <div>Được thay đổi bởi: {item.adminName}</div>
+                    </div>
+                )
+            };
+        });
+        return stepsData.reverse();  // Đảo ngược lại danh sách các bước để hiển thị từ cuối lên đầu
+    }, [history]);
+    
     return (
         <Detail name='Đặt hàng'>
             <Descriptions
