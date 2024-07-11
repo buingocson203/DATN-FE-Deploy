@@ -40,3 +40,18 @@ export const getOrderHistory = async (orderId: string) => {
     const response = await instance.get(`api/order/order-history/${orderId}`)
     return response.data
 }
+
+/**
+ *
+ * @param startDate YYYY-MM-DD
+ * @param endDate YYYY-MM-DD
+ */
+export const getOrdersByDateRange = async ({ startDate, endDate }: { startDate: string; endDate: string }) => {
+    const response = await instance.get(`api/order/product-best-seller`, {
+        params: {
+            startDate,
+            endDate
+        }
+    })
+    return response.data
+}

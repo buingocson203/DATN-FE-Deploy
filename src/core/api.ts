@@ -11,8 +11,8 @@ instance.interceptors.request.use(function (config) {
     const token = user?.accessToken || ''
 
     const token2 =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdlZTgyMTBjZTE3ZDU1YzEzNDMxOTAiLCJpYXQiOjE3MjA0MjU4MjgsImV4cCI6MTcyMDUxMjIyOH0.lMWFJpZQkY5IREah8S-FPUSxb8H55m6KD7dmJOdkt2c'
-    config.headers['Authorization'] = `Bearer ${token}`
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdlZTgyMTBjZTE3ZDU1YzEzNDMxOTAiLCJpYXQiOjE3MjA1OTkwMjksImV4cCI6MTcyMDY4NTQyOX0.rQgxqFdOad0XDw-G0XctEutdqyXPXqIZkw-A-D6bUe4'
+    config.headers['Authorization'] = `Bearer ${token2}`
     return config
 })
 
