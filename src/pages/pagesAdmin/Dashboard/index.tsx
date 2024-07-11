@@ -562,10 +562,6 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 </div>
             </main>
         </>
