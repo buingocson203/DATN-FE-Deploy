@@ -34,7 +34,7 @@ const Dashboard = (props: Props) => {
             pending: 0,
             waiting: 0,
             delivering: 0,
-            done: 0,
+            done: 0
         }
 
         // Duyệt qua từng object trong danh sách
@@ -52,24 +52,24 @@ const Dashboard = (props: Props) => {
         // Chuyển đổi orderStatusCount thành danh sách
         const result = []
         for (const [statusName, statusQuantity] of Object.entries(orderStatusCount)) {
-            let parseName = '';
+            let parseName = ''
             console.log(statusName)
-            switch(statusName){
+            switch (statusName) {
                 case 'pending':
                     parseName = 'Chờ xác nhận'
-                    break;
+                    break
                 case 'waiting':
                     parseName = 'Đã xác nhận'
-                    break;
+                    break
                 case 'delivering':
                     parseName = 'Đang giao hàng'
-                    break;
+                    break
                 case 'done':
                     parseName = 'Đã hoàn thành'
-                    break;
+                    break
                 default:
                     parseName = statusName
-                    break;
+                    break
             }
             result.push({ statusName: parseName, statusQuantity })
         }
@@ -96,7 +96,7 @@ const Dashboard = (props: Props) => {
             <main>
                 <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
                     {/* Thống kê đơn hàng */}
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px]'>
+                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 min-h-[300px] mb-4'>
                         <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} />
                     </div>
                     <RevenueStatistics />
@@ -363,16 +363,15 @@ const Dashboard = (props: Props) => {
                                         ` <img src={logo} alt='User' />
                                         <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
                                     </div>
-
                                 </a>
-                            <a
-                                href='messages.html'
-                                className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
-                            >
-                                <div className='relative h-14 w-14 rounded-full'>
-                                    ` <img src={logo} alt='User' />
-                                    <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
-                                </div>
+                                <a
+                                    href='messages.html'
+                                    className='flex items-center gap-5 py-3 px-7.5 hover:bg-gray-3 dark:hover:bg-meta-4'
+                                >
+                                    <div className='relative h-14 w-14 rounded-full'>
+                                        ` <img src={logo} alt='User' />
+                                        <span className='absolute right-0 bottom-0 h-3.5 w-3.5 rounded-full border-2 border-white bg-meta-6'></span>
+                                    </div>
 
                                     <div className='flex flex-1 items-center justify-between'>
                                         <div>
@@ -449,7 +448,6 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
-                    
                 </div>
             </main>
         </>
