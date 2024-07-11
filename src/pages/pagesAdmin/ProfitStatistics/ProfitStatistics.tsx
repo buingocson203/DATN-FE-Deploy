@@ -1,15 +1,14 @@
 import { IOderByDateRange } from '@/common/interfaces/order'
 import { getOrdersByDateRange } from '@/services/order'
-import { Select } from 'antd'
+import { DatePicker, DatePickerProps, Segmented, SegmentedProps } from 'antd'
 import { CategoryScale, Chart as ChartJS } from 'chart.js/auto'
+import dayjs from 'dayjs'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Bar } from 'react-chartjs-2'
-
 ChartJS.register(CategoryScale)
 
 type TimeUnit = 'week' | 'month' | 'year'
-
 interface GroupedValues {
     [key: string]: { profit: number }
 }
@@ -23,14 +22,12 @@ export const ProfitStatistics: React.FC = () => {
     const [value, setValue] = useState<TimeUnit>('week')
     const [data, setData] = useState<ChartData[]>([])
 
-    const handleChange = (value: TimeUnit) => {
-        setValue(value)
-    }
+    const [defaultValue, setDefaultValue] = useState<string>(moment().format('YYYY-MM-DD'))
 
     const getDateRange = () => {
         return {
-            startDate: moment().startOf(value).format('YYYY-MM-DD'),
-            endDate: moment().endOf(value).format('YYYY-MM-DD')
+            startDate: moment(defaultValue).startOf(value).format('YYYY-MM-DD'),
+            endDate: moment(defaultValue).endOf(value).format('YYYY-MM-DD')
         }
     }
 
@@ -80,37 +77,54 @@ export const ProfitStatistics: React.FC = () => {
     }
 
     const getData = async () => {
-        const response = await getOrdersByDateRange(getDateRange())
-        const responseData = response?.data
-
-        const tranform = tranformData(getLabels(), responseData)
-        setData(tranform)
+        try {
+            const response = await getOrdersByDateRange(getDateRange())
+            const responseData = response?.data
+            const tranform = tranformData(getLabels(), responseData)
+            setData(tranform)
+        } catch (error) {
+            setData([])
+        }
     }
 
     useEffect(() => {
         getData()
-    }, [value])
+    }, [value, defaultValue])
+
+    const options: SegmentedProps['options'] = useMemo(() => {
+        return [
+            { label: 'Tuần', value: 'week' },
+            { label: 'Tháng', value: 'month' },
+            { label: 'Năm', value: 'year' }
+            // { label: 'Khoảng thời gian', value: 'date-range' }
+        ]
+    }, [])
+
+    const datePickerFormats: Record<TimeUnit, string> = {
+        week: 'wo-YYYY',
+        month: 'MM-YYYY',
+        year: 'YYYY'
+    }
+
+    const onChangeSelect: SegmentedProps<TimeUnit>['onChange'] = (value) => {
+        setDefaultValue(moment().format('YYYY-MM-DD'))
+        setValue(value)
+    }
+
+    const onChangeDatePicker: DatePickerProps['onChange'] = (date, dateString) => {
+        setDefaultValue(moment(new Date(date as any)).format('YYYY-MM-DD'))
+    }
 
     return (
         <div className='p-6'>
-            <Select
-                onChange={handleChange}
-                defaultValue={'week'}
-                placeholder='Chọn'
-                options={[
-                    {
-                        label: 'Theo tuần',
-                        value: 'week'
-                    },
-                    {
-                        label: 'Theo tháng',
-                        value: 'month'
-                    },
-                    {
-                        label: 'Theo năm',
-                        value: 'year'
-                    }
-                ]}
+            <Segmented options={options} onChange={onChangeSelect} />
+            <DatePicker
+                value={dayjs(defaultValue, 'YYYY-MM-DD')}
+                format={datePickerFormats[value]}
+                onChange={onChangeDatePicker}
+                picker={value}
+                allowClear={false}
+                inputReadOnly={true}
             />
             <Bar
                 data={{
