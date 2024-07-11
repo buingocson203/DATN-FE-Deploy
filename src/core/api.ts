@@ -12,7 +12,7 @@ instance.interceptors.request.use(function (config) {
 
     const token2 =
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjdlZTgyMTBjZTE3ZDU1YzEzNDMxOTAiLCJpYXQiOjE3MjA1OTkwMjksImV4cCI6MTcyMDY4NTQyOX0.rQgxqFdOad0XDw-G0XctEutdqyXPXqIZkw-A-D6bUe4'
-    config.headers['Authorization'] = `Bearer ${token2}`
+    config.headers['Authorization'] = `Bearer ${token}`
     return config
 })
 

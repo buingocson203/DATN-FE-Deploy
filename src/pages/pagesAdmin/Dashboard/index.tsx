@@ -6,19 +6,39 @@ import { log } from 'util'
 import { getOrders } from '@/services/order'
 import RevenueStatistics from './RevenueStatistics'
 import StatisticalProduct from '../Statistical/Products'
+import type { DatePickerProps } from 'antd';
+import { DatePicker, Select, Space } from 'antd';
+
+const { Option } = Select;
 
 type Props = {}
+type PickerType = 'date' | 'week' | 'month' | 'year';
+const PickerWithType = ({
+    type,
+    onChange,
+}: {
+    type: PickerType;
+    onChange: DatePickerProps['onChange'];
+}) => {
+    if (type === 'date') return <DatePicker onChange={onChange} />;
+    return <DatePicker picker={type} onChange={onChange} />;
+};
+
 
 const Dashboard = (props: Props) => {
+    const [type, setType] = useState<PickerType>('date');
+    const [orders, setOrders] = useState([]);
+    const [filteredOrders, setFilteredOrders] = useState([]);
+    let timeFilterOrder = null;
     interface IStatisticOrder {
         statusName: String
         statusQuantity: Number
     }
     const columns: TableProps<IStatisticOrder>['columns'] = [
         {
-            title: 'Trạng thái đơn hàng',
+            title: 'Thống kê trạng thái đơn hàng',
             dataIndex: 'statusName',
-            key: 'statusName'
+            key: 'statusName',
         },
         {
             title: 'Số lượng',
@@ -30,12 +50,13 @@ const Dashboard = (props: Props) => {
     const [isLoading, setIsLoading] = useState(false)
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
 
-    const countOrderStatus = (orderList) => {
+    const countOrderStatus = (orderList: any) => {
         const orderStatusCount = {
             pending: 0,
             waiting: 0,
             delivering: 0,
-            done: 0
+            done: 0,
+            cancel: 0,
         }
 
         // Duyệt qua từng object trong danh sách
@@ -53,8 +74,7 @@ const Dashboard = (props: Props) => {
         // Chuyển đổi orderStatusCount thành danh sách
         const result = []
         for (const [statusName, statusQuantity] of Object.entries(orderStatusCount)) {
-            let parseName = ''
-            console.log(statusName)
+            let parseName = '';
             switch (statusName) {
                 case 'pending':
                     parseName = 'Chờ xác nhận'
@@ -67,7 +87,10 @@ const Dashboard = (props: Props) => {
                     break
                 case 'done':
                     parseName = 'Đã hoàn thành'
-                    break
+                    break;
+                case 'cancel':
+                    parseName = 'Hủy bỏ'
+                    break;
                 default:
                     parseName = statusName
                     break
@@ -81,8 +104,10 @@ const Dashboard = (props: Props) => {
     const fetchOrders = async () => {
         setIsLoading(true)
         const response = await getOrders()
-        const data = response?.data?.filter((item) => item)
-        let resultResolve = countOrderStatus(data)
+        const data = response?.data?.filter((item: any) => item)
+        setOrders(data);
+        setFilteredOrders(data)
+        let resultResolve = countOrderStatus(filteredOrders)
         if (resultResolve) {
             setStatisticOrder(resultResolve)
         }
@@ -92,13 +117,100 @@ const Dashboard = (props: Props) => {
     useEffect(() => {
         fetchOrders()
     }, [])
+    const handleSelectWeek = (val:any) => {
+        const startOfWeek = new Date(val.getTime());
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        const endOfWeek = new Date(startOfWeek.getTime());
+        endOfWeek.setDate(endOfWeek.getDate() + 6);
+        let rangeWeek = {
+            startDate: (startOfWeek),
+            endDate: (endOfWeek),
+        };
+        return rangeWeek;
+    }
+    const handleFilterStatisticOrder = (val: any) => {
+        switch (type) {
+            case 'date':
+                timeFilterOrder = new Date(val.$d);
+                break;
+            case 'week':
+                timeFilterOrder = handleSelectWeek(val.$d);
+                break;
+            case 'month':
+                timeFilterOrder = new Date(val.$d);
+                break;
+            case 'year':
+                timeFilterOrder = val.$y;
+                break;
+            default:
+                timeFilterOrder = null;
+                break;
+        }
+        handleFilterOrderByTime();
+    }
+
+    const handleFilterOrderByTime = () => {
+        let resultResolve;
+        let filteredData;
+        switch (type) {
+            case 'date':
+                filteredData = (orders.filter(order => {
+                    return new Date(order?.createdAt).toDateString() == timeFilterOrder?.toDateString()
+                }))
+                resultResolve = countOrderStatus(filteredData)
+                if (resultResolve) {
+                    setStatisticOrder(resultResolve)
+                }
+                break;
+            case 'week':
+                filteredData = (orders.filter(order => {
+                    let isValidOrder = (new Date(order?.createdAt) > timeFilterOrder?.startDate) && (new Date(order?.createdAt) < timeFilterOrder?.endDate)
+                    return isValidOrder;
+                }))
+                resultResolve = countOrderStatus(filteredData)
+                if (resultResolve) {
+                    setStatisticOrder(resultResolve)
+                }
+                break;
+            case 'month':
+                filteredData = (orders.filter(order => {
+                    return new Date(order?.createdAt).getMonth() - 1 == timeFilterOrder?.getMonth() - 1
+                }))
+                resultResolve = countOrderStatus(filteredData)
+                if (resultResolve) {
+                    setStatisticOrder(resultResolve)
+                }
+                break;
+            case 'year':
+                filteredData = (orders.filter(order => {
+                    return new Date(order?.createdAt).getFullYear() == timeFilterOrder
+                }))
+                resultResolve = countOrderStatus(filteredData)
+                if (resultResolve) {
+                    setStatisticOrder(resultResolve)
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     return (
         <>
             <main>
                 <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
                     {/* Thống kê đơn hàng */}
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 min-h-[300px] mb-4'>
-                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} />
+                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 !h-[300px] mb-12'>
+                        <Space className='p-[12px]'>
+                            <Select value={type} onChange={setType}>
+                                <Option value="date">Ngày</Option>
+                                <Option value="week">Tuần</Option>
+                                <Option value="month">Tháng</Option>
+                                <Option value="year">Năm</Option>
+                            </Select>
+                            <PickerWithType type={type} onChange={(value) => handleFilterStatisticOrder(value)} />
+                        </Space>
+                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} pagination={false} />
                     </div>
                     <RevenueStatistics />
 
@@ -450,6 +562,10 @@ const Dashboard = (props: Props) => {
                             </div>
                         </div>
                     </div>
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
                 </div>
             </main>
         </>
