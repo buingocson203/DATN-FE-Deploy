@@ -6,39 +6,34 @@ import { log } from 'util'
 import { getOrders } from '@/services/order'
 import RevenueStatistics from './RevenueStatistics'
 import StatisticalProduct from '../Statistical/Products'
-import type { DatePickerProps } from 'antd';
-import { DatePicker, Select, Space } from 'antd';
+import type { DatePickerProps } from 'antd'
+import { DatePicker, Select, Space } from 'antd'
+import dayjs from 'dayjs'
 
-const { Option } = Select;
+const { Option } = Select
 
 type Props = {}
-type PickerType = 'date' | 'week' | 'month' | 'year';
-const PickerWithType = ({
-    type,
-    onChange,
-}: {
-    type: PickerType;
-    onChange: DatePickerProps['onChange'];
-}) => {
-    if (type === 'date') return <DatePicker onChange={onChange} />;
-    return <DatePicker picker={type} onChange={onChange} />;
-};
-
+type PickerType = 'date' | 'week' | 'month' | 'year'
+const PickerWithType = ({ type, onChange }: { type: PickerType; onChange: DatePickerProps['onChange'] }) => {
+    if (type === 'date') return <DatePicker onChange={onChange} defaultValue={dayjs(new Date())} />
+    return <DatePicker picker={type} onChange={onChange} />
+}
 
 const Dashboard = (props: Props) => {
-    const [type, setType] = useState<PickerType>('date');
-    const [orders, setOrders] = useState([]);
-    const [filteredOrders, setFilteredOrders] = useState([]);
-    let timeFilterOrder = null;
+    const [type, setType] = useState<PickerType>('date')
+    const [orders, setOrders] = useState([])
+    const [filteredOrders, setFilteredOrders] = useState([])
+    let timeFilterOrder = null
     interface IStatisticOrder {
-        statusName: String
-        statusQuantity: Number
+        statusName: string
+        statusQuantity: number
+        classColor: string
     }
     const columns: TableProps<IStatisticOrder>['columns'] = [
         {
             title: 'Thống kê trạng thái đơn hàng',
             dataIndex: 'statusName',
-            key: 'statusName',
+            key: 'statusName'
         },
         {
             title: 'Số lượng',
@@ -56,7 +51,7 @@ const Dashboard = (props: Props) => {
             waiting: 0,
             delivering: 0,
             done: 0,
-            cancel: 0,
+            cancel: 0
         }
 
         // Duyệt qua từng object trong danh sách
@@ -74,28 +69,35 @@ const Dashboard = (props: Props) => {
         // Chuyển đổi orderStatusCount thành danh sách
         const result = []
         for (const [statusName, statusQuantity] of Object.entries(orderStatusCount)) {
-            let parseName = '';
+            let parseName = ''
+            let classColor = ''
             switch (statusName) {
                 case 'pending':
                     parseName = 'Chờ xác nhận'
+                    classColor = '#495761'
                     break
                 case 'waiting':
                     parseName = 'Đã xác nhận'
+                    classColor = '#ea8034'
                     break
                 case 'delivering':
                     parseName = 'Đang giao hàng'
+                    classColor = '#2998f3'
                     break
                 case 'done':
                     parseName = 'Đã hoàn thành'
-                    break;
+                    classColor = '#4eaf46'
+                    break
                 case 'cancel':
                     parseName = 'Hủy bỏ'
-                    break;
+                    classColor = '#c05258'
+                    break
                 default:
                     parseName = statusName
+                    classColor = '#000'
                     break
             }
-            result.push({ statusName: parseName, statusQuantity })
+            result.push({ statusName: parseName, statusQuantity, classColor })
         }
 
         return result
@@ -105,7 +107,7 @@ const Dashboard = (props: Props) => {
         setIsLoading(true)
         const response = await getOrders()
         const data = response?.data?.filter((item: any) => item)
-        setOrders(data);
+        setOrders(data)
         setFilteredOrders(data)
         let resultResolve = countOrderStatus(filteredOrders)
         if (resultResolve) {
@@ -117,16 +119,16 @@ const Dashboard = (props: Props) => {
     useEffect(() => {
         fetchOrders()
     }, [])
-    const handleSelectWeek = (val:any) => {
-        const startOfWeek = new Date(val.getTime());
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
-        const endOfWeek = new Date(startOfWeek.getTime());
-        endOfWeek.setDate(endOfWeek.getDate() + 6);
+    const handleSelectWeek = (val: any) => {
+        const startOfWeek = new Date(val.getTime())
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
+        const endOfWeek = new Date(startOfWeek.getTime())
+        endOfWeek.setDate(endOfWeek.getDate() + 6)
         let rangeWeek = {
-            startDate: (startOfWeek),
-            endDate: (endOfWeek),
-        };
-        return rangeWeek;
+            startDate: startOfWeek,
+            endDate: endOfWeek
+        }
+        return rangeWeek
     }
     const handleFilterStatisticOrder = (val: any) => {
         switch (type) {
@@ -154,37 +156,39 @@ const Dashboard = (props: Props) => {
         let filteredData;
         switch (type) {
             case 'date':
-                filteredData = (orders.filter(order => {
+                filteredData = orders.filter((order) => {
                     return new Date(order?.createdAt).toDateString() == timeFilterOrder?.toDateString()
-                }))
+                })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
                 break;
             case 'week':
-                filteredData = (orders.filter(order => {
-                    let isValidOrder = (new Date(order?.createdAt) > timeFilterOrder?.startDate) && (new Date(order?.createdAt) < timeFilterOrder?.endDate)
-                    return isValidOrder;
-                }))
+                filteredData = orders.filter((order) => {
+                    let isValidOrder =
+                        new Date(order?.createdAt) > timeFilterOrder?.startDate &&
+                        new Date(order?.createdAt) < timeFilterOrder?.endDate
+                    return isValidOrder
+                })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
                 break;
             case 'month':
-                filteredData = (orders.filter(order => {
+                filteredData = orders.filter((order) => {
                     return new Date(order?.createdAt).getMonth() - 1 == timeFilterOrder?.getMonth() - 1
-                }))
+                })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
                 break;
             case 'year':
-                filteredData = (orders.filter(order => {
+                filteredData = orders.filter((order) => {
                     return new Date(order?.createdAt).getFullYear() == timeFilterOrder
-                }))
+                })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
@@ -200,17 +204,43 @@ const Dashboard = (props: Props) => {
             <main>
                 <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
                     {/* Thống kê đơn hàng */}
-                    <div className='col-span-12 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 mb-4'>
-                        <Space className='p-[12px]'>
-                            <Select value={type} onChange={setType}>
-                                <Option value="date">Ngày</Option>
-                                <Option value="week">Tuần</Option>
-                                <Option value="month">Tháng</Option>
-                                <Option value="year">Năm</Option>
-                            </Select>
-                            <PickerWithType type={type} onChange={(value) => handleFilterStatisticOrder(value)} />
-                        </Space>
-                        <Table<IStatisticOrder> dataSource={statisticOrder} columns={columns} loading={isLoading} pagination={false} />
+                    <div className='col-span-12 rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark xl:col-span-12 mb-4'>
+                        <div className='pl-[12px] flex items-center justify-between'>
+                            <h2 className='font-bold'>Thống kê trạng thái đơn hàng</h2>
+                            <Space className='p-[12px] !px-[24px]' style={{ fontFamily: 'Roboto !important' }}>
+                                <Select value={type} onChange={setType}>
+                                    <Option value='date'>Ngày</Option>
+                                    <Option value='week'>Tuần</Option>
+                                    <Option value='month'>Tháng</Option>
+                                    <Option value='year'>Năm</Option>
+                                </Select>
+                                <PickerWithType type={type} onChange={(value) => handleFilterStatisticOrder(value)} />
+                            </Space>
+                        </div>
+                        <div className='grid grid-cols-3 gap-4 px-[24px] mb-6'>
+                            {statisticOrder.map((statisticOrderItem, index) => {
+                                return (
+                                    <div
+                                        key={statisticOrderItem.statusName}
+                                        style={{ color: statisticOrderItem.classColor, boxShadow: '0 0 5px #efefef' }}
+                                        className='flex items-center justify-between border border-1 border-gray-300 rounded-lg py-5 px-[36px]'
+                                    >
+                                        <div className='flex items-center gap-x-4'>
+                                            <i
+                                                className='fa-solid fa-tag text-[24px]'
+                                                style={{ transform: 'scaleX(-1)' }}
+                                            ></i>
+                                            <p className='!text-black'>{statisticOrderItem.statusName}</p>
+                                        </div>
+                                        <p className='font-bold'>
+                                            {statisticOrderItem.statusQuantity < 10
+                                                ? `0${statisticOrderItem.statusQuantity}`
+                                                : statisticOrderItem.statusQuantity.toString()}
+                                        </p>
+                                    </div>
+                                )
+                            })}
+                        </div>
                     </div>
                     <RevenueStatistics />
 

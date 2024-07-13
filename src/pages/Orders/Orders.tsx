@@ -70,6 +70,7 @@ const Orders = () => {
                 }`
             )
         }
+        fetchData();
     }
 
     const onSelectOrderToReview = (order: any) => {
