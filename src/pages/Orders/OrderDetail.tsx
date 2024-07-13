@@ -391,7 +391,7 @@ const OrderDetail = () => {
                 {(() => {
                     if (
                         detailOrder?.orderStatus == "done" &&
-                        !detailOrder?.productDetails.some((x) => !x.isRated)
+                        !detailOrder?.isRated
                     ) {
                         return (
                             <button
