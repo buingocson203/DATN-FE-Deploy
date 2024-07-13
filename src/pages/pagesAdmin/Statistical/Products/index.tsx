@@ -6,100 +6,69 @@ import HighestRevenueProducts from './TopRevenue';
 import HighestProfitProducts from './TopProfit';
 import instance from '@/core/api';
 
-const fetchProducts = async (selectedCategory, filterBy, year, month, week) => {
-    const endpointMap = {
-        bestSelling: 'api/order/top-5-product-best-seller',
-        highestRevenue: 'api/order/top-revenue-product',
-        highestProfit: 'api/order/topProfitableProducts',
-    };
-
-    let url = `${endpointMap[selectedCategory]}?filterBy=${filterBy}&year=${year}`;
+const fetchProducts = async (endpoint, filterBy, year, month, week) => {
+    let url = `${endpoint}?filterBy=${filterBy}&year=${year}`;
     if (filterBy === 'month') {
         url += `&month=${month}`;
     } else if (filterBy === 'week') {
         url += `&week=${week}`;
     }
 
-    // const { data } = await instance.get(url);
-    // console.log(`Data fetched for ${selectedCategory}:`, data);
-    // return data;
     try {
         const { data } = await instance.get(url);
-        console.log(`Data fetched for ${selectedCategory}:`, data);
+        console.log(`Data fetched from ${endpoint}:`, data);
         return data;
     } catch (error) {
-        console.error(`Error fetching data for ${selectedCategory}:`, error);
+        console.error(`Error fetching data from ${endpoint}:`, error);
         throw new Error(error.response?.data?.message || 'Error fetching data');
     }
 };
 
 const StatisticalProduct = () => {
-    const [selectedCategory, setSelectedCategory] = useState('bestSelling');
     const [timeFrame, setTimeFrame] = useState('week');
     const [week, setWeek] = useState('');
     const [month, setMonth] = useState('');
     const [year, setYear] = useState('');
 
-    const handleCategoryChange = (event) => {
-        setSelectedCategory(event.target.value);
-    };
-
     const handleTimeFrameChange = (event) => {
         setTimeFrame(event.target.value);
     };
 
-    const { data: products, isLoading } = useQuery(
-        ['products', selectedCategory, timeFrame, year, month, week],
-        () => fetchProducts(selectedCategory, timeFrame, year, month, week),
+    const fetchBestSellingProducts = () => fetchProducts('api/order/top-5-product-best-seller', timeFrame, year, month, week);
+    const fetchHighestRevenueProducts = () => fetchProducts('api/order/top-revenue-product', timeFrame, year, month, week);
+    const fetchHighestProfitProducts = () => fetchProducts('api/order/topProfitableProducts', timeFrame, year, month, week);
+
+    const { data: bestSellingProducts, isLoading: isLoadingBestSelling } = useQuery(
+        ['bestSellingProducts', timeFrame, year, month, week],
+        fetchBestSellingProducts,
         {
             enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
         }
     );
-    console.log('Products:', products);
 
-    const renderComponent = () => {
-        const [isLoading, setIsLoading] = useState(true);
-        const [dataAvailable, setDataAvailable] = useState(true); // Ban đầu giả định dữ liệu có sẵn
-
-        useEffect(() => {
-            if (products && Array.isArray(products.data) && products.data.length === 0) {
-                setDataAvailable(false); // Không có dữ liệu
-            }
-            setIsLoading(false); // Ngừng loading khi đã có dữ liệu trả về hoặc không có dữ liệu
-        }, [products]);
-
-        // Kiểm tra xem có dữ liệu không và có bị lỗi không
-        if (!dataAvailable) {
-            return <div>No data available</div>;
+    const { data: highestRevenueProducts, isLoading: isLoadingHighestRevenue } = useQuery(
+        ['highestRevenueProducts', timeFrame, year, month, week],
+        fetchHighestRevenueProducts,
+        {
+            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
         }
+    );
 
-        if (isLoading) {
-            return <div>Loading...</div>;
+    const { data: highestProfitProducts, isLoading: isLoadingHighestProfit } = useQuery(
+        ['highestProfitProducts', timeFrame, year, month, week],
+        fetchHighestProfitProducts,
+        {
+            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
         }
+    );
 
-        return (
-            <>
-                {selectedCategory === 'bestSelling' && <BestSellingProducts products={products} />}
-                {selectedCategory === 'highestRevenue' && <HighestRevenueProducts products={products} />}
-                {selectedCategory === 'highestProfit' && <HighestProfitProducts products={products} />}
-            </>
-        );
-    };
+    const isLoading = isLoadingBestSelling || isLoadingHighestRevenue || isLoadingHighestProfit;
 
     return (
         <div className="min-h-screen bg-gray-100 p-6">
             <div className="flex flex-col justify-between items-center max-w-2xl mx-auto mb-4 space-y-4">
                 <h1 className="text-3xl font-bold">Thứ Hạng Sản Phẩm</h1>
                 <div className="flex space-x-4">
-                    <select
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        className="p-2 border rounded-lg bg-white shadow text-gray-600"
-                    >
-                        <option value="bestSelling">Top 5 Sản Phẩm Bán Chạy Nhất</option>
-                        <option value="highestRevenue">Top 5 Sản Phẩm Có Doanh Thu Cao</option>
-                        <option value="highestProfit">Top 5 Sản Phẩm Có Lợi Nhuận Cao</option>
-                    </select>
                     <select
                         value={timeFrame}
                         onChange={handleTimeFrameChange}
@@ -158,7 +127,24 @@ const StatisticalProduct = () => {
                     )}
                 </div>
             </div>
-            {renderComponent()}
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : (
+                <div className="grid grid-cols-3 gap-4">
+                    <div>
+                        <h2 className="text-xl font-bold mb-2">Top 5 Sản Phẩm Bán Chạy Nhất</h2>
+                        <BestSellingProducts products={bestSellingProducts} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold mb-2">Top 5 Sản Phẩm Có Doanh Thu Cao</h2>
+                        <HighestRevenueProducts products={highestRevenueProducts} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-bold mb-2">Top 5 Sản Phẩm Có Lợi Nhuận Cao</h2>
+                        <HighestProfitProducts products={highestProfitProducts} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
