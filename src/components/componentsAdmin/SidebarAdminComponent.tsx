@@ -54,7 +54,6 @@ const SidebarAdminComponent: React.FC = () => {
 
             <Menu
                 defaultSelectedKeys={['dashboard']}
-                defaultOpenKeys={['sub1']}
                 mode='inline'
                 theme='dark'
                 inlineCollapsed={collapsed}
