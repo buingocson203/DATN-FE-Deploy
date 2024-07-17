@@ -4,7 +4,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import ProductItem from '@/features/product/_components/product-item'
 import { cn, onMutateError } from '@/lib/utils'
 import { FacebookIcon, MessageCircleIcon, MinusIcon, PlusIcon, TwitterIcon, Zap } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import ProductComment from './ProductComment'
@@ -18,14 +18,52 @@ import { render } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { updateCartQuantityStore } from '../../store/actions'
 import { cartActions } from '@/store/slices/cartSlice'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons'
+import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
+import { message } from 'antd'
 
 const ProductDetail = () => {
+    const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
+
+    const { mutate: onFavorite } = useProductFavoriteMutation({
+        action: 'ADD',
+        onSuccess: () => {
+            message.success("Đã thêm SP vào danh sách yêu thích")
+            refetch()
+        }
+    })
+
+    const { mutate: onRemoveFavorite} = useProductFavoriteMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            message.success('Đã xoá SP khỏi danh sách yêu thích')
+            refetch()
+        }
+    })
+
     const dispatch = useDispatch()
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
     const [variant, setVariant] = useState<IProductSize | undefined>()
 
     const { id: productId, detail: detailID } = useParams()
+
+    const isFavorite = useMemo(() => {
+        return favoriteProduct?.data.find(it => it.productId === productId)
+    }, [productId, favoriteProduct?.data])
+
+    const onToggleFavorite = () => {
+        if (!getUserID()) {
+            message.info("Vui lòng đăng nhập tài khoản!")
+            return;
+        }
+
+        if (isFavorite) {
+            onRemoveFavorite(productId)
+        } else {
+            onFavorite(productId)
+        }
+    }
 
     const { data: infoProduct } = useQuery({
         queryFn: () => getInfoProductById(String(productId)),
@@ -97,7 +135,7 @@ const ProductDetail = () => {
             <BreadCrumb links={breadcrumb} />
             <div className='app-container text-[#333]'>
                 <div className='flex flex-col md:flex-row'>
-                    <div className='flex-1 img-product-container'>
+                    <div className='flex-1 img-product-container relative group'>
                         <Carousel>
                             <CarouselContent>
                                 {infoProduct?.data?.images?.map((image, index) => (
@@ -107,6 +145,10 @@ const ProductDetail = () => {
                                 ))}
                             </CarouselContent>
                         </Carousel>
+
+                        <div onClick={onToggleFavorite} className='cursor-pointer absolute top-4 right-4 inline-block h-auto text-2xl opacity-0 group-hover:opacity-100 transition'>
+                            {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />} 
+                        </div>
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
                         <div className='flex-1'>
