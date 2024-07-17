@@ -22,6 +22,7 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
 import Checkout from '@/pages/Checkout'
+import CheckoutNow from '@/pages/CheckoutNow'
 import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
 import MyProfile from '@/pages/MyProfile'
@@ -56,6 +57,7 @@ const Routers = () => {
                 <Route path='/orders' element={<Orders />} />
                 <Route path='/orders/:id' element={<OrderDetail />} />
                 <Route path='/checkout' element={<Checkout />} />
+                <Route path='/checkout-now/:id' element={<CheckoutNow />} />
                 <Route path='/formaddress' element={<FormAddress />} />
                 <Route path='/payment' element={<PayMent />} />
                 <Route path='/collections/:id' element={<Collection />} />
