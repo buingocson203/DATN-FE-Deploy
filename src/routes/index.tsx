@@ -40,6 +40,7 @@ import OrderDetailAdmin from '@/pages/pagesAdmin/Orders/OrderDetail'
 import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
+import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 
 const Routers = () => {
     return (
@@ -59,6 +60,7 @@ const Routers = () => {
                 <Route path='/collections/:id' element={<Collection />} />
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/policy/:id' element={<PolicyPage />} />
+                <Route path='/pages/policy' element={<ReturnPolicy />} />
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
