@@ -380,6 +380,35 @@ export default function Header() {
                                             Quy chế hoạt động
                                         </Link>
                                     </li>
+                                </ul>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to='/pages/blog' className='hover:text-neutral-900'>
+                                Blog
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to='/pages/lien-he' className='hover:text-neutral-900'>
+                                Giới thiệu
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                to='/pages/chinh-sach-doi-tra-1'
+                                className='flex items-center justify-center gap-1 item-hover relative'
+                            >
+                                <span className='relative hover:text-neutral-700'>Chính sách đổi trả</span>
+                                <ChevronDownIcon className='w-3 transition-all group-hover:rotate-180 duration-300' />
+                                <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
+                                    <li>
+                                        <Link
+                                            className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
+                                            to='/pages/quy-cho-hoat-dong'
+                                        >
+                                            Quy chế hoạt động
+                                        </Link>
+                                    </li>
                                     <li>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
@@ -391,7 +420,7 @@ export default function Header() {
                                     <li>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                            to='/pages/chinh-sach-doi-tra-1'
+                                            to='/pages/policy'
                                         >
                                             Chính sách đổi trả và bảo hành
                                         </Link>

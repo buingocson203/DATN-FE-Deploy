@@ -92,6 +92,7 @@ const ProductDetail = () => {
         return userID
     }
     const addToCart = (quantity: number) => {
+        console.log(variant);
         const fetchData = async (dataX: any) => {
             try {
                 await instance.post(`api/cart`, dataX)
@@ -235,16 +236,19 @@ const ProductDetail = () => {
                                 </div>
                                 <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                             </div>
-                            <div className='flex items-center justify-center mt-5 gap-2'>
+                            <div className='grid grid-cols-2 gap-x-4 mt-5'>
                                 <button
                                     onClick={() => addToCart(quantity)}
                                     className='px-7 py-3 border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-full'
                                 >
                                     THÊM VÀO GIỎ
                                 </button>
-                                <button className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
-                                    MUA NGAY
-                                </button>
+                                <Link to={`/checkout-now/${variant?.productDetailId}?sizeId=${variant?.sizeId}`}>
+                                    <button
+                                        className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
+                                        MUA NGAY
+                                    </button>
+                                </Link>
                             </div>
                             {/* ẨN khuyến mại */}
                             <div className='flex items-center justify-center mt-5 gap-2'>

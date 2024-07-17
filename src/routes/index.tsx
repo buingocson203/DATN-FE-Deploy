@@ -22,6 +22,7 @@ import ListCategory from '@/features/category/_components/ListCategory'
 import EditCategory from '@/pages/pagesAdmin/Category/EditCategory'
 import Edit from '@/features/size/_components/EditSize'
 import Checkout from '@/pages/Checkout'
+import CheckoutNow from '@/pages/CheckoutNow'
 import EditAccount from '@/pages/pagesAdmin/Accounts/EditAccount'
 import AddAccount from '@/pages/pagesAdmin/Accounts/AddAccount'
 import MyProfile from '@/pages/MyProfile'
@@ -42,6 +43,7 @@ import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 import PaymentSuccess from '@/pages/PaymentSuccess'
 import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
 import { ProfitStatistics } from '@/pages/pagesAdmin/ProfitStatistics/ProfitStatistics'
+import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 
 const Routers = () => {
     return (
@@ -56,6 +58,7 @@ const Routers = () => {
                 <Route path='/orders' element={<Orders />} />
                 <Route path='/orders/:id' element={<OrderDetail />} />
                 <Route path='/checkout' element={<Checkout />} />
+                <Route path='/checkout-now/:id' element={<CheckoutNow />} />
                 <Route path='/formaddress' element={<FormAddress />} />
                 <Route path='/payment' element={<PayMent />} />
                 <Route path='/collections/:id' element={<Collection />} />
@@ -63,6 +66,7 @@ const Routers = () => {
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
                 <Route path='/payment-success' element={<PaymentSuccess />} />
+                <Route path='/pages/policy' element={<ReturnPolicy />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
