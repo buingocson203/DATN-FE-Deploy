@@ -285,7 +285,7 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>Blog</Link>
+                        <Link to='/pages/blog' className='hover:text-neutral-900'>Blog</Link>
                     </li>
                     <li>
                         <Link to='/pages/lien-he' className='hover:text-neutral-900'>Giới thiệu</Link>
@@ -314,7 +314,7 @@ export default function Header() {
                                 <li>
                                     <Link
                                         className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/pages/chinh-sach-doi-tra-1'
+                                        to='/pages/policy'
                                     >
                                         Chính sách đổi trả và bảo hành
                                     </Link>
