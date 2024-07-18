@@ -404,7 +404,7 @@ export default function Header() {
                                     <li>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                            to='/pages/quy-cho-hoat-dong'
+                                            to='/pages/quy-che-hoat-dong'
                                         >
                                             Quy chế hoạt động
                                         </Link>
@@ -412,7 +412,7 @@ export default function Header() {
                                     <li>
                                         <Link
                                             className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                            to='/pages/quy-tring-dat-hang-va-thanh-toan'
+                                            to='/pages/quy-trinh-dat-hang-va-thanh-toan'
                                         >
                                             Chính sách đặt hàng và thanh toán
                                         </Link>

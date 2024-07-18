@@ -272,17 +272,23 @@ const AddProduct: React.FC = () => {
 
             if (value !== undefined) {
                 if (importPrice !== undefined && Number(value) <= Number(importPrice)) {
-                    console.log('2')
                     return Promise.reject(new Error('Giá bán phải lớn hơn Giá nhập'))
                 }
                 if (price !== undefined && Number(value) > Number(price)) {
-                    console.log(price)
-                    return Promise.reject(new Error('Giá bán phải lớn hơn Giá niêm yết'))
+                    return Promise.reject(new Error('Giá bán phải nhỏ hoặc bằng Giá niêm yiết'))
                 }
             }
 
             return Promise.resolve()
         }
+
+    const handleKeyPress = (e) => {
+        const charCode = e.which ? e.which : e.keyCode
+        // Ngăn chặn các ký tự không phải số từ 1-9
+        if (charCode < 49 || charCode > 57) {
+            e.preventDefault()
+        }
+    }
 
     return (
         <div className='border p-6'>
@@ -417,7 +423,7 @@ const AddProduct: React.FC = () => {
                                                 ]}
                                                 validateFirst
                                             >
-                                                <Input type='number' min={1} placeholder='Giá nhập' />
+                                                <InputNumber min={1} placeholder='Giá nhập' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -437,7 +443,7 @@ const AddProduct: React.FC = () => {
                                                 ]}
                                                 validateFirst
                                             >
-                                                <Input type='number' min={1} placeholder='Giá niêm yiết' />
+                                                <InputNumber type='number' min={1} placeholder='Giá niêm yiết' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -454,7 +460,7 @@ const AddProduct: React.FC = () => {
                                                 ]}
                                                 validateFirst
                                             >
-                                                <Input type='number' min={1} placeholder='Giá bán' />
+                                                <InputNumber type='number' min={1} placeholder='Giá bán' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -463,7 +469,7 @@ const AddProduct: React.FC = () => {
                                                 name={[field.name, 'quantity']}
                                                 rules={[{ required: true, message: 'Vui lòng nhập' }]}
                                             >
-                                                <Input type='number' min={1} placeholder='Số lượng' />
+                                                <InputNumber type='number' min={1} placeholder='Số lượng' />
                                             </Form.Item>
                                         </Col>
                                     </Row>
