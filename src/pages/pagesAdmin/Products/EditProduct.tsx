@@ -35,6 +35,7 @@ import { getProduct, updateProduct } from '@/services/product'
 import { addProductDetail, deleteProductDetail, updateProductDetail } from '@/services/productDetail'
 import { getSizes } from '@/services/size'
 import { FileType, getBase64 } from '@/utils/common'
+import InputNumber from '@/components/ui/input-number'
 
 type UploadImageStatus = 'removed' | 'added'
 

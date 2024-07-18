@@ -34,6 +34,7 @@ import { addProduct } from '@/services/product'
 import { addProductDetail } from '@/services/productDetail'
 import { getSizes } from '@/services/size'
 import { useNavigate } from 'react-router-dom'
+import InputNumber from '@/components/ui/input-number'
 
 interface FieldType {
     name: string
