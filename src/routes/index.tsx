@@ -44,6 +44,7 @@ import PaymentSuccess from '@/pages/PaymentSuccess'
 import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
 import { ProfitStatistics } from '@/pages/pagesAdmin/ProfitStatistics/ProfitStatistics'
 import OrderingAndPaymentProcess from '@/pages/OrderingAndPaymentProcess'
+import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 
 const Routers = () => {
     return (
@@ -67,6 +68,7 @@ const Routers = () => {
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
                 <Route path='/payment-success' element={<PaymentSuccess />} />
                 <Route path='/pages/quy-trinh-dat-hang-va-thanh-toan' element={<OrderingAndPaymentProcess />} />
+                <Route path='/pages/policy' element={<ReturnPolicy />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />

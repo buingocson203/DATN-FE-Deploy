@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import BestSellingProducts from './ProductStatistical';
 import HighestRevenueProducts from './TopRevenue';
 import HighestProfitProducts from './TopProfit';
 import instance from '@/core/api';
+import { DatePicker, Segmented, ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
+import locale from 'antd/locale/vi_VN';
 
-const fetchProducts = async (endpoint, filterBy, year, month, week) => {
-    let url = `${endpoint}?filterBy=${filterBy}&year=${year}`;
-    if (filterBy === 'month') {
-        url += `&month=${month}`;
-    } else if (filterBy === 'week') {
-        url += `&week=${week}`;
-    }
+dayjs.locale('vi');
+
+const fetchProducts = async (endpoint, startDate, endDate) => {
+    const url = `${endpoint}?startDate=${startDate}&endDate=${endDate}`;
 
     try {
         const { data } = await instance.get(url);
@@ -25,125 +25,93 @@ const fetchProducts = async (endpoint, filterBy, year, month, week) => {
 };
 
 const StatisticalProduct = () => {
-    const [timeFrame, setTimeFrame] = useState('week');
-    const [week, setWeek] = useState('');
-    const [month, setMonth] = useState('');
-    const [year, setYear] = useState('');
+    const [activeTab, setActiveTab] = useState('WEEK');
+    const [datePickerVal, setDatePickerVal] = useState(dayjs());
 
-    const handleTimeFrameChange = (event) => {
-        setTimeFrame(event.target.value);
-    };
+    const { startDate, endDate } = useMemo(() => {
+        const startDate = dayjs(datePickerVal.startOf(activeTab.toLowerCase())).format('YYYY-MM-DD');
+        const endDate = dayjs(datePickerVal.endOf(activeTab.toLowerCase())).format('YYYY-MM-DD');
 
-    const fetchBestSellingProducts = () => fetchProducts('api/order/top-5-product-best-seller', timeFrame, year, month, week);
-    const fetchHighestRevenueProducts = () => fetchProducts('api/order/top-revenue-product', timeFrame, year, month, week);
-    const fetchHighestProfitProducts = () => fetchProducts('api/order/topProfitableProducts', timeFrame, year, month, week);
+        return { startDate, endDate };
+    }, [datePickerVal, activeTab]);
+
+    const fetchBestSellingProducts = () => fetchProducts('/api/order/top-5-product-best-seller', startDate, endDate);
+    const fetchHighestRevenueProducts = () => fetchProducts('/api/order/top-revenue-product', startDate, endDate);
+    const fetchHighestProfitProducts = () => fetchProducts('/api/order/topProfitableProducts', startDate, endDate);
 
     const { data: bestSellingProducts, isLoading: isLoadingBestSelling } = useQuery(
-        ['bestSellingProducts', timeFrame, year, month, week],
+        ['bestSellingProducts', startDate, endDate],
         fetchBestSellingProducts,
         {
-            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
+            enabled: !!startDate && !!endDate,
         }
     );
 
     const { data: highestRevenueProducts, isLoading: isLoadingHighestRevenue } = useQuery(
-        ['highestRevenueProducts', timeFrame, year, month, week],
+        ['highestRevenueProducts', startDate, endDate],
         fetchHighestRevenueProducts,
         {
-            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
+            enabled: !!startDate && !!endDate,
         }
     );
 
     const { data: highestProfitProducts, isLoading: isLoadingHighestProfit } = useQuery(
-        ['highestProfitProducts', timeFrame, year, month, week],
+        ['highestProfitProducts', startDate, endDate],
         fetchHighestProfitProducts,
         {
-            enabled: year !== '' && (timeFrame === 'year' || (timeFrame === 'month' && month !== '') || (timeFrame === 'week' && week !== '')),
+            enabled: !!startDate && !!endDate,
         }
     );
 
     const isLoading = isLoadingBestSelling || isLoadingHighestRevenue || isLoadingHighestProfit;
 
+    const onTabChange = (tab) => {
+        setActiveTab(tab);
+        setDatePickerVal(dayjs());
+    };
+
     return (
-        <div className="min-h-screen bg-gray-100 p-6">
-            <div className="flex flex-col justify-center items-center max-w-2xl mx-auto mb-4 space-y-4">
-                <h1 className="text-2xl font-bold mb-4">Top sản phẩm</h1>
-                <div className="flex items-center space-x-4">
-                    <select
-                        value={timeFrame}
-                        onChange={handleTimeFrameChange}
-                        className="p-2 border rounded-lg bg-white shadow text-gray-600"
-                    >
-                        <option value="week">Tuần</option>
-                        <option value="month">Tháng</option>
-                        <option value="year">Năm</option>
-                    </select>
-                    {timeFrame === 'week' && (
-                        <>
-                            <input
-                                type="number"
-                                value={week}
-                                onChange={(e) => setWeek(e.target.value)}
-                                placeholder="Tuần"
-                                className="p-2 border rounded-lg bg-white shadow text-gray-600 w-24"
-                            />
-                            <input
-                                type="number"
-                                value={year}
-                                onChange={(e) => setYear(e.target.value)}
-                                placeholder="Năm"
-                                className="p-2 border rounded-lg bg-white shadow text-gray-600 w-24"
-                            />
-                        </>
-                    )}
-                    {timeFrame === 'month' && (
-                        <>
-                            <input
-                                type="number"
-                                value={month}
-                                onChange={(e) => setMonth(e.target.value)}
-                                placeholder="Tháng"
-                                className="p-2 border rounded-lg bg-white shadow text-gray-600 w-24"
-                            />
-                            <input
-                                type="number"
-                                value={year}
-                                onChange={(e) => setYear(e.target.value)}
-                                placeholder="Năm"
-                                className="p-2 border rounded-lg bg-white shadow text-gray-600 w-24"
-                            />
-                        </>
-                    )}
-                    {timeFrame === 'year' && (
-                        <input
-                            type="number"
-                            value={year}
-                            onChange={(e) => setYear(e.target.value)}
-                            placeholder="Năm"
-                            className="p-2 border rounded-lg bg-white shadow text-gray-600 w-24"
+        <ConfigProvider locale={locale}>
+            <div className="min-h-screen bg-gray-100 p-6">
+                <div className="flex flex-col justify-center items-center max-w-2xl mx-auto mb-4 space-y-4">
+                    <h1 className="text-2xl font-bold mb-4">Top sản phẩm</h1>
+                    <div className="flex items-center space-x-4">
+                        <Segmented
+                            value={activeTab}
+                            options={[
+                                { label: 'Tuần', value: 'WEEK' },
+                                { label: 'Tháng', value: 'MONTH' },
+                                { label: 'Năm', value: 'YEAR' }
+                            ]}
+                            onChange={onTabChange}
                         />
-                    )}
+                        <DatePicker
+                            value={datePickerVal}
+                            onChange={setDatePickerVal}
+                            picker={activeTab.toLowerCase()}
+                        />
+                    </div>
                 </div>
+                {isLoading ? (
+                    <div>Loading...</div>
+                ) : (
+                    <div className="grid grid-cols-3 gap-4">
+                        <div>
+                            <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Bán Chạy Nhất</h2>
+                            <BestSellingProducts products={bestSellingProducts} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Có Doanh Thu Cao</h2>
+                            <HighestRevenueProducts products={highestRevenueProducts} />
+                        </div>
+                        <div>
+                            <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Có Lợi Nhuận Cao</h2>
+                            <HighestProfitProducts products={highestProfitProducts} />
+                        </div>
+                    </div>
+                )}
             </div>
-            {isLoading ? (
-                <div>Loading...</div>
-            ) : (
-                <div className="grid grid-cols-3 gap-4">
-                    <div>
-                        <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Bán Chạy Nhất</h2>
-                        <BestSellingProducts products={bestSellingProducts} />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Có Doanh Thu Cao</h2>
-                        <HighestRevenueProducts products={highestRevenueProducts} />
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-bold mb-2">Top 5 Sản Phẩm Có Lợi Nhuận Cao</h2>
-                        <HighestProfitProducts products={highestProfitProducts} />
-                    </div>
-                </div>
-            )}
-        </div>
+        </ConfigProvider>
     );
 };
 
