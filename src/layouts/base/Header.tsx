@@ -364,7 +364,7 @@ export default function Header() {
                                 Giới thiệu
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link
                                 to='/pages/chinh-sach-doi-tra-1'
                                 className='flex items-center justify-center gap-1 item-hover relative'
@@ -392,7 +392,7 @@ export default function Header() {
                             <Link to='/pages/lien-he' className='hover:text-neutral-900'>
                                 Giới thiệu
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link
                                 to='/pages/chinh-sach-doi-tra-1'
