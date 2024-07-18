@@ -33,7 +33,7 @@ const ProductFavoriteDrawer = (props: IProductFavoriteDrawerProps) => {
 
                     <div>
                         <p className='font-medium'>{it.nameProduct}</p>
-                        <p className='mt-1'>{formatPrice(it.price)}</p>
+                        <p className='mt-1'>{formatPrice(it.promotionalPrice)}</p>
                     </div>
 
                     <Popconfirm
