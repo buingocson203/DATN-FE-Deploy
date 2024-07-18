@@ -14,6 +14,7 @@ export interface IProductFavorite {
     imageProduct: string
     price: number
     productId: string
+    promotionalPrice: number
 }
 
 export const getProductFavorites = async (): Promise<IProductFavoriteRes> => {
