@@ -210,7 +210,7 @@ const HomePage = (props: Props) => {
                         />
                         <div className='flex-1'>
                             <p className='mb-1'>Miễn phí vận chuyển</p>
-                            <p className='text-sm'>Miễn phí vận chuyển nội thành HCM cho đơn hàng từ 1000k</p>
+                            <p className='text-sm'>Miễn phí vận chuyển cho tất cả đơn hàng từ 1000k</p>
                         </div>
                     </div>
                     <div className='flex justify-center items-start gap-3'>
@@ -232,7 +232,7 @@ const HomePage = (props: Props) => {
                         />
                         <div className='flex-1'>
                             <p className='mb-1'>Hỗ trợ</p>
-                            <p className='text-sm'>Gọi hotline 0977 826 896 để được tư vấn</p>
+                            <p className='text-sm'>Gọi hotline 0377 485 926 để được tư vấn</p>
                         </div>
                     </div>
                     <div className='flex justify-center items-start gap-3'>
@@ -244,8 +244,7 @@ const HomePage = (props: Props) => {
                         <div className='flex-1'>
                             <p className='mb-1'>Thanh toán đa dạng</p>
                             <p className='text-sm'>
-                                Nhiều phương thức thanh toán đa dạng như: Tiền Mặt, Cà Thẻ, Chuyển Khoản, Apple Pay,
-                                Momo...
+                                Nhiều phương thức thanh toán đa dạng như: Tiền Mặt, Chuyển Khoản
                             </p>
                         </div>
                     </div>

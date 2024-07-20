@@ -14,11 +14,11 @@ const ReturnPolicy = () => {
                 <section className="mb-8">
                     <h2 className="text-2xl font-semibold mb-4">1. Chính sách đổi trả</h2>
                     <p className="mb-4">
-                        Chúng tôi tin rằng một đôi giày ưng ý, mức giá hợp ví sẽ mang đến niềm vui khi mua sắm. Để niềm vui tiếp nối niềm vui, trước khi đổi giày, mong bạn dành vài giây đọc quy định bên dưới:
+                        Chúng tôi tin rằng một đôi giày ưng ý, mức giá hợp ví sẽ mang đến niềm vui khi mua sắm. Để tránh những trải nghiệm không đáng mong muốn, trước khi đổi giày, mong bạn dành vài giây đọc quy định bên dưới:
                     </p>
                     <ul className="list-disc pl-5 space-y-2">
                         <li>
-                            Thời hạn đổi sản phẩm trong vòng 3 ngày tính từ ngày nhận hàng.
+                            Thời hạn đổi sản phẩm trong vòng 3 ngày được tính từ ngày nhận hàng.
                         </li>
                         <li>
                             Sản phẩm đổi không có dấu hiệu đã qua sử dụng, còn nguyên tem, nhãn mác, không giặt tẩy, bám bẩn, biến dạng.
