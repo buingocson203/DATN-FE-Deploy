@@ -45,8 +45,29 @@ const cartSlice = createSlice({
     }
 })
 
+const itemsSelected = createSlice({
+    name: 'itemsSelected',
+    initialState: [],
+    reducers: {
+        selectItem: (state, action: PayloadAction<any>) => {
+            const newItem = action.payload
+            state.push(newItem)
+            console.log(state)
+        },
+        deselectItem: (state, action: PayloadAction<number>) => {
+            const index = action.payload
+            if (index > -1) state.splice(index, 1)
+            console.log(state)
+        },
+        unselectAll: (state) => []
+    }
+})
+
 export const cartReducer = cartSlice.reducer
 export const cartActions = cartSlice.actions
+
+export const itemsSelectedReducer = itemsSelected.reducer
+export const itemsActions = itemsSelected.actions
 
 // selectors
 const badge = (state: RootState) => state.cart.badge

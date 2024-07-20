@@ -47,7 +47,8 @@ const OrderDetail = () => {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: "cancel",
             });
-            alert("Hủy đơn hàng thành công");
+            let txtMessage = detailOrder?.paymentMethod == "cod" ? 'Hủy đơn hàng thành công' : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn';
+            alert(txtMessage)
             fetchData();
         } catch (error) {
             console.log(error);

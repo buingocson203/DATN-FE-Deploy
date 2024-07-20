@@ -1,11 +1,15 @@
 import instance from '@/core/api'
 import { useLocalStorage } from '@/hooks/useStorage'
+import { store } from '@/store/store'
 import { Icon } from '@iconify/react'
 import classNames from 'classnames'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { itemsActions } from '@/store/slices/cartSlice'
+import { log } from 'console'
+import { useSelector } from 'react-redux'
 
 type Inputs = {
     address: string
@@ -59,6 +63,7 @@ const getUserID = (): string => {
 }
 
 const Checkout = () => {
+    const items = useSelector((state) => state.itemsSelected) // Select data from counter slice
     const [user] = useLocalStorage('user', null)
     const navigate = useNavigate()
     const [step, setStep] = useState<'CHECKOUT' | 'PAYMENT'>('CHECKOUT')
@@ -142,8 +147,11 @@ const Checkout = () => {
     }, [transactionStatus])
 
     const fetchData = async () => {
-        const response = await instance.get(`api/cart/${getUserID()}`)
-        setCartList(response.data.data)
+        // const response = await instance.get(`api/cart/${getUserID()}`)
+        // Thay vì gọi API getAll cart thì lấy các sản phẩm được chọn trong store ra
+
+        console.log(items)
+        setCartList(items)
     }
 
     const onSubmit: SubmitHandler<Inputs> = async (data) => {
@@ -368,9 +376,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'

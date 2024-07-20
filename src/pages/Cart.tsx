@@ -2,13 +2,16 @@ import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
 import { Icon } from '@iconify/react'
 import { useEffect, useMemo, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { cartActions } from '@/store/slices/cartSlice'
+import { itemsActions } from '@/store/slices/cartSlice'
 
 const Cart = () => {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
+
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -29,6 +32,7 @@ const Cart = () => {
     const [cartList, setCartList] = useState<CartItem[]>([])
     const [forceRender, setForceRender] = useState(0)
     const [lstSelected, setLstSelected] = useState([])
+    const [itemsSelected, setItemsSelected] = useState([])
 
     const fetchDataCart = async () => {
         const response = await instance.get(`api/cart/${getUserID()}`)
@@ -37,6 +41,7 @@ const Cart = () => {
         const ids = data?.map((item) => item.productDetailId)
 
         dispatch(cartActions.replaceAll(ids))
+        dispatch(itemsActions.unselectAll())
     }
     useEffect(() => {
         fetchDataCart()
@@ -71,7 +76,12 @@ const Cart = () => {
             }
             return item
         })
+        const newItemsSelected = itemsSelected?.map((item) => {
+            let newQuantity = newCartList.find((x) => x.idCart === item.idCart)?.totalQuantity
+            return { ...item, totalQuantity: newQuantity }
+        })
         setCartList(newCartList)
+        setItemsSelected(newItemsSelected)
         setForceRender(forceRender + 1)
     }
     const removeCart = (itemID: string) => {
@@ -91,15 +101,20 @@ const Cart = () => {
         })
         setForceRender(forceRender + 1)
     }
-    const handleSelectCart = (event: any, idCart: any) => {
+    const handleSelectCart = (event: any, idCart: any, item: any) => {
         if (event.target.checked) {
+            dispatch(itemsActions.selectItem(item))
             setLstSelected([...lstSelected, idCart])
+            setItemsSelected([...itemsSelected, item])
         } else {
             const index = lstSelected.indexOf(idCart)
             if (index > -1) {
                 lstSelected.splice(index, 1)
+                itemsSelected.splice(index, 1)
             }
+            dispatch(itemsActions.deselectItem(index))
             setLstSelected([...lstSelected])
+            setItemsSelected([...itemsSelected])
         }
     }
     const removeCartList = () => {
@@ -116,15 +131,26 @@ const Cart = () => {
         }
         fetchData(lstSelected)
         setCartList(cartList.filter((x) => !lstSelected.includes(x.idCart)))
+        setLstSelected([])
+        setItemsSelected([])
         setForceRender(forceRender + 1)
     }
     const totalPrice = useMemo(() => {
         let count = 0
-        cartList?.forEach((item) => {
-            count += item.promotionalPrice * item.totalQuantity
+        itemsSelected?.forEach((item) => {
+            count += item?.promotionalPrice * item?.totalQuantity
         })
         return count
-    }, [cartList])
+    }, [itemsSelected])
+
+    const handleClickCheckout = () => {
+        if (itemsSelected?.length === 0) {
+            alert('Vui lòng chọn sản phẩm để thanh toán')
+            return
+        }
+        // Navigate to checkout page
+        navigate('/checkout')
+    }
     return (
         <div>
             <BreadCrumb links={breadcrumb} />
@@ -154,7 +180,7 @@ const Cart = () => {
                                                 name=''
                                                 id=''
                                                 style={{ transform: 'scale(2)' }}
-                                                onChange={() => handleSelectCart(event, item.idCart)}
+                                                onChange={() => handleSelectCart(event, item.idCart, item)}
                                             />
                                             <div className='oder--item-img w-[150px] h-[150px]'>
                                                 <img
@@ -174,9 +200,9 @@ const Cart = () => {
                                                 <h3 className='desc-inf-title'>{item.nameProduct}</h3>
                                                 <p className='mb-4 text-[16px] font-semibold'>Size: {item.size}</p>
                                                 <p className='text-gray-600 font-semibold'>
-                                                    Price: {item.promotionalPrice}đ
+                                                    Price: {item.promotionalPrice.toLocaleString()}đ
                                                     <strike className='text-[16px] text-gray-400 ml-1'>
-                                                        {item.price}đ
+                                                        {item.price.toLocaleString()}đ
                                                     </strike>
                                                 </p>
                                             </div>
@@ -184,7 +210,7 @@ const Cart = () => {
 
                                         <div className='item-desc-price'>
                                             <p className='text-right font-semibold mb-3'>
-                                                {item.promotionalPrice * item.totalQuantity}đ
+                                                {(item.promotionalPrice * item.totalQuantity).toLocaleString()}đ
                                             </p>
                                             <div className='flex items-center space-x-4 border-solid border'>
                                                 <button
@@ -220,17 +246,18 @@ const Cart = () => {
                             <hr className='mb-3 border-dashed' />
                             <div className='info--detail-price flex justify-between py-4'>
                                 <p className='text-[20px] font-bold'>Tổng tiền:</p>
-                                <p className='font-semibold text-red-500'>{totalPrice}đ</p>
+                                <p className='font-semibold text-red-500'>{totalPrice.toLocaleString()}đ</p>
                             </div>
                             <hr className='mb-3 border-dashed' />
                             <div className='info--detail-note text-[16px] text-gray-600'>
                                 <li>Phí vận chuyển sẽ được tính ở trang thanh toán.</li>
                                 <li>Mua thật nhiều nhận nhiều ưu đãi</li>
                             </div>
-                            <div className='info--detail-btn bg-red-500 text-center py-2 mt-4'>
-                                <Link to='/checkout' className='text-white uppercase'>
-                                    Thanh toán
-                                </Link>
+                            <div
+                                className='info--detail-btn bg-red-500 text-center py-2 mt-4 text-white uppercase'
+                                onClick={() => handleClickCheckout()}
+                            >
+                                Thanh toán
                             </div>
                         </div>
                     </div>

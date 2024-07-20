@@ -64,10 +64,11 @@ const CheckoutNow = () => {
     const [step, setStep] = useState<'CHECKOUT' | 'PAYMENT'>('CHECKOUT')
     const [cartList, setCartList] = useState<CartItem[]>([])
     const queryParams = new URLSearchParams(location.search)
-    let sizeIdQuery = queryParams.get('sizeId');
+    let sizeIdQuery = queryParams.get('sizeId')
+    let quantitySelected = queryParams.get('quantity')
     const transactionStatus = queryParams.get('vnp_TransactionStatus')
     const txnRef = queryParams.get('vnp_TxnRef')
-    const { id: productDetailID } = useParams();
+    const { id: productDetailID } = useParams()
 
     const {
         register,
@@ -77,29 +78,29 @@ const CheckoutNow = () => {
     } = useForm<Inputs>()
 
     useEffect(() => {
-        getDetailProductByIDDetail(productDetailID);
+        getDetailProductByIDDetail(productDetailID)
     }, [])
 
     const getDetailProductByIDDetail = async (detailID: any) => {
-        let response = await instance.get(`api/productDetail/${detailID}`);
-        let data = response.data.data;
+        let response = await instance.get(`api/productDetail/${detailID}`)
+        let data = response.data.data
         let newItems = [
             {
-                "idCart": "",
-                "nameProduct": data.name,
-                "productId": data.productId,
-                "productDetailId": data.productDetailId,
-                "size": data.size,
-                "sizeId": sizeIdQuery,
-                "price": data.price,
-                "importPrice": data.importPrice,
-                "promotionalPrice": data.promotionalPrice,
-                "totalQuantity": 1,
-                "totalPrice": data.price,
-                "imageProduct": data.productImage
+                idCart: '',
+                nameProduct: data.name,
+                productId: data.productId,
+                productDetailId: data.productDetailId,
+                size: data.size,
+                sizeId: sizeIdQuery,
+                price: data.price,
+                importPrice: data.importPrice,
+                promotionalPrice: data.promotionalPrice,
+                totalQuantity: quantitySelected,
+                totalPrice: data.price,
+                imageProduct: data.productImage
             }
-        ];
-        setCartList(newItems);
+        ]
+        setCartList(newItems)
     }
 
     useEffect(() => {
@@ -383,9 +384,9 @@ const CheckoutNow = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'

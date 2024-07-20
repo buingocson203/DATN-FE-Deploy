@@ -21,6 +21,7 @@ import { cartActions } from '@/store/slices/cartSlice'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
 import { message } from 'antd'
+import { log } from 'console'
 
 const ProductDetail = () => {
     const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
@@ -28,12 +29,12 @@ const ProductDetail = () => {
     const { mutate: onFavorite } = useProductFavoriteMutation({
         action: 'ADD',
         onSuccess: () => {
-            message.success("Đã thêm SP vào danh sách yêu thích")
+            message.success('Đã thêm SP vào danh sách yêu thích')
             refetch()
         }
     })
 
-    const { mutate: onRemoveFavorite} = useProductFavoriteMutation({
+    const { mutate: onRemoveFavorite } = useProductFavoriteMutation({
         action: 'DELETE',
         onSuccess: () => {
             message.success('Đã xoá SP khỏi danh sách yêu thích')
@@ -49,13 +50,13 @@ const ProductDetail = () => {
     const { id: productId, detail: detailID } = useParams()
 
     const isFavorite = useMemo(() => {
-        return favoriteProduct?.data.find(it => it.productId === productId)
+        return favoriteProduct?.data.find((it) => it.productId === productId)
     }, [productId, favoriteProduct?.data])
 
     const onToggleFavorite = () => {
         if (!getUserID()) {
-            message.info("Vui lòng đăng nhập tài khoản!")
-            return;
+            message.info('Vui lòng đăng nhập tài khoản!')
+            return
         }
 
         if (isFavorite) {
@@ -70,7 +71,6 @@ const ProductDetail = () => {
         enabled: !!productId,
         onError: onMutateError
     })
-    console.log(infoProduct)
 
     const { data: relatedProducts } = useQuery({
         queryFn: () => getRelatedProductsInfo(String(productId)),
@@ -92,7 +92,7 @@ const ProductDetail = () => {
         return userID
     }
     const addToCart = (quantity: number) => {
-        console.log(variant);
+        console.log(variant)
         const fetchData = async (dataX: any) => {
             try {
                 await instance.post(`api/cart`, dataX)
@@ -146,8 +146,11 @@ const ProductDetail = () => {
                             </CarouselContent>
                         </Carousel>
 
-                        <div onClick={onToggleFavorite} className='cursor-pointer absolute top-4 right-4 inline-block h-auto text-2xl opacity-0 group-hover:opacity-100 transition'>
-                            {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />} 
+                        <div
+                            onClick={onToggleFavorite}
+                            className='cursor-pointer absolute top-4 right-4 inline-block h-auto text-2xl opacity-0 group-hover:opacity-100 transition'
+                        >
+                            {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
                         </div>
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
@@ -216,9 +219,25 @@ const ProductDetail = () => {
                                     >
                                         <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
                                     </div>
-                                    <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
+                                    <input
+                                        type='number'
+                                        value={quantity}
+                                        id='quantity-detail'
+                                        min={1}
+                                        defaultValue={quantity}
+                                        max={variant?.quantity}
+                                        className='w-10 h-10 text-center'
+                                        onChange={(event) => {
+                                            if (Number.parseInt(event.target.value) > variant?.quantity) {
+                                                alert('Vượt quá số lượng còn lại của sản phẩm')
+                                                return
+                                            }
+                                            setQuantity(Number.parseInt(event.target.value))
+                                        }}
+                                    />
+                                    {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
                                         {quantity}
-                                    </div>
+                                    </div> */}
                                     <div
                                         className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
                                         onClick={() =>
@@ -243,9 +262,10 @@ const ProductDetail = () => {
                                 >
                                     THÊM VÀO GIỎ
                                 </button>
-                                <Link to={`/checkout-now/${variant?.productDetailId}?sizeId=${variant?.sizeId}`}>
-                                    <button
-                                        className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
+                                <Link
+                                    to={`/checkout-now/${variant?.productDetailId}?sizeId=${variant?.sizeId}&quantity=${quantity}`}
+                                >
+                                    <button className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
                                         MUA NGAY
                                     </button>
                                 </Link>
