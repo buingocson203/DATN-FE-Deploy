@@ -46,7 +46,24 @@ const Orders = () => {
         fetchData()
     }, [])
 
-    const cancelOrder = async (orderID: any) => {
+    const convertStateToVN = (stateEN : string) => {
+        switch (stateEN) {
+            case 'pending':
+                return 'Chờ xác nhận'
+            case 'waiting':
+                return 'Đã xác nhận'
+            case 'cancel':
+                return 'Hủy bỏ'
+            case 'delivering':
+                return 'Đang giao hàng'
+            case 'done':
+                return 'Đã giao hàng'
+            default:
+                return stateEN
+        }
+    }
+
+    const cancelOrder = async (orderID: any, paymentMethod: any) => {
         event?.stopPropagation()
         let userConfirm = confirm(
             'Khi đồng ý hủy đơn hàng bạn sẽ không được hoàn tiền của đơn hàng đã đặt. Bạn có chắc chắn muốn hủy không?'
@@ -58,15 +75,17 @@ const Orders = () => {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: 'cancel'
             })
-            alert('Hủy đơn hàng thành công')
+            let txtMessage = paymentMethod == "cod" ? 'Hủy đơn hàng thành công' : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn';
+            alert(txtMessage)
             fetchData()
         } catch (error) {
             console.log(error)
             let messageX = error?.response?.data?.message
-            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1;
+            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex]);
             alert(
                 `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${
-                    messageX.split(' ')[curStateIndex]
+                    currentStateVN
                 }`
             )
         }
@@ -238,7 +257,7 @@ const Orders = () => {
                                                 <span className='text-red-500'>
                                                     {formatMoney(order?.total_price || 0)}
                                                 </span>
-                                            </h3>
+                                            </h3>       
                                         </div>
                                         <div
                                             className='order-box__tool flex items-center px-[16px] justify-between py-[12px] bg-stone-200'
@@ -270,7 +289,7 @@ const Orders = () => {
                                                     if (['pending'].includes(order.orderStatus)) {
                                                         return (
                                                             <button
-                                                                onClick={() => cancelOrder(order._id)}
+                                                                onClick={() => cancelOrder(order._id, order.paymentMethod)}
                                                                 className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
                                                             >
                                                                 Hủy đơn hàng
