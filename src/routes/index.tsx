@@ -6,7 +6,7 @@ import ProductsPage from '@/pages/ProductsPage'
 import Signup from '@/pages/auth/Signup'
 import { Route, Routes } from 'react-router-dom'
 import Signin from '@/pages/auth/Signin'
-import Dashboard from '@/pages/pagesAdmin/Dashboard'
+import Dashboard from '@/pages/pagesAdmin/Dashboard/Dashboard'
 import ListBill from '@/pages/pagesAdmin/ListBill'
 import BillDetail from '@/pages/pagesAdmin/ListBill/BillDetail'
 import ListUser from '@/pages/pagesAdmin/ListUser'
@@ -42,7 +42,6 @@ import ReviewList from '@/pages/pagesAdmin/Reviews/ReviewList'
 import ReviewDetail from '@/pages/pagesAdmin/Reviews/ReviewDetail'
 import PaymentSuccess from '@/pages/PaymentSuccess'
 import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
-import { ProfitStatistics } from '@/pages/pagesAdmin/ProfitStatistics/ProfitStatistics'
 import OrderingAndPaymentProcess from '@/pages/OrderingAndPaymentProcess'
 import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 import InformationSecurityPolicy from '@/pages/InformationSecurityPolicy'
@@ -96,8 +95,6 @@ const Routers = () => {
 
                 <Route path='/admin/reviews' element={<ProtectedRoute element={ReviewList} />} />
                 <Route path='/admin/reviews/detail/:reviewId' element={<ProtectedRoute element={ReviewDetail} />} />
-
-                <Route path='/admin/profitStatistics' element={<ProtectedRoute element={ProfitStatistics} />} />
             </Route>
         </Routes>
     )
