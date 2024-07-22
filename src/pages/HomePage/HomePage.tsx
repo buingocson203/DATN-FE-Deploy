@@ -42,7 +42,16 @@ const HomePage = (props: Props) => {
         const { data } = await instance.get(`/api/infoProduct?category=${id}&limit=12`);
         setProductCate(data.data);
     }
+    const formatCurrency = (amount: number | bigint) => {
+        // Định dạng số thành tiền Việt Nam
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0, // Tối thiểu số lẻ là 0
+        });
 
+        return formatter.format(amount);
+    };
     return (
         <main className=''>
             <div className='app-container'>
@@ -159,8 +168,8 @@ const HomePage = (props: Props) => {
                                     <div>
                                         <p className='text-md my-1'>{itemOutStProducts.productName}</p>
                                         <div className='flex items-center gap-1'>
-                                            <span className='text-red-500 text-sm'>{itemOutStProducts.promotionalPrice}đ</span>
-                                            <span className='text-neutral-300 text-xs line-through'>{itemOutStProducts.price}đ</span>
+                                            <span className='text-red-500 text-sm'>{formatCurrency(itemOutStProducts.promotionalPrice)}</span>
+                                            <span className='text-neutral-300 text-xs line-through'>{formatCurrency(itemOutStProducts.price)}</span>
                                         </div>
                                     </div>
                                 </Link>

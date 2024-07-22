@@ -110,6 +110,35 @@ export default function Header() {
         }
         setLoading(false)
     }
+    const [isSearchPopupOpen, setIsSearchPopupOpen] = useState(false);
+    useEffect(() => {
+        if (searchTerm) {
+            setIsSearchPopupOpen(true);
+        } else {
+            setIsSearchPopupOpen(false);
+        }
+    }, [searchTerm]);
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!event.target.closest('.search-popup')) {
+                setIsSearchPopupOpen(false);
+            }
+        };
+
+        const handleEscapeKey = (event) => {
+            if (event.key === 'Escape') {
+                setIsSearchPopupOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscapeKey);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, []);
 
     return (
         <>
@@ -219,8 +248,8 @@ export default function Header() {
                             </div>
                         </form>
                         {loading && <p className='text-sm text-gray-500'>Loading...</p>}
-                        {searchResults.length > 0 && (
-                            <div className='border border-gray-300 bg-white rounded-lg mt-2 p-4 absolute z-50 w-full max-w-4xl'>
+                        {isSearchPopupOpen && searchResults.length > 0 && (
+                            <div className='search-popup border border-gray-300 bg-white rounded-lg mt-2 p-4 absolute z-50 w-full max-w-4xl'>
                                 <ul>
                                     {searchResults.map((product) => (
                                         <li

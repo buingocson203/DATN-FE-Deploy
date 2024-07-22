@@ -35,7 +35,7 @@ const Pagination2: React.FC<Props> = ({ products, productsPerPage, setCurrentPag
 
     return (
         <div>
-            <h1>Danh sách sản phẩm</h1>
+
             <ul>
                 {currentProducts.map(product => (
                     <li key={product.id}>{product.name}</li>

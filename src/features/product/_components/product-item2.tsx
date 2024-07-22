@@ -8,6 +8,16 @@ type Props = {
 
 export default function ProductItem({ product }: Props) {
     const takeTwoImage = product.images.slice(0, 2);
+    const formatCurrency = (amount: number | bigint) => {
+        // Định dạng số thành tiền Việt Nam
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0, // Tối thiểu số lẻ là 0
+        });
+
+        return formatter.format(amount);
+    };
     return (
         <Link to={`/products/${product && product.productId}`} className='cursor-pointer group' onClick={() => {
             setTimeout(() => {
@@ -59,8 +69,8 @@ export default function ProductItem({ product }: Props) {
                 <span className='text-xs'>+{product && product.productDetails.length || 0} kích thước</span>
                 <p className='text-md my-1'>{product && product.nameProduct}</p>
                 <div className='flex items-center gap-1'>
-                    <span className='text-red-500 text-sm'>{product && product.productDetails[0].promotionalPrice}đ</span>
-                    <span className='text-neutral-300 text-xs line-through'>{product && product.productDetails[0].price}đ</span>
+                    <span className='text-red-500 text-sm'>{formatCurrency(product && product.productDetails[0].promotionalPrice)}</span>
+                    <span className='text-neutral-300 text-xs line-through'>{formatCurrency(product && product.productDetails[0].price)}</span>
                 </div>
             </div>
         </Link>
