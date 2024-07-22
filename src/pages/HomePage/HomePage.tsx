@@ -13,7 +13,16 @@ import instance from '@/core/api'
 import { Link } from 'react-router-dom'
 
 type Props = {}
+const formatCurrency = (amount: number | bigint) => {
+    // Định dạng số thành tiền Việt Nam
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        minimumFractionDigits: 0, // Tối thiểu số lẻ là 0
+    });
 
+    return formatter.format(amount);
+};
 const HomePage = (props: Props) => {
     const [activeTab, setActiveTab] = useState(0);
     const [productCate, setProductCate] = useState([]);
@@ -117,11 +126,7 @@ const HomePage = (props: Props) => {
                                 }}>
                                     <div className='pt-6 relative pb-3 overflow-hidden'>
                                         <div className='relative rounded-md overflow-hidden'>
-                                            {/* {takeTwoImage.map((itemImage, index) => <img
-                                            className={`w-full h-[240px] ${index == 1 ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all' : ''}`}
-                                            src={itemImage.imageUrl}
-                                            alt='Ảnh không tồn tại'
-                                        />)} */}
+
                                             <img
                                                 src={
                                                     itemOutStProducts.image ||
@@ -130,14 +135,7 @@ const HomePage = (props: Props) => {
                                                 alt=''
                                                 className='h-[240px] w-full top-0 left-0 right-0 bottom-0 object-cover opacity-98 group-hover:opacity-100 duration-500  transition-all'
                                             />
-                                            {/* <img
-                                                src={
-                                                    itemOutStProducts.image ||
-                                                    'https://product.hstatic.net/200000690551/product/gr1_3065ae8062014890a39116134a1aa31c_large.jpg'
-                                                }
-                                                alt=''
-                                                className='absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
-                                            /> */}
+
                                         </div>
                                         {/* Another image show opacity when hover */}
                                         <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>
@@ -159,8 +157,8 @@ const HomePage = (props: Props) => {
                                     <div>
                                         <p className='text-md my-1'>{itemOutStProducts.productName}</p>
                                         <div className='flex items-center gap-1'>
-                                            <span className='text-red-500 text-sm'>{itemOutStProducts.promotionalPrice}đ</span>
-                                            <span className='text-neutral-300 text-xs line-through'>{itemOutStProducts.price}đ</span>
+                                            <span className='text-red-500 text-sm'>{formatCurrency(itemOutStProducts.promotionalPrice)}</span>
+                                            <span className='text-neutral-300 text-xs line-through'>{formatCurrency(itemOutStProducts.price)}</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -169,38 +167,7 @@ const HomePage = (props: Props) => {
                     </div>
                     {/* <HomePageButton className='mt-10'>Xem tất cả&nbsp;{tabs[activeTab]}</HomePageButton> */}
                 </div>
-                {/* <div className='py-16 px-2'>
-                    <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>Bài viết mới nhất</h1>
-                    <div className='px-5'>
-                        <Carousel>
-                            <CarouselContent className='-ml-2 md:-ml-4'>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                            </CarouselContent>
-                            <CarouselPrevious className='absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 z-10' />
-                            <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 z-10' />
-                        </Carousel>
-                    </div>
-                </div> */}
+
                 <div className='py-16 px-2 grid lg:grid-cols-4 md:grid-cols-2 gap-4'>
                     <div className='flex justify-center items-start gap-3'>
                         <img
