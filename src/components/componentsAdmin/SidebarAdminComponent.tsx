@@ -3,9 +3,7 @@ import {
     LineHeightOutlined,
     PieChartOutlined,
     ProductOutlined,
-    ProfileOutlined,
     TeamOutlined,
-    UserSwitchOutlined,
     OrderedListOutlined,
     CommentOutlined
 } from '@ant-design/icons'
@@ -18,12 +16,6 @@ type MenuItem = Required<MenuProps>['items'][number]
 
 const items: MenuItem[] = [
     { key: 'dashboard', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
-    // {
-    //     key: 'dashboard',
-    //     label: 'Thống kê',
-    //     icon: <PieChartOutlined />,
-    //     children: [{ key: '1', icon: <FontSizeOutlined />, label: <Link to='/admin/dashboard/products'>Thống kê sản phẩm</Link> }]
-    // },
     { key: 'products', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lý sản phẩm</Link> },
     { key: 'orders', icon: <OrderedListOutlined />, label: <Link to='/admin/orders'>Quản lý đặt hàng</Link> },
     { key: 'reviews', icon: <CommentOutlined />, label: <Link to='/admin/reviews'>Quản lý đánh giá</Link> },
@@ -39,8 +31,6 @@ const items: MenuItem[] = [
         icon: <TeamOutlined />,
         label: <Link to='/admin/account'>Quản lý tài khoản</Link>
     },
-    { key: '12', icon: <ProfileOutlined />, label: 'Quản lý hóa đơn' },
-    { key: '13', icon: <UserSwitchOutlined />, label: 'Tài khoản' }
 ]
 
 const SidebarAdminComponent: React.FC = () => {
