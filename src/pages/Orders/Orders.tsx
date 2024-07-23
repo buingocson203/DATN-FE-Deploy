@@ -238,10 +238,10 @@ const Orders = () => {
                                                     </div>
                                                     <div className='order-detail-price flex items-center gap-x-[12px]'>
                                                         <span className='line-through text-[14px]'>
-                                                            {formatMoney(product.price)}
+                                                            {formatMoney(product.price)}₫
                                                         </span>
                                                         <h4 className='text-red-500'>
-                                                            {formatMoney(product.promotionalPrice)}
+                                                            {formatMoney(product.promotionalPrice)}₫
                                                         </h4>
                                                     </div>
                                                 </div>
@@ -255,7 +255,7 @@ const Orders = () => {
                                             <h3 className='text-right pr-[16px] text-[18px] mb-1'>
                                                 Thành tiền:{' '}
                                                 <span className='text-red-500'>
-                                                    {formatMoney(order?.total_price || 0)}
+                                                    {formatMoney(order?.total_price || 0)}₫
                                                 </span>
                                             </h3>       
                                         </div>
