@@ -172,6 +172,8 @@ const Cart = () => {
 
                         <div className='cart__content--oder border-2 rounded'>
                             {cartList?.map((item) => {
+                                console.log(item);
+
                                 return (
                                     <div className='content--oder--item relative flex justify-between items-center  p-5'>
                                         <div className='desc flex gap-8 items-center '>
@@ -197,12 +199,14 @@ const Cart = () => {
                                                 </button>
                                             </div>
                                             <div className='item-desc-inf'>
-                                                <h3 className='desc-inf-title'>{item.nameProduct}</h3>
+                                                <Link to={`/products/${item.productId}`}>
+                                                    <h3 className='desc-inf-title'>{item.nameProduct}</h3>
+                                                </Link>
                                                 <p className='mb-4 text-[16px] font-semibold'>Size: {item.size}</p>
                                                 <p className='text-gray-600 font-semibold'>
-                                                    Price: {item.promotionalPrice.toLocaleString()}đ
+                                                    Price: {item.promotionalPrice.toLocaleString()}₫
                                                     <strike className='text-[16px] text-gray-400 ml-1'>
-                                                        {item.price.toLocaleString()}đ
+                                                        {item.price.toLocaleString()}₫
                                                     </strike>
                                                 </p>
                                             </div>
@@ -210,7 +214,7 @@ const Cart = () => {
 
                                         <div className='item-desc-price'>
                                             <p className='text-right font-semibold mb-3'>
-                                                {(item.promotionalPrice * item.totalQuantity).toLocaleString()}đ
+                                                {(item.promotionalPrice * item.totalQuantity).toLocaleString()}₫
                                             </p>
                                             <div className='flex items-center space-x-4 border-solid border'>
                                                 <button
@@ -246,7 +250,7 @@ const Cart = () => {
                             <hr className='mb-3 border-dashed' />
                             <div className='info--detail-price flex justify-between py-4'>
                                 <p className='text-[20px] font-bold'>Tổng tiền:</p>
-                                <p className='font-semibold text-red-500'>{totalPrice.toLocaleString()}đ</p>
+                                <p className='font-semibold text-red-500'>{totalPrice.toLocaleString()}₫</p>
                             </div>
                             <hr className='mb-3 border-dashed' />
                             <div className='info--detail-note text-[16px] text-gray-600'>

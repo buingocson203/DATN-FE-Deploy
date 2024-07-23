@@ -376,9 +376,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -424,7 +424,7 @@ const Checkout = () => {
                                         <p className='mb-4 text-[16px] font-normal text-gray-500'>{it.size}</p>
                                     </div>
                                     <p className='text-gray-600 font-medium text-[16px] ml-auto'>
-                                        {it.promotionalPrice * it.totalQuantity}
+                                        {(it.promotionalPrice * it.totalQuantity).toLocaleString()}₫
                                     </p>
                                 </div>
                             </div>
@@ -434,7 +434,7 @@ const Checkout = () => {
                         <div className='pay__provisional mx-4 mt-4'>
                             <div className='payy__provisional--money flex justify-between mb-3'>
                                 <p className='text-[18px] text-gray-500'>Tạm tính</p>
-                                <p className='text-[18px] text-gray-500'>{totalPrice}</p>
+                                <p className='text-[18px] text-gray-500'>{totalPrice.toLocaleString()}₫</p>
                             </div>
                             <div className='payy__provisional--transport flex justify-between'>
                                 <p className='text-[18px] text-gray-500'>Phí vận chuyển</p>
@@ -447,7 +447,7 @@ const Checkout = () => {
                         <div className='payy__provisional--total flex justify-between mx-4 mt-4'>
                             <p className='text-[18px] text-gray-500'>Tổng cộng</p>
                             <p>
-                                <span className='text-[16px] text-gray-500 mr-2'>VNĐ</span> {totalPrice}
+                                <span className='text-[16px] text-gray-500 mr-2'></span> {totalPrice.toLocaleString()}₫
                             </p>
                         </div>
                     </div>

@@ -344,12 +344,12 @@ const OrderDetail = () => {
                                                     <span className="line-through text-[14px]">
                                                         {formatMoney(
                                                             product.price
-                                                        )}
+                                                        )}₫
                                                     </span>
                                                     <h4 className="text-red-500">
                                                         {formatMoney(
                                                             product.promotionalPrice
-                                                        )}
+                                                        )}₫
                                                     </h4>
                                                 </div>
                                             </div>
@@ -363,7 +363,7 @@ const OrderDetail = () => {
                                         <span className="text-red-500">
                                             {formatMoney(
                                                 detailOrder?.total_price || 0
-                                            )}
+                                            )}₫
                                         </span>
                                     </h3>
                                 </div>

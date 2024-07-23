@@ -54,8 +54,8 @@ export default function ProductItem({ _id, IdImages, name, sizeId, price, promot
                 <span className='text-xs'>+{sizeId?.length || 0} kích thước</span>
                 <p className='text-md my-1'>{name}</p>
                 <div className='flex items-center gap-1'>
-                    <span className='text-red-500 text-sm'>{promotionalPrice}đ</span>
-                    <span className='text-neutral-300 text-xs line-through'>{importPrice}đ</span>
+                    <span className='text-red-500 text-sm'>{promotionalPrice?.toLocaleString()}₫</span>
+                    <span className='text-neutral-300 text-xs line-through'>{price?.toLocaleString()}₫</span>
                 </div>
             </div>
         </Link>

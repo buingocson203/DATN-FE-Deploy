@@ -164,9 +164,9 @@ const ProductDetail = () => {
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
                                 <span className='w-[120px]'>Giá:</span>
                                 <span className='text-red-500 font-medium text-xl mr-2'>
-                                    {variant?.promotionalPrice || 0}₫
+                                    {variant?.promotionalPrice.toLocaleString() || 0}₫
                                 </span>
-                                <span className='line-through text-neutral-500 mr-4'>{variant?.price || 0}₫</span>
+                                <span className='line-through text-neutral-500 mr-4'>{variant?.price.toLocaleString() || 0}₫</span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
