@@ -6,9 +6,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/logoFSneaker.png'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useState } from 'react'
 
 const Signup = () => {
     const navigate = useNavigate()
+    const [agree, setAgree] = useState(false) // State to manage checkbox
     const { form, onSubmit } = useAuthMutation({
         action: 'SIGN UP',
         onSuccess: () => {
@@ -16,9 +18,18 @@ const Signup = () => {
             form.reset()
             setTimeout(() => {
                 navigate('/signin')
-            }, 3000) // 5 seconds delay
+            }, 3000)
         }
     })
+
+    const handleFormSubmit = (event) => {
+        if (!agree) {
+            toast.error('Bạn phải đồng ý với điều khoản trước khi đăng ký tài khoản')
+            event.preventDefault() // Prevent form submission
+            return
+        }
+        form.handleSubmit(onSubmit)(event)
+    }
 
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8'>
@@ -31,7 +42,7 @@ const Signup = () => {
             </div>
             <div className='mt-10 sm:mx-auto sm:w-full sm:max-w-sm'>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+                    <form onSubmit={handleFormSubmit} className='space-y-6'>
                         <FormField
                             name='fullName'
                             control={form.control}
@@ -152,6 +163,20 @@ const Signup = () => {
                                 </FormItem>
                             )}
                         />
+                        <div className='flex items-center'>
+                            <input
+                                type='checkbox'
+                                id='agree'
+                                checked={agree}
+                                onChange={(e) => setAgree(e.target.checked)}
+                                className='h-4 w-4 text-indigo-600 border-gray-300 rounded'
+                            />
+                            <label htmlFor='agree' className='ml-2 block text-sm text-gray-900'>
+                                Bạn đồng ý với
+                                <Link to='/pages/policy' className='underline'> Chính sách </Link> 
+                                của chúng tôi.
+                            </label>
+                        </div>
                         <Button
                             variant='destructive'
                             type='submit'
