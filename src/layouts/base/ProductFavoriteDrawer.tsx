@@ -4,6 +4,7 @@ import { Drawer, Empty, message, Popconfirm } from 'antd'
 
 import { DeleteOutlined } from '@ant-design/icons'
 import { useProductFavoriteMutation } from '@/hooks/useProductFavorite'
+import { Link } from 'react-router-dom'
 
 interface IProductFavoriteDrawerProps {
     open: boolean
@@ -29,10 +30,18 @@ const ProductFavoriteDrawer = (props: IProductFavoriteDrawerProps) => {
 
             {data?.map((it, index) => (
                 <div className='flex items-center gap-x-2 mb-3' key={index}>
-                    <img src={it.imageProduct} alt={it.nameProduct} className='w-20 h-20 rounded object-cover border' />
+                    <Link to={`/products/${it.productId}`} className='block w-20 h-20'>
+                        <img
+                            src={it.imageProduct}
+                            alt={it.nameProduct}
+                            className='w-full h-full rounded object-cover border'
+                        />
+                    </Link>
 
-                    <div>
-                        <p className='font-medium'>{it.nameProduct}</p>
+                    <div className='flex-1'>
+                        <Link to={`/products/${it.productId}`}>
+                            <p className='font-medium'>{it.nameProduct}</p>
+                        </Link>
                         <p className='mt-1'>{formatPrice(it.promotionalPrice)}</p>
                     </div>
 
