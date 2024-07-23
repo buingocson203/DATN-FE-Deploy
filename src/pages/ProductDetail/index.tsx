@@ -66,13 +66,13 @@ const ProductDetail = () => {
         }
     }
 
-    const { data: infoProduct } = useQuery({
+    const { data: infoProduct, refetch: refetchProductDetail } = useQuery({
         queryFn: () => getInfoProductById(String(productId)),
         enabled: !!productId,
         onError: onMutateError
     })
 
-    const { data: relatedProducts } = useQuery({
+    const { data: relatedProducts, refetch: refetchProductRelated } = useQuery({
         queryFn: () => getRelatedProductsInfo(String(productId)),
         enabled: !!productId,
         queryKey: ['/productDetail/related', detailID],
@@ -84,6 +84,11 @@ const ProductDetail = () => {
         enabled: !!detailID,
         onError: onMutateError
     })
+
+    useEffect(() => {
+        refetchProductDetail();
+        refetchProductRelated();
+    }, [productId]);
 
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
