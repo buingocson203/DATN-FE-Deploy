@@ -45,5 +45,6 @@ export interface IOderByDateRange {
     importPrice: number
     image: string
     date: Date
-    profit: number
+    // profit: number
+    totalRevenue: number
 }

@@ -44,10 +44,6 @@ interface IRevenueData {
 const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD'
 const BAR_BG = 'rgba(54, 162, 235, 0.2)'
 
-const isSameDate = (date1: string, date2: string) => {
-    return dayjs(date1).isSame(dayjs(date2), 'date')
-}
-
 const Dashboard = () => {
     const [unitType, setUnitType] = useState<ITimeUnitType>('date')
 
@@ -207,88 +203,10 @@ const Dashboard = () => {
 
     const fetchRevenue = async () => {
         try {
-            const res = await getOrdersByDateRange({ startDate, endDate })
-            const month = dayjs(date).get('month')
-            const year = dayjs(date).get('year')
-            let data: any = []
-
-            switch (unitType) {
-                case 'week':
-                case 'month': {
-                    data = res.data
-                        .reduce<{ date: string; totalRevenue: number }[]>((res, curr) => {
-                            const foundDate = res.find((it) => isSameDate(it.date, curr.date))
-
-                            if (foundDate) {
-                                res = res.map((it) =>
-                                    isSameDate(it.date, foundDate.date)
-                                        ? { ...it, totalRevenue: it.totalRevenue + foundDate.totalRevenue }
-                                        : it
-                                )
-                            } else {
-                                res = [
-                                    ...res,
-                                    {
-                                        date: dayjs(curr.date).format('YYYY-MM-DD'),
-                                        totalRevenue: curr.totalRevenue
-                                    }
-                                ]
-                            }
-
-                            return res
-                        }, [])
-                        .sort((a, b) => dayjs(a.date).diff(dayjs(b.date)))
-
-                    const transformData = []
-                    for (let i = dayjs(startDate).get('date'); i <= dayjs(endDate).get('date'); i++) {
-                        transformData.push({
-                            label: `${i}/${month + 1}/${year}`,
-                            totalRevenue: data.find((it) => dayjs(it.date).get('date') === i)?.totalRevenue || 0
-                        })
-                    }
-
-                    data = transformData
-                    break
-                }
-
-                case 'year': {
-                    data = res.data
-                        .reduce<{ month: number; totalRevenue: number }[]>((res, curr) => {
-                            const foundDate = res.find((it) => it.month === dayjs(curr.date).get('month') + 1)
-
-                            if (foundDate) {
-                                res = res.map((it) =>
-                                    it.month === dayjs(foundDate.month).get('month') + 1
-                                        ? { ...it, totalRevenue: it.totalRevenue + foundDate.totalRevenue }
-                                        : it
-                                )
-                            } else {
-                                res = [
-                                    ...res,
-                                    {
-                                        month: dayjs(curr.date).get('month') + 1,
-                                        totalRevenue: curr.totalRevenue
-                                    }
-                                ]
-                            }
-
-                            return res
-                        }, [])
-                        .sort((a, b) => a.month - b.month)
-
-                    const transformData = []
-                    for (let i = 1; i <= 12; i++) {
-                        transformData.push({
-                            label: `T${i}/${year}`,
-                            totalRevenue: data.find((it) => it.month === i)?.totalRevenue || 0
-                        })
-                    }
-
-                    data = transformData
-                }
-            }
-
-            setRevenueData(data)
+            const response = await getOrdersByDateRange({ startDate, endDate })
+            const data = response?.data
+            const tranform = tranformRevenueData(getLabels(), data as any)
+            setRevenueData(tranform)
         } catch (error) {
             setRevenueData([])
         }
@@ -298,8 +216,6 @@ const Dashboard = () => {
         try {
             const response = await getOrdersByDateRange({ startDate, endDate })
             const data = response?.data
-
-            console.log(data)
 
             const tranform = tranformProfitData(getLabels(), data as any)
             setProfitData(tranform)
@@ -324,6 +240,27 @@ const Dashboard = () => {
         const profitData: IProfitData[] = labels.map((date) => ({
             label: date,
             total: groupedValues[date]?.total ?? 0
+        }))
+
+        return profitData
+    }
+
+    const tranformRevenueData = (labels: string[], data: IOderByDateRange[]) => {
+        let groupedValues = data?.reduce((acc: IProfitGroupedValues, obj) => {
+            let format = unitType !== 'date' ? labelFormats[unitType] : 'HH'
+
+            let key = dayjs(obj.date).format(format)
+            if (!acc[key]) {
+                acc[key] = { total: 0 }
+            }
+            const totalRevenue = obj.totalRevenue
+            acc[key].total += isNaN(totalRevenue) ? 0 : totalRevenue
+            return acc
+        }, {})
+
+        const profitData: IRevenueData[] = labels.map((date) => ({
+            label: date,
+            totalRevenue: groupedValues[date]?.total ?? 0
         }))
 
         return profitData
