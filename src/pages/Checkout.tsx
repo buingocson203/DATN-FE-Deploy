@@ -128,6 +128,7 @@ const Checkout = () => {
                 })
                 .catch((error) => {
                     console.error('Error creating order:', error)
+                    toast.error('Sản phẩm đã hết size của bạn!')
                 })
         }
     }, [transactionStatus])
@@ -168,6 +169,7 @@ const Checkout = () => {
                 window.location.href = response.url // Redirect to the VNPAY URL
             } catch (error) {
                 console.log('run herere ')
+                toast.dismiss("Het hang")
                 // console.error('Error creating payment URL:', error)
             }
         } else {
@@ -189,8 +191,19 @@ const Checkout = () => {
             await instance.post('/api/order/create-order', data)
             toast.success('Đặt hàng thành công')
             navigate('/orders')
-        } catch (error) {
-            toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                const errorMessage = error.response.data.message;
+                // Trích xuất thông tin sản phẩm từ payload
+                const productDetail = data.productDetails.find(detail => detail.productDetailId === errorMessage.match(/ID (\w+)/)[1]);
+                if (productDetail) {
+                    toast.error(`Sản phẩm "${productDetail.productName}" size "${productDetail.sizeName}" đã hết!`);
+                } else {
+                    toast.error('Sản phẩm đã hết size của bạn!');
+                }
+            } else {
+                toast.error('Sản phẩm đã hết size của bạn!');
+            }
         }
     }
 

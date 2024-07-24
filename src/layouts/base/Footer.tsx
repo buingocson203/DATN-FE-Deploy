@@ -1,8 +1,10 @@
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from "lucide-react";
 import { Link } from "react-router-dom";
+import ContactButton from "./ContactButton";
 
 export default function Footer() {
     return <footer className="bg-[#f5f5f5] ">
+        <ContactButton />
         <div className="app-container grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 ">
             <div className="text-neutral-500 px-4 md:px-8 md:border-r md:border-neutral-200 py-4 md:py-16">
                 <h3 className="text-lg text-neutral-800 mb-5 font-semibold">Giới thiệu</h3>
