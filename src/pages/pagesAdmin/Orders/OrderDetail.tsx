@@ -92,7 +92,7 @@ const OrderDetail = () => {
         },
         {
             label: 'Số điện thoại',
-            children: data?.phone
+            children: "0" + data?.phone
         },
         {
             label: 'Địa chỉ',
@@ -213,14 +213,16 @@ const OrderDetail = () => {
         const stepsData = reversedHistory.map((item, index) => {
             const previousStatus = index > 0 ? reversedHistory[index - 1].status : 'Chờ xác nhận';
             return {
-                title: `${previousStatus !== 'Chờ xác nhận' ? ORDER_STATUS_NAMES[previousStatus] : previousStatus} --> ${ORDER_STATUS_NAMES[item.status]}`,
+                title: `${
+                    previousStatus !== 'Chờ xác nhận' ? ORDER_STATUS_NAMES[previousStatus] : previousStatus
+                } --> ${ORDER_STATUS_NAMES[item.status]}`,
                 description: (
                     <div>
-                        <div>Thời gian: {dayjs(item?.timeStamp).format('HH:MM DD-MM-YYYY')}</div>
+                        <div>Thời gian: {dayjs(item?.timestamp).format('HH:mm DD-MM-YYYY')}</div>
                         <div>Được thay đổi bởi: {item.adminName}</div>
                     </div>
                 )
-            };
+            }
         });
         return stepsData.reverse();  // Đảo ngược lại danh sách các bước để hiển thị từ cuối lên đầu
     }, [history]);

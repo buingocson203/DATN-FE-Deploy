@@ -19,7 +19,7 @@ export const useGetProducts = (query: { limit: number }) => {
     const fetchData = async () => {
         setIsLoading(true)
         try {
-            const response = await getProducts({ _page: currentPage, _limit: query?.limit, _sort: 'asc' })
+            const response = await getProducts({ _page: currentPage, _limit: query?.limit, _sort: 'createdAt' })
             const products: IProduct[] = response?.datas?.docs
 
             const count: number = response?.datas?.totalDocs
