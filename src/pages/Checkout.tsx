@@ -142,6 +142,7 @@ const Checkout = () => {
                 })
                 .catch((error) => {
                     console.error('Error creating order:', error)
+                    toast.error('Sản phẩm đã hết size của bạn!')
                 })
         }
     }, [transactionStatus])
@@ -205,8 +206,19 @@ const Checkout = () => {
         try {
             await instance.post('/api/order/create-order', data)
             navigate('/payment-success')
-        } catch (error) {
-            toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
+        } catch (error: any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                const errorMessage = error.response.data.message;
+                // Trích xuất thông tin sản phẩm từ payload
+                const productDetail = data.productDetails.find(detail => detail.productDetailId === errorMessage.match(/ID (\w+)/)[1]);
+                if (productDetail) {
+                    toast.error(`Đặt hàng không thành công do sản phẩm "${productDetail.productName}" size "${productDetail.sizeName}" đã hết!`);
+                } else {
+                    toast.error('Sản phẩm đã hết size của bạn!');
+                }
+            } else {
+                toast.error('Sản phẩm đã hết size của bạn!');
+            }
         }
     }
 
