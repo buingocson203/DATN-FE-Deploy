@@ -26,5 +26,6 @@ export interface IOderHistory {
     adminId: string
     adminName: string
     status: IOrderStatus
+    timestamp: Date
     timeStamp: Date
 }

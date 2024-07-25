@@ -2,6 +2,10 @@ import Joi from 'joi'
 import * as Yup from 'Yup'
 
 export const formSchema = Joi.object({
+    fullName: Joi.string().required().messages({
+        'any.required': 'Họ tên không được để trống',
+        'string.empty': 'Họ tên không được để trống'
+    }),
     userName: Joi.string().min(6).required().messages({
         'string.min': 'Tên đăng nhập phải có ít nhất 6 kí tự',
         'any.required': 'Tên đăng nhập không được bỏ trống',
@@ -15,6 +19,10 @@ export const formSchema = Joi.object({
             'any.required': 'Email không được bỏ trống',
             'string.empty': 'Email không được bỏ trống'
         }),
+    address: Joi.string().required().messages({
+        'any.required': 'Địa chỉ không được để trống',
+        'string.empty': 'Địa chỉ không được để trống'
+    }),
     password: Joi.string().min(6).max(32).required().messages({
         'string.min': 'Mật khẩu ít nhất 6 kí tự',
         'string.max': 'Mật khẩu không quá 32 kí tự',

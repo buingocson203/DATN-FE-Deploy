@@ -1,84 +1,124 @@
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from 'lucide-react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import logo from '../../assets/1-01.png'
-import { useLocalStorage } from '@/hooks/useStorage'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuIndicator, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from "@/components/ui/navigation-bar";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { getAllCategory } from "@/services/category/requests";
+import { ChatBubbleIcon } from "@radix-ui/react-icons";
+import { normalizeHash } from "@remix-run/router/dist/utils";
+import { ChevronDown } from "lucide";
+import { Bell, ChevronDownIcon, ChevronRightIcon, MenuIcon, SearchIcon, ShoppingBagIcon, User2 } from "lucide-react";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../assets/1-01.png";
+import { useLocalStorage } from '@/hooks/useStorage';
 export default function Header() {
+    const dispatch = useDispatch()
+    const { data, refetch } = useProductFavoriteQuery()
+    const [openProductFavorite, setOpenProductFavorite] = useState(false)
+
+    const cartQuantity = useAppSelector(selectBadge)
+    const getUserID = () => {
+        const storedUser = localStorage.getItem('user')
+        const user = storedUser ? JSON.parse(storedUser) : {}
+        return user?._id || ''
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await instance.get(`api/cart/${getUserID()}`)
+            const data = response?.data?.data
+            const ids = data?.map((item) => item.productDetailId)
+            dispatch(cartActions.replaceAll(ids))
+        }
+        fetchData()
+    }, [])
+
     const [open, setOpen] = useState(false)
     const [user] = useLocalStorage('user', null)
 
-    return (
-        <header>
-            <div className='bg-black py-2 text-white text-xs'>
-                <div className='app-container flex items-center justify-between'>
-                    <div className='flex gap-3'>
-                        <span>Hotline: (+84) 977.826.896</span>
-                        <span className='border-l border-neutral-400 pl-3'>Liên hệ</span>
-                    </div>
-                    <div className='flex gap-2'>
-                        <div className='relative'>
-                            <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center'>
-                                1
-                            </span>
-                            <Bell size={20} />
-                        </div>
-                        <span>Thông báo của tôi</span>
-                    </div>
-                </div>
-            </div>
 
-            <div className='flex app-container border-b border-neutral-200 py-3 gap-5'>
-                <div className='block md:hidden'>
-                    <Sheet>
-                        <SheetTrigger>
-                            <MenuIcon size={26} className='cursor-pointer' onClick={() => setOpen((prev) => !prev)} />
-                        </SheetTrigger>
-                        <SheetContent side={'left'}>
-                            <h2 className='text-left text-xl font-semibold border-b border-neutral-300 pb-3'>
-                                Danh mục
-                            </h2>
-                            <ul className='mt-4 flex flex-col gap-2'>
-                                <li>
-                                    <Link to='/' className='text-sm text-neutral-900'>
-                                        Hàng mới về
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to='/' className='text-sm text-neutral-900'>
-                                        Mua 1 tặng 1
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to='/' className='text-sm text-neutral-900'>
-                                        Hệ thống cửa hàng
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Accordion type='single' collapsible>
-                                        <AccordionItem
-                                            value='item-1'
-                                            className='bg-transparent border-none text-sm text-neutral-900 p-0 m-0'
-                                        >
-                                            <AccordionTrigger className='text-sm text-neutral-900 font-normal no-underline  p-0 m-0'>
-                                                Chính sách
-                                            </AccordionTrigger>
-                                            <AccordionContent className=''>
-                                                <Link to='/' className='text-sm text-neutral-900 block my-2'>
-                                                    Quy Chế
-                                                </Link>
-                                                <Link to='/' className='text-sm text-neutral-900 block my-2'>
-                                                    Quy Chế
-                                                </Link>
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    </Accordion>
-                                </li>
-                            </ul>
-                        </SheetContent>
-                    </Sheet>
+    const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
+    const navigate = useNavigate();
+
+    const handleCategoryClick = (categoryId: string) => {
+        navigate('/collections/' + categoryId, { replace: true });
+        window.location.reload(); // reload the page
+    };
+    return (
+        <>
+            <header>
+                <div className='bg-black py-2 text-white text-xs'>
+                    <div className='app-container flex items-center justify-between'>
+                        <div className='flex gap-3'>
+                            <span>Hotline: (+84) 977.826.896</span>
+                            <span className='border-l border-neutral-400 pl-3'>Liên hệ</span>
+                        </div>
+                        <div className='flex gap-2'>
+                            <div className='relative'>
+                                <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-3 h-3 flex items-center justify-center'>
+                                    1
+                                </span>
+                                <Bell size={20} />
+                            </div>
+                            <span>Thông báo của tôi</span>
+                        </div>
+                    </div>
                 </div>
+
+                <div className='flex app-container border-b border-neutral-200 py-3 gap-5'>
+                    <div className='block md:hidden'>
+                        <Sheet>
+                            <SheetTrigger>
+                                <MenuIcon
+                                    size={26}
+                                    className='cursor-pointer'
+                                    onClick={() => setOpen((prev) => !prev)}
+                                />
+                            </SheetTrigger>
+                            <SheetContent side={'left'}>
+                                <h2 className='text-left text-xl font-semibold border-b border-neutral-300 pb-3'>
+                                    Danh mục
+                                </h2>
+                                <ul className='mt-4 flex flex-col gap-2'>
+                                    <li>
+                                        <Link to='/' className='text-sm text-neutral-900'>
+                                            Hàng mới về
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to='/' className='text-sm text-neutral-900'>
+                                            Mua 1 tặng 1
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link to='/' className='text-sm text-neutral-900'>
+                                            Hệ thống cửa hàng
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Accordion type='single' collapsible>
+                                            <AccordionItem
+                                                value='item-1'
+                                                className='bg-transparent border-none text-sm text-neutral-900 p-0 m-0'
+                                            >
+                                                <AccordionTrigger className='text-sm text-neutral-900 font-normal no-underline p-0 m-0'>
+                                                    Chính sách
+                                                </AccordionTrigger>
+                                                <AccordionContent className=''>
+                                                    <Link to='/' className='text-sm text-neutral-900 block my-2'>
+                                                        Quy Chế
+                                                    </Link>
+                                                    <Link to='/' className='text-sm text-neutral-900 block my-2'>
+                                                        Quy Chế
+                                                    </Link>
+                                                </AccordionContent>
+                                            </AccordionItem>
+                                        </Accordion>
+                                    </li>
+                                </ul>
+                            </SheetContent>
+                        </Sheet>
+                    </div>
 
                 <div className='md:w-[200px] flex-1 md:flex-none flex justify-center'>
                     <Link to='/'>
@@ -139,6 +179,13 @@ export default function Header() {
                             <p className='hidden md:block'>Đăng nhập/Đăng ký</p>
                         </Link>
                     )}
+                    <Link
+                        to='/orders'
+                        className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
+                        style={{ marginTop: '4px' }}
+                    >
+                        <p className='hidden md:block'>Đơn hàng</p>
+                    </Link>
                     <div className='relative'>
                         <Link to='/cart'>
                             <span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer'>
@@ -158,20 +205,23 @@ export default function Header() {
                         </Link>
                     </li>
                     <li>
-                        <Link to='/' className='flex items-center justify-center gap-1 item-hover relative'>
+                        <Link to='/products' className='flex items-center justify-center gap-1 item-hover relative'>
                             <span className='relative  hover:text-neutral-700'>Sản phẩm</span>
                             <ChevronDownIcon className='w-3 transition-all group-hover:rotate-180 duration-300' />
 
                             <ul className='absolute top-full left-0 bg-white py-2 shadow-lg w-[200px] text-neutral-600 z-10 text-sm opacity-0 pointer-events-none item-child-hover'>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/adidas'
-                                    >
-                                        Adidas
-                                    </Link>
-                                </li>
-                                <li>
+
+                                {categories?.map(category =>
+                                    <li key={category._id}>
+                                        <Link
+                                            className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
+                                            to={'#'} // use # to prevent Link default behavior
+                                            onClick={() => handleCategoryClick(category._id)}
+                                        >
+                                            {category.name}
+                                        </Link>
+                                    </li>)}
+                                {/* <li>
                                     <Link
                                         className='px-5 py-2 flex items-center relative item-hover'
                                         to='/collections/nike'
@@ -221,101 +271,16 @@ export default function Header() {
                                     >
                                         MLB
                                     </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/croon'
-                                    >
-                                        CROON
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/new-balance-fila'
-                                    >
-                                        New Balance - Fila
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/luxury'
-                                    >
-                                        Luxury
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/converse-vans'
-                                    >
-                                        Converse - Vans
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/chinh-hang'
-                                    >
-                                        Chính hãng
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
-                                        className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                        to='/collections/all'
-                                    >
-                                        <span className='flex-1'>Phụ kiện</span>
-                                        <ChevronRightIcon className='w-3 ml-1' />
-                                        <ul className='item-child-hover absolute top-0 left-full w-[200px] bg-white z-10 py-2 shadow-lg'>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/vo'
-                                                >
-                                                    Vớ
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/non'
-                                                >
-                                                    Nón
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/mat-kinh'
-                                                >
-                                                    Mắt kính
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/dep'
-                                                >
-                                                    Dép
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link
-                                                    className='px-5 py-2 flex items-center relative item-hover hover:text-neutral-700'
-                                                    to='/collections/khac'
-                                                >
-                                                    Khác
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </Link>
-                                </li>
+                                </li> */}
+
                             </ul>
                         </Link>
                     </li>
+                    {/* <li>
+                        <Link to='/products' className='hover:text-neutral-900'>
+                            Sản phẩm
+                        </Link>
+                    </li> */}
                     <li>
                         <Link to='/collections/mua-1-tang-1' className='hover:text-neutral-900'>
                             Hàng mới về

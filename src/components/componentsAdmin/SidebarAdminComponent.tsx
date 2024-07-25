@@ -1,42 +1,36 @@
-import React, { useState } from 'react'
 import {
-    AppstoreOutlined,
-    MailOutlined,
-    ProductOutlined,
-    LineHeightOutlined,
     FontSizeOutlined,
-    MenuFoldOutlined,
-    TeamOutlined,
-    UserOutlined,
-    ProfileOutlined,
-    MenuUnfoldOutlined,
-    UserSwitchOutlined,
+    LineHeightOutlined,
     PieChartOutlined,
-    LogoutOutlined
+    ProductOutlined,
+    TeamOutlined,
+    OrderedListOutlined,
+    CommentOutlined
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
-import { Button, Menu } from 'antd'
-import logo from '../../assets/2-01.jpg'
+import { Menu } from 'antd'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import logo from '../../assets/2-01.jpg'
 type MenuItem = Required<MenuProps>['items'][number]
 
 const items: MenuItem[] = [
-    { key: '1', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
-    { key: '2', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lí sản phẩm</Link> },
+    { key: 'dashboard', icon: <PieChartOutlined />, label: <Link to='/admin/dashboard'>Thống kê</Link> },
+    { key: 'products', icon: <ProductOutlined />, label: <Link to='/admin/products'>Quản lý sản phẩm</Link> },
+    { key: 'orders', icon: <OrderedListOutlined />, label: <Link to='/admin/orders'>Quản lý đặt hàng</Link> },
+    { key: 'reviews', icon: <CommentOutlined />, label: <Link to='/admin/reviews'>Quản lý đánh giá</Link> },
     {
         key: 'sub1',
-        label: 'Quản lí thuộc tính',
+        label: 'Quản lý thuộc tính',
         icon: <LineHeightOutlined />,
-        children: [{ key: '5', icon: <FontSizeOutlined />, label: <Link to='/admin/size'>Quản lí Size</Link> }]
+        children: [{ key: '5', icon: <FontSizeOutlined />, label: <Link to='/admin/size'>Quản lý Size</Link> }]
     },
-    { key: '8', icon: <ProductOutlined />, label: <Link to='/admin/category'>Quản lí danh mục</Link> },
+    { key: '8', icon: <ProductOutlined />, label: <Link to='/admin/category'>Quản lý danh mục</Link> },
     {
         key: '11',
         icon: <TeamOutlined />,
-        label: <Link to='/admin/account'>Quản lí tài khoản</Link>
+        label: <Link to='/admin/account'>Quản lý tài khoản</Link>
     },
-    { key: '12', icon: <ProfileOutlined />, label: 'Quản lí hóa đơn' },
-    { key: '13', icon: <UserSwitchOutlined />, label: 'Tài khoản' }
 ]
 
 const SidebarAdminComponent: React.FC = () => {
@@ -49,8 +43,7 @@ const SidebarAdminComponent: React.FC = () => {
             </div>
 
             <Menu
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
+                defaultSelectedKeys={['dashboard']}
                 mode='inline'
                 theme='dark'
                 inlineCollapsed={collapsed}

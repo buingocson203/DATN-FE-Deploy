@@ -8,8 +8,10 @@ import { useLocalStorage } from './useStorage'
 import { toast } from 'react-toastify'
 
 type FormAuthType = {
+    fullName: string
     userName: string
     email: string
+    address: string
     password: string
     confirmPassword: string
 }
@@ -22,7 +24,7 @@ type useAuthMutationProps = {
 
 const useAuthMutation = ({
     action,
-    defaultValues = { userName: '', email: '', password: '', confirmPassword: '' },
+    defaultValues = { fullName: '', userName: '', email: '', address: '', password: '', confirmPassword: '' },
     onSuccess
 }: useAuthMutationProps) => {
     const queryClient = useQueryClient()
@@ -55,7 +57,7 @@ const useAuthMutation = ({
     })
 
     const onSubmit: SubmitHandler<FormAuthType> = (values) => {
-        mutate(values)
+        mutate(values as any)
     }
 
     return {

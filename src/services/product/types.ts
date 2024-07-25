@@ -39,3 +39,12 @@ export interface IProductSize {
     "promotionalPrice": number,
     "productDetailId": string
 }
+export interface IFNewOutStand {
+    productId: string
+    productDetailId: string
+    productName: string
+    totalQuantity: number
+    price: number
+    promotionalPrice: number
+    image: string
+}

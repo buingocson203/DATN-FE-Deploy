@@ -18,8 +18,15 @@ export const filterCategoryBySize = async (
     minPrice: number,
     maxPrice: number
 ): Promise<IFProducts[]> => {
-    const { data } = await instance.get(
-        `api/infoProduct?category=${idCate}&minPrice=${minPrice}&maxPrice=${maxPrice}&size=${idSize}`
-    )
-    return data.data
+    if (idSize) {
+        const { data } = await instance.get(
+            `api/infoProduct?category=${idCate}&minPrice=${minPrice}&maxPrice=${maxPrice}&size=${idSize}`
+        )
+        return data.data
+    } else {
+        const { data } = await instance.get(
+            `api/infoProduct?category=${idCate}&minPrice=${minPrice}&maxPrice=${maxPrice}`
+        )
+        return data.data
+    }
 }

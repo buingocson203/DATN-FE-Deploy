@@ -1,15 +1,19 @@
 import instance from '@/core/api'
+import { useLocalStorage } from '@/hooks/useStorage'
 import { Icon } from '@iconify/react'
 import classNames from 'classnames'
 import React, { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { itemsActions } from '@/store/slices/cartSlice'
+import { log } from 'console'
+import { useSelector } from 'react-redux'
 
 type Inputs = {
     address: string
     phone: string
-    paymentMethod: 'cod' | 'vnpay'
+    payment_type: 'cod' | 'vnpay'
 }
 
 interface CartItem {
@@ -23,7 +27,7 @@ interface CartItem {
     imageProduct: string
     productId: string
     sizeId: string
-    productDetailId: string
+    productDetailId?: string
 }
 
 interface ICreateOrderBody {
@@ -38,10 +42,10 @@ interface ICreateOrderBody {
         sizeId: string
         image: string
         productName: string
+        promotionalPrice: number
     }[]
-    total_price: number
     paymentMethod?: 'cod' | 'vnpay'
-    orderStatus: string
+    codeOrders?: string
 }
 
 const getUserID = (): string => {
@@ -52,54 +56,97 @@ const getUserID = (): string => {
 }
 
 const Checkout = () => {
+    const [user] = useLocalStorage('user', null)
     const navigate = useNavigate()
     const [step, setStep] = useState<'CHECKOUT' | 'PAYMENT'>('CHECKOUT')
     const [cartList, setCartList] = useState<CartItem[]>([])
+    const queryParams = new URLSearchParams(location.search)
+    const transactionStatus = queryParams.get('vnp_TransactionStatus')
 
     const {
         register,
         handleSubmit,
-        formState: { isValid }
+        formState: { errors },
+        reset
     } = useForm<Inputs>()
 
     useEffect(() => {
         fetchData()
     }, [])
 
+    useEffect(() => {
+        if (transactionStatus === '00') {
+            // toast.success("Thanh toán thành công")
+            // window.location.href = '/';
+            console.log('HELLO WINDOW')
+        }
+        console.log('HELLO WORLD')
+    }, [transactionStatus])
+
     const totalPrice = useMemo(() => {
-        const totalPrice = cartList.reduce((total, item) => {
+        const totalPrice = cartList?.reduce((total, item) => {
             return (total += item.price * item.totalQuantity)
         }, 0)
 
         return totalPrice
-    }, [cartList.length])
+    }, [cartList?.length])
 
     const fetchData = async () => {
         const response = await instance.get(`api/cart/${getUserID()}`)
         setCartList(response.data.data)
     }
 
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        if (step === 'CHECKOUT') return
-
-        const productDetails = cartList.map((it) => ({
-            productId: it.productId,
-            price: it.price,
-            quantityOrders: it.totalQuantity,
-            sizeId: it.sizeId,
-            image: it.imageProduct,
-            sizeName: it.size.toString(),
-            productDetailId: it.productDetailId,
-            productName: it.nameProduct
-        }))
-
-        handleCreateOrder({
-            ...data,
-            user_id: getUserID(),
-            total_price: totalPrice,
-            productDetails,
-            orderStatus: 'pending'
+    const convertCart = () => {
+        const data = cartList.map((item) => {
+            return {
+                productId: item.productId,
+                price: item.price,
+                quantityOrders: item.totalQuantity,
+                sizeId: item.sizeId,
+                image: item.imageProduct,
+                sizeName: `${item.size}`,
+                productDetailId: item.productDetailId,
+                productName: item.nameProduct,
+                promotionalPrice: item.promotionalPrice
+            }
         })
+        return data
+    }
+    const onSubmit: SubmitHandler<Inputs> = async (data) => {
+        if (step === 'CHECKOUT') return
+        if (data.payment_type === 'vnpay') {
+            try {
+                const { data: response } = await instance.post(
+                    'api/order/create-order-vnpay',
+                    {
+                        address: data.address,
+                        phone: data.phone,
+                        user_id: getUserID(),
+                        productDetails: convertCart(),
+                        total_price: totalPrice,
+                        paymentMethod: 'vnpay',
+                        orderStatus: 'pending',
+                        paymentStatus: 'unpaid'
+                    },
+                    {
+                        withCredentials: true // Đảm bảo thông tin đăng nhập được bao gồm trong yêu cầu
+                    }
+                )
+                window.location.href = response.paymentUrl // Redirect to the VNPAY URL
+            } catch (error) {
+                console.log('run herere ')
+                console.error('Error creating payment URL:', error)
+            }
+        } else {
+            handleCreateOrder({
+                phone: data.phone,
+                address: data.address,
+                user_id: getUserID(),
+                productDetails: convertCart(),
+                paymentMethod: 'cod',
+                codeOrders: ''
+            })
+        }
     }
 
     const handleCreateOrder = async (data: ICreateOrderBody) => {
@@ -109,6 +156,17 @@ const Checkout = () => {
             navigate('/')
         } catch (error) {
             toast.error('Đã có lỗi xảy ra, vui lòng thử lại sau')
+        }
+    }
+
+    const onDeleteAllCart = async () => {
+        const ids = cartList?.map((it) => it.idCart)
+        try {
+            await instance.delete(`api/cart/deteCart`, {
+                data: { idCart: ids }
+            })
+        } catch (error) {
+            console.log(error)
         }
     }
 
@@ -154,8 +212,8 @@ const Checkout = () => {
                                         </div>
                                         <div className='info__profile'>
                                             <p className='text-gray-600 text-[18px] flex gap-1'>
-                                                <span>Bui Ngoc Son</span>
-                                                <span>(buingocson@fsneaker.com)</span>
+                                                <span>{user.userName}</span>
+                                                <span>({user.email})</span>
                                             </p>
                                             <button className='text-sky-600 text-[16px]'>Đăng xuất</button>
                                         </div>
@@ -163,36 +221,6 @@ const Checkout = () => {
 
                                     <div className='form__profile'>
                                         <div>
-                                            {/* <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                <select className='block py-2.5 px-3 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'>
-                                                    <option>Địa chỉ lưu trữ</option>
-                                                    <option>0123456789, FPT, 7000, Hà Nội, Viet Nam</option>
-                                                </select>
-                                                <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                                                    <svg
-                                                        className='fill-current h-4 w-4'
-                                                        xmlns='http://www.w3.org/2000/svg'
-                                                        viewBox='0 0 20 20'
-                                                    >
-                                                        <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                                                    </svg>
-                                                </div>
-                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                    Thêm địa chỉ mới
-                                                </label>
-                                            </div> */}
-                                            {/* <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                <input
-                                                    type='text'
-                                                    id='floating_email'
-                                                    className='block py-2.5 px-4 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'
-                                                    placeholder=' '
-                                                    {...register('name', { required: true })}
-                                                />
-                                                <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                    Họ và tên
-                                                </label>
-                                            </div> */}
                                             <div className='relative z-0 w-full mb-5 group border rounded'>
                                                 <input
                                                     type='text'
@@ -219,78 +247,13 @@ const Checkout = () => {
                                                     Địa chỉ
                                                 </label>
                                             </div>
-                                            {/* <div className='grid md:grid-cols-3 md:gap-6'>
-                                                <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                    <select className='block py-2.5 px-3 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'>
-                                                        <option>Chọn tỉnh / thành</option>
-                                                        <option>Option 2</option>
-                                                        <option>Option 3</option>
-                                                    </select>
-                                                    <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                                                        <svg
-                                                            className='fill-current h-4 w-4'
-                                                            xmlns='http://www.w3.org/2000/svg'
-                                                            viewBox='0 0 20 20'
-                                                        >
-                                                            <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                                                        </svg>
-                                                    </div>
-                                                    <label className='peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 px-3 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                        Tỉnh / thành
-                                                    </label>
-                                                </div>
-                                                <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                    <select className='block py-2.5 px-3 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'>
-                                                        <option>Chọn quận / huyện</option>
-                                                        <option>Option 2</option>
-                                                        <option>Option 3</option>
-                                                    </select>
-                                                    <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                                                        <svg
-                                                            className='fill-current h-4 w-4'
-                                                            xmlns='http://www.w3.org/2000/svg'
-                                                            viewBox='0 0 20 20'
-                                                        >
-                                                            <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                                                        </svg>
-                                                    </div>
-                                                    <label className='peer-focus:font-medium absolute px-3 text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 bg-white'>
-                                                        Quận / huyện
-                                                    </label>
-                                                </div>
-                                                <div className='relative z-0 w-full mb-5 group border rounded'>
-                                                    <select className='block py-2.5 px-3 w-full text-sm text-gray-900 bg-transparent border-0 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer'>
-                                                        <option>Chọn phường / xã</option>
-                                                        <option>Option 2</option>
-                                                        <option>Option 3</option>
-                                                    </select>
-                                                    <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700'>
-                                                        <svg
-                                                            className='fill-current h-4 w-4'
-                                                            xmlns='http://www.w3.org/2000/svg'
-                                                            viewBox='0 0 20 20'
-                                                        >
-                                                            <path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
-                                                        </svg>
-                                                    </div>
-                                                    <label className='peer-focus:font-medium absolute px-3 bg-white text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6'>
-                                                        Phường / xã
-                                                    </label>
-                                                </div>
-                                            </div> */}
                                             <div className='pay__router flex justify-between items-center mt-4'>
                                                 <Link to='/cart' className='text-sky-600 text-[18px]'>
                                                     Giỏ hàng
                                                 </Link>
                                                 <button
-                                                    disabled={!isValid}
-                                                    onClick={() => setStep('PAYMENT')}
-                                                    type='button'
                                                     className={classNames(
-                                                        'text-white bg-sky-700 px-5 py-3 rounded text-[18px]',
-                                                        {
-                                                            'opacity-50': !isValid
-                                                        }
+                                                        'text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
                                                     )}
                                                 >
                                                     Tiếp tục đến phương thức thanh toán
@@ -332,9 +295,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                            // onChange={(e) => {
-                                            //     setPaymentMethod(e.target.value as 'vnpay')
-                                            // }}
+                                        // onChange={(e) => {
+                                        //     setPaymentMethod(e.target.value as 'vnpay')
+                                        // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -353,9 +316,6 @@ const Checkout = () => {
                                             <button
                                                 type='submit'
                                                 className='text-white bg-sky-700 px-5 py-3 rounded text-[18px]'
-                                                // onClick={() => {
-                                                //     paymentMethod === 'cod' ? handleOrder() : handleOrderVnPay()
-                                                // }}
                                             >
                                                 Hoàn tất đơn hàng
                                             </button>
@@ -383,7 +343,7 @@ const Checkout = () => {
                                         <p className='mb-4 text-[16px] font-normal text-gray-500'>{it.size}</p>
                                     </div>
                                     <p className='text-gray-600 font-medium text-[16px] ml-auto'>
-                                        {it.price * it.totalQuantity}
+                                        {(it.promotionalPrice * it.totalQuantity).toLocaleString()}₫
                                     </p>
                                 </div>
                             </div>
@@ -393,7 +353,7 @@ const Checkout = () => {
                         <div className='pay__provisional mx-4 mt-4'>
                             <div className='payy__provisional--money flex justify-between mb-3'>
                                 <p className='text-[18px] text-gray-500'>Tạm tính</p>
-                                <p className='text-[18px] text-gray-500'>{totalPrice}</p>
+                                <p className='text-[18px] text-gray-500'>{totalPrice.toLocaleString()}₫</p>
                             </div>
                             <div className='payy__provisional--transport flex justify-between'>
                                 <p className='text-[18px] text-gray-500'>Phí vận chuyển</p>
@@ -406,7 +366,7 @@ const Checkout = () => {
                         <div className='payy__provisional--total flex justify-between mx-4 mt-4'>
                             <p className='text-[18px] text-gray-500'>Tổng cộng</p>
                             <p>
-                                <span className='text-[16px] text-gray-500 mr-2'>VNĐ</span> {totalPrice}
+                                <span className='text-[16px] text-gray-500 mr-2'></span> {totalPrice.toLocaleString()}₫
                             </p>
                         </div>
                     </div>

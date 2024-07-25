@@ -13,8 +13,8 @@ export const STATUS_PRODUCT = [
 
 export const ORDER_STATUS_NAMES: Record<IOrderStatus, string> = {
     pending: 'Chờ xác nhận',
-    waiting: 'Chờ lấy hàng',
-    delivering: 'Chờ giao hàng',
+    waiting: 'Đã xác nhận',
+    delivering: 'Đang giao hàng',
     done: 'Hoàn thành',
     cancel: 'Huỷ bỏ'
 }

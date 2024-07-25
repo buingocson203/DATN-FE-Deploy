@@ -4,8 +4,8 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import ProductItem from '@/features/product/_components/product-item'
 import { cn } from '@/lib/utils'
 import { FacebookIcon, MessageCircleIcon, MinusIcon, PlusIcon, TwitterIcon, Zap } from 'lucide-react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import ProductComment from './ProductComment'
 import ProductDescription from './ProductDescription'
@@ -15,23 +15,64 @@ import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from
 import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
 import { render } from 'react-dom'
-
+import { useDispatch } from 'react-redux'
+import { updateCartQuantityStore } from '../../store/actions'
+import { cartActions } from '@/store/slices/cartSlice'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons'
+import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
+import { message } from 'antd'
+import { log } from 'console'
 
 const ProductDetail = () => {
+    const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
+
+    const { mutate: onFavorite } = useProductFavoriteMutation({
+        action: 'ADD',
+        onSuccess: () => {
+            message.success('Đã thêm SP vào danh sách yêu thích')
+            refetch()
+        }
+    })
+
+    const { mutate: onRemoveFavorite } = useProductFavoriteMutation({
+        action: 'DELETE',
+        onSuccess: () => {
+            message.success('Đã xoá SP khỏi danh sách yêu thích')
+            refetch()
+        }
+    })
+
+    const dispatch = useDispatch()
     const [quantity, setQuantity] = useState(1)
     const [activeTab, setActiveTab] = useState(0)
     const [variant, setVariant] = useState<IProductSize | undefined>()
 
     const { id: productId, detail: detailID } = useParams()
 
-    const { data: infoProduct } = useQuery({
+    const isFavorite = useMemo(() => {
+        return favoriteProduct?.data.find((it) => it.productId === productId)
+    }, [productId, favoriteProduct?.data])
+
+    const onToggleFavorite = () => {
+        if (!getUserID()) {
+            message.info('Vui lòng đăng nhập tài khoản!')
+            return
+        }
+
+        if (isFavorite) {
+            onRemoveFavorite(productId)
+        } else {
+            onFavorite(productId)
+        }
+    }
+
+    const { data: infoProduct, refetch: refetchProductDetail } = useQuery({
         queryFn: () => getInfoProductById(String(productId)),
         enabled: !!productId,
         onError: onMutateError
     })
-    console.log(infoProduct)
 
-    const { data: relatedProducts } = useQuery({
+    const { data: relatedProducts, refetch: refetchProductRelated } = useQuery({
         queryFn: () => getRelatedProductsInfo(String(productId)),
         enabled: !!productId,
         queryKey: ['/productDetail/related', detailID],
@@ -44,6 +85,11 @@ const ProductDetail = () => {
         onError: onMutateError
     })
 
+    useEffect(() => {
+        refetchProductDetail();
+        refetchProductRelated();
+    }, [productId]);
+
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -51,9 +97,12 @@ const ProductDetail = () => {
         return userID
     }
     const addToCart = (quantity: number) => {
+        console.log(variant)
         const fetchData = async (dataX: any) => {
             try {
                 await instance.post(`api/cart`, dataX)
+
+                variant?.productDetailId && dispatch(cartActions.addToCart(variant?.productDetailId))
                 alert('Thêm sản phẩm vào giỏ hàng thành công')
             } catch (error) {
                 console.log(error)
@@ -78,14 +127,20 @@ const ProductDetail = () => {
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     useEffect(() => {
         if (!infoProduct) return
-        setVariant(infoProduct?.data?.productDetails[0])
+        for (let index = 0; index < infoProduct?.data?.productDetails.length; index++) {
+            const element = infoProduct?.data?.productDetails[index]
+            if (element.quantity > 0) {
+                setVariant(element)
+                break
+            }
+        }
     }, [infoProduct])
     return (
         <div className='pb-10'>
             <BreadCrumb links={breadcrumb} />
             <div className='app-container text-[#333]'>
                 <div className='flex flex-col md:flex-row'>
-                    <div className='flex-1 img-product-container'>
+                    <div className='flex-1 img-product-container relative group'>
                         <Carousel>
                             <CarouselContent>
                                 {infoProduct?.data?.images?.map((image, index) => (
@@ -107,10 +162,10 @@ const ProductDetail = () => {
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
                                 <span className='w-[120px]'>Giá:</span>
                                 <span className='text-red-500 font-medium text-xl mr-2'>
-                                    {variant?.importPrice || 0}₫
+                                    {variant?.promotionalPrice.toLocaleString() || 0}₫
                                 </span>
                                 <span className='line-through text-neutral-500 mr-4'>
-                                    {variant?.promotionalPrice || 0}₫
+                                    {variant?.price.toLocaleString() || 0}₫
                                 </span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
@@ -127,6 +182,7 @@ const ProductDetail = () => {
                                                 (size: any, index: any, self: any) =>
                                                     index === self.findIndex((t) => t.size === size.size)
                                             )
+                                            .sort((a, b) => a.size - b.size)
                                             .map((size, index) => {
                                                 return (
                                                     <span
@@ -137,7 +193,9 @@ const ProductDetail = () => {
                                                         )}
                                                         key={index}
                                                         onClick={() => {
-                                                            setVariant(size)
+                                                            if (size.quantity > 0) {
+                                                                setVariant(size)
+                                                            }
                                                         }}
                                                     >
                                                         {size.size}
@@ -152,45 +210,75 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='flex items-center mt-5'>
-                                <span className='w-[120px]'>Số lượng:</span>
-                                <div className='flex'>
-                                    <div
-                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                        onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
-                                    >
-                                        <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
-                                    </div>
-                                    <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
-                                        {quantity}
-                                    </div>
-                                    <div
-                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                        onClick={() =>
-                                            setQuantity((prev) => {
-                                                if (prev < variant?.quantity) {
-                                                    return prev + 1
+                            <div className='flex items-center justify-between mt-5'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='w-[120px]'>Số lượng:</span>
+                                    <div className='flex'>
+                                        <div
+                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                            onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
+                                        >
+                                            <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
+                                        </div>
+                                        <input
+                                            type='number'
+                                            value={quantity}
+                                            id='quantity-detail'
+                                            min={1}
+                                            defaultValue={quantity}
+                                            max={variant?.quantity}
+                                            className='w-10 h-10 text-center'
+                                            onChange={(event) => {
+                                                if (Number.parseInt(event.target.value) > variant?.quantity) {
+                                                    alert('Vượt quá số lượng còn lại của sản phẩm')
+                                                    return
                                                 }
-                                                alert('Không được vượt quá số lượng sản phẩm đang có')
-                                                return prev
-                                            })
-                                        }
-                                    >
-                                        <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
+                                                setQuantity(Number.parseInt(event.target.value))
+                                            }}
+                                        />
+                                        {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
+                                        {quantity}
+                                    </div> */}
+                                        <div
+                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                            onClick={() =>
+                                                setQuantity((prev) => {
+                                                    if (prev < variant?.quantity) {
+                                                        return prev + 1
+                                                    }
+                                                    alert('Không được vượt quá số lượng sản phẩm đang có')
+                                                    return prev
+                                                })
+                                            }
+                                        >
+                                            <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
+                                        </div>
                                     </div>
+                                    <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                                 </div>
-                                <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
+
+                                <div 
+                                    onClick={onToggleFavorite}
+                                    className='cursor-pointer  text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
+                                >
+                                    {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
+                                </div>
                             </div>
-                            <div className='flex items-center justify-center mt-5 gap-2'>
+
+                            <div className='grid grid-cols-2 gap-x-4 mt-5'>
                                 <button
                                     onClick={() => addToCart(quantity)}
                                     className='px-7 py-3 border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-full'
                                 >
                                     THÊM VÀO GIỎ
                                 </button>
-                                <button className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
-                                    MUA NGAY
-                                </button>
+                                <Link
+                                    to={`/checkout-now/${variant?.productDetailId}?sizeId=${variant?.sizeId}&quantity=${quantity}`}
+                                >
+                                    <button className='px-7 py-3 border border-red-500 text-white bg-red-500 outline-none hover:opacity-90 transition-all rounded-md w-full'>
+                                        MUA NGAY
+                                    </button>
+                                </Link>
                             </div>
                             {/* ẨN khuyến mại */}
                             <div className='flex items-center justify-center mt-5 gap-2'>

@@ -1,4 +1,4 @@
-export type ISort = 'asc' | 'desc'
+export type ISort = 'asc' | 'desc' | 'createdAt'
 
 export type IRole = 'admin' | 'user'
 

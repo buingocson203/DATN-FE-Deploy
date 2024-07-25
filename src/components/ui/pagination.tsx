@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { DOTS, usePagination } from '../../hooks/usePagination'
-import { Button } from './button'
+import { Button } from 'antd'
 
 import { Button as DefaultButton } from 'antd'
 
@@ -41,10 +41,10 @@ const Pagination = (props: Props) => {
     return (
         <>
             <div className='flex items-center justify-center gap-3 py-3'>
-                <DefaultButton
+                <Button
                     onClick={onPrevious}
                     disabled={currentPage === 1}
-                    className='stroke-[#333333] px-0 hover:stroke-white lg:px-4'
+                    className='stroke-[#333333] px-0 hover:stroke-primary lg:px-4'
                 >
                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'>
                         <path d='M15 18L9 12L15 6' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
@@ -61,9 +61,8 @@ const Pagination = (props: Props) => {
                     }
 
                     return (
-                        <DefaultButton
-                            style={{ backgroundColor: pageNumber === currentPage ? '#1677ff' : undefined }}
-                            type={pageNumber === currentPage ? 'primary' : 'default'}
+                        <Button
+                            type={currentPage === pageNumber ? 'primary' : 'default'}
                             key={pageNumber}
                             onClick={() => onPageChange(pageNumber as number)}
                         >
@@ -79,10 +78,10 @@ const Pagination = (props: Props) => {
                         // </Button>
                     )
                 })}
-                <DefaultButton
+                <Button
                     onClick={onNext}
                     disabled={currentPage === lastPage}
-                    className='stroke-[#333333] px-0  hover:stroke-white lg:px-4'
+                    className='stroke-[#333333] px-0  hover:stroke-primay lg:px-4'
                 >
                     <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none'>
                         <path d='M9 6L15 12L9 18' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />

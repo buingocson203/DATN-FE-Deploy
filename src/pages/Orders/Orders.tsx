@@ -45,16 +45,26 @@ const Orders = () => {
     }, [])
 
     const cancelOrder = async (orderID: any) => {
+        event?.stopPropagation()
         try {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: 'cancel'
             })
-            alert('Hủy đơn hàng thành công')
+            let txtMessage = paymentMethod == "cod" ? 'Hủy đơn hàng thành công' : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn';
+            alert(txtMessage)
             fetchData()
         } catch (error) {
             console.log(error)
-            alert('Có lỗi xảy ra')
+            let messageX = error?.response?.data?.message
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1;
+            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex]);
+            alert(
+                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${
+                    currentStateVN
+                }`
+            )
         }
+        fetchData();
     }
 
     const onSelectOrderToReview = (order: any) => {
@@ -189,9 +199,11 @@ const Orders = () => {
                                                             className='h-[86px] w-[86px] '
                                                         />
                                                         <div className='order-detail-info__content ml-5'>
+                                                        <Link to={`/products/${product.productId}`} className='text-[16px] custom-focus'>
                                                             <h3 className='font-bold text-[18px]'>
                                                                 {product.productName}
                                                             </h3>
+                                                        </Link>
                                                             <p className='text-[16px]'>
                                                                 Phân loại hàng: {product.sizeName}
                                                             </p>
@@ -200,10 +212,10 @@ const Orders = () => {
                                                     </div>
                                                     <div className='order-detail-price flex items-center gap-x-[12px]'>
                                                         <span className='line-through text-[14px]'>
-                                                            {formatMoney(product.price)}
+                                                            {formatMoney(product.price)}₫
                                                         </span>
                                                         <h4 className='text-red-500'>
-                                                            {formatMoney(product.promotionalPrice)}
+                                                            {formatMoney(product.promotionalPrice)}₫
                                                         </h4>
                                                     </div>
                                                 </div>
@@ -215,7 +227,9 @@ const Orders = () => {
                                             </h4>
                                             <h3 className='text-right pr-[16px] text-[18px] mb-1'>
                                                 Thành tiền:{' '}
-                                                <span className='text-red-500'>{formatMoney(order.total_amount_paid || order.total_price)}</span>
+                                                <span className='text-red-500'>
+                                                    {formatMoney(order?.total_price || 0)}
+                                                </span>
                                             </h3>
                                         </div>
                                         <div
@@ -228,15 +242,15 @@ const Orders = () => {
                                                     {(() => {
                                                         switch (order.orderStatus) {
                                                             case 'pending':
-                                                                return 'Đang xử lý'
+                                                                return 'Chờ xác nhận'
                                                             case 'waiting':
-                                                                return 'Đang chờ lấy hàng'
+                                                                return 'Đã xác nhận'
                                                             case 'cancel':
-                                                                return 'Đã hủy đơn'
+                                                                return 'Hủy bỏ'
                                                             case 'delivering':
-                                                                return 'Đã giao hàng'
+                                                                return 'Đang giao hàng'
                                                             case 'done':
-                                                                return 'Đã hoàn thành'
+                                                                return 'Đã giao hàng'
                                                             default:
                                                                 return order.orderStatus
                                                         }
@@ -245,10 +259,10 @@ const Orders = () => {
                                             </div>
                                             <div className='order-box__tool--btn flex gap-x-[12px]'>
                                                 {(() => {
-                                                    if (['pending', 'waiting'].includes(order.orderStatus)) {
+                                                    if (['pending'].includes(order.orderStatus)) {
                                                         return (
                                                             <button
-                                                                onClick={() => cancelOrder(order._id)}
+                                                                onClick={() => cancelOrder(order._id, order.paymentMethod)}
                                                                 className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
                                                             >
                                                                 Hủy đơn hàng
