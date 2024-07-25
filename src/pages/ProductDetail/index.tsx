@@ -154,13 +154,6 @@ const ProductDetail = () => {
                                 ))}
                             </CarouselContent>
                         </Carousel>
-
-                        <div
-                            onClick={onToggleFavorite}
-                            className='cursor-pointer absolute top-4 right-4 inline-block h-auto text-2xl opacity-0 group-hover:opacity-100 transition'
-                        >
-                            {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
-                        </div>
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
                         <div className='flex-1'>
@@ -221,6 +214,7 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                             </div>
+
                             <div className='flex items-center mt-5'>
                                 <span className='w-[120px]'>Số lượng:</span>
                                 <div className='flex'>
@@ -263,9 +257,17 @@ const ProductDetail = () => {
                                     >
                                         <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
                                     </div>
+                                    <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                                 </div>
-                                <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
+
+                                <div 
+                                    onClick={onToggleFavorite}
+                                    className='cursor-pointer  text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
+                                >
+                                    {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
+                                </div>
                             </div>
+
                             <div className='grid grid-cols-2 gap-x-4 mt-5'>
                                 <button
                                     onClick={() => addToCart(quantity)}
