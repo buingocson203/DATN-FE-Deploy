@@ -14,14 +14,13 @@ import { useQuery } from 'react-query'
 import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from '@/services/product/request'
 import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
-import { render } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { updateCartQuantityStore } from '../../store/actions'
 import { cartActions } from '@/store/slices/cartSlice'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
 import { message } from 'antd'
-import { log } from 'console'
+import { toast } from 'react-toastify'
 
 const ProductDetail = () => {
     const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
@@ -86,9 +85,9 @@ const ProductDetail = () => {
     })
 
     useEffect(() => {
-        refetchProductDetail();
-        refetchProductRelated();
-    }, [productId]);
+        refetchProductDetail()
+        refetchProductRelated()
+    }, [productId])
 
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
@@ -103,10 +102,10 @@ const ProductDetail = () => {
                 await instance.post(`api/cart`, dataX)
 
                 variant?.productDetailId && dispatch(cartActions.addToCart(variant?.productDetailId))
-                alert('Thêm sản phẩm vào giỏ hàng thành công')
+                toast.success('Thêm sản phẩm vào giỏ hàng thành công')
             } catch (error) {
                 console.log(error)
-                alert('Số lượng yêu cầu vượt quá số lượng trong kho')
+                toast.error('Số lượng yêu cầu vượt quá số lượng trong kho')
             }
         }
         fetchData({
@@ -126,13 +125,18 @@ const ProductDetail = () => {
     ]
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     useEffect(() => {
-        if (!infoProduct) return
+        if (!infoProduct) return;
+        let isSetVariant = false;
         for (let index = 0; index < infoProduct?.data?.productDetails.length; index++) {
             const element = infoProduct?.data?.productDetails[index]
             if (element.quantity > 0) {
                 setVariant(element)
+                isSetVariant = true;
                 break
             }
+        }
+        if(!isSetVariant){
+            setVariant(undefined);
         }
     }, [infoProduct])
     return (
@@ -210,49 +214,48 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='flex items-center justify-between mt-5'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='w-[120px]'>Số lượng:</span>
-                                    <div className='flex'>
-                                        <div
-                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                            onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
-                                        >
-                                            <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
-                                        </div>
-                                        <input
-                                            type='number'
-                                            value={quantity}
-                                            id='quantity-detail'
-                                            min={1}
-                                            defaultValue={quantity}
-                                            max={variant?.quantity}
-                                            className='w-10 h-10 text-center'
-                                            onChange={(event) => {
-                                                if (Number.parseInt(event.target.value) > variant?.quantity) {
-                                                    alert('Vượt quá số lượng còn lại của sản phẩm')
-                                                    return
-                                                }
-                                                setQuantity(Number.parseInt(event.target.value))
-                                            }}
-                                        />
-                                        {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
+
+                            <div className='flex items-center mt-5'>
+                                <span className='w-[120px]'>Số lượng:</span>
+                                <div className='flex'>
+                                    <div
+                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                        onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
+                                    >
+                                        <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
+                                    </div>
+                                    <input
+                                        type='number'
+                                        value={quantity}
+                                        id='quantity-detail'
+                                        min={1}
+                                        defaultValue={quantity}
+                                        max={variant?.quantity}
+                                        className='w-10 h-10 text-center'
+                                        onChange={(event) => {
+                                            if (Number.parseInt(event.target.value) > variant?.quantity) {
+                                                toast.error('Vượt quá số lượng còn lại của sản phẩm')
+                                                return
+                                            }
+                                            setQuantity(Number.parseInt(event.target.value))
+                                        }}
+                                    />
+                                    {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
                                         {quantity}
                                     </div> */}
-                                        <div
-                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                            onClick={() =>
-                                                setQuantity((prev) => {
-                                                    if (prev < variant?.quantity) {
-                                                        return prev + 1
-                                                    }
-                                                    alert('Không được vượt quá số lượng sản phẩm đang có')
-                                                    return prev
-                                                })
-                                            }
-                                        >
-                                            <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
-                                        </div>
+                                    <div
+                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                        onClick={() =>
+                                            setQuantity((prev) => {
+                                                if (prev < variant?.quantity) {
+                                                    return prev + 1
+                                                }
+                                                toast.error('Không được vượt quá số lượng sản phẩm đang có')
+                                                return prev
+                                            })
+                                        }
+                                    >
+                                        <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
                                     </div>
                                     <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                                 </div>

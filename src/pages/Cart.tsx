@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react'
 import { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-
+import { toast } from 'react-toastify'
 import { cartActions } from '@/store/slices/cartSlice'
 import { itemsActions } from '@/store/slices/cartSlice'
 
@@ -61,7 +61,7 @@ const Cart = () => {
                 })
             } catch (error) {
                 fetchDataCart()
-                alert('Số lượng yêu cầu vượt quá số lượng trong kho')
+                toast.error('Số lượng yêu cầu vượt quá số lượng trong kho')
             }
         }
         const newCartList = cartList?.map((item) => {
@@ -124,9 +124,9 @@ const Cart = () => {
                     data: { idCart: ids }
                 })
                 dispatch(cartActions.removeAll())
-                alert('Giỏ hàng đã được xóa thành công')
+                toast.success('Giỏ hàng đã được xóa thành công')
             } catch (error) {
-                alert('Xóa giỏ hàng thất bại')
+                toast.error('Xóa giỏ hàng thất bại')
             }
         }
         fetchData(lstSelected)
@@ -145,7 +145,7 @@ const Cart = () => {
 
     const handleClickCheckout = () => {
         if (itemsSelected?.length === 0) {
-            alert('Vui lòng chọn sản phẩm để thanh toán')
+            toast.error('Vui lòng chọn sản phẩm để thanh toán')
             return
         }
         // Navigate to checkout page
@@ -172,7 +172,7 @@ const Cart = () => {
 
                         <div className='cart__content--oder border-2 rounded'>
                             {cartList?.map((item) => {
-                                console.log(item);
+                                console.log(item)
 
                                 return (
                                     <div className='content--oder--item relative flex justify-between items-center  p-5'>
