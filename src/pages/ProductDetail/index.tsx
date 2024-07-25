@@ -150,13 +150,6 @@ const ProductDetail = () => {
                                 ))}
                             </CarouselContent>
                         </Carousel>
-
-                        <div
-                            onClick={onToggleFavorite}
-                            className='cursor-pointer absolute top-4 right-4 inline-block h-auto text-2xl opacity-0 group-hover:opacity-100 transition'
-                        >
-                            {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
-                        </div>
                     </div>
                     <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
                         <div className='flex-1'>
@@ -171,7 +164,9 @@ const ProductDetail = () => {
                                 <span className='text-red-500 font-medium text-xl mr-2'>
                                     {variant?.promotionalPrice.toLocaleString() || 0}₫
                                 </span>
-                                <span className='line-through text-neutral-500 mr-4'>{variant?.price.toLocaleString() || 0}₫</span>
+                                <span className='line-through text-neutral-500 mr-4'>
+                                    {variant?.price.toLocaleString() || 0}₫
+                                </span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
@@ -215,51 +210,61 @@ const ProductDetail = () => {
                                     )}
                                 </div>
                             </div>
-                            <div className='flex items-center mt-5'>
-                                <span className='w-[120px]'>Số lượng:</span>
-                                <div className='flex'>
-                                    <div
-                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                        onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
-                                    >
-                                        <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
-                                    </div>
-                                    <input
-                                        type='number'
-                                        value={quantity}
-                                        id='quantity-detail'
-                                        min={1}
-                                        defaultValue={quantity}
-                                        max={variant?.quantity}
-                                        className='w-10 h-10 text-center'
-                                        onChange={(event) => {
-                                            if (Number.parseInt(event.target.value) > variant?.quantity) {
-                                                alert('Vượt quá số lượng còn lại của sản phẩm')
-                                                return
-                                            }
-                                            setQuantity(Number.parseInt(event.target.value))
-                                        }}
-                                    />
-                                    {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
+                            <div className='flex items-center justify-between mt-5'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='w-[120px]'>Số lượng:</span>
+                                    <div className='flex'>
+                                        <div
+                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                            onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
+                                        >
+                                            <MinusIcon className='size-10 text-neutral-400 group-hover:text-neutral-800' />
+                                        </div>
+                                        <input
+                                            type='number'
+                                            value={quantity}
+                                            id='quantity-detail'
+                                            min={1}
+                                            defaultValue={quantity}
+                                            max={variant?.quantity}
+                                            className='w-10 h-10 text-center'
+                                            onChange={(event) => {
+                                                if (Number.parseInt(event.target.value) > variant?.quantity) {
+                                                    alert('Vượt quá số lượng còn lại của sản phẩm')
+                                                    return
+                                                }
+                                                setQuantity(Number.parseInt(event.target.value))
+                                            }}
+                                        />
+                                        {/* <div className='w-10 h-10 border border-neutral-200 bg-white cursor-pointer flex items-center justify-center text-sm'>
                                         {quantity}
                                     </div> */}
-                                    <div
-                                        className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
-                                        onClick={() =>
-                                            setQuantity((prev) => {
-                                                if (prev < variant?.quantity) {
-                                                    return prev + 1
-                                                }
-                                                alert('Không được vượt quá số lượng sản phẩm đang có')
-                                                return prev
-                                            })
-                                        }
-                                    >
-                                        <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
+                                        <div
+                                            className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
+                                            onClick={() =>
+                                                setQuantity((prev) => {
+                                                    if (prev < variant?.quantity) {
+                                                        return prev + 1
+                                                    }
+                                                    alert('Không được vượt quá số lượng sản phẩm đang có')
+                                                    return prev
+                                                })
+                                            }
+                                        >
+                                            <PlusIcon className='text-sm size-5 text-neutral-400 group-hover:text-neutral-800' />
+                                        </div>
                                     </div>
+                                    <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                                 </div>
-                                <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
+
+                                <div 
+                                    onClick={onToggleFavorite}
+                                    className='cursor-pointer  text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
+                                >
+                                    {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
+                                </div>
                             </div>
+
                             <div className='grid grid-cols-2 gap-x-4 mt-5'>
                                 <button
                                     onClick={() => addToCart(quantity)}
