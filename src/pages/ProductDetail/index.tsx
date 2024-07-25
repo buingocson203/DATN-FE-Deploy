@@ -14,14 +14,13 @@ import { useQuery } from 'react-query'
 import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from '@/services/product/request'
 import { IProduct, IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
-import { render } from 'react-dom'
 import { useDispatch } from 'react-redux'
 import { updateCartQuantityStore } from '../../store/actions'
 import { cartActions } from '@/store/slices/cartSlice'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
 import { message } from 'antd'
-import { log } from 'console'
+import { toast } from 'react-toastify'
 
 const ProductDetail = () => {
     const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
@@ -86,9 +85,9 @@ const ProductDetail = () => {
     })
 
     useEffect(() => {
-        refetchProductDetail();
-        refetchProductRelated();
-    }, [productId]);
+        refetchProductDetail()
+        refetchProductRelated()
+    }, [productId])
 
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
@@ -103,10 +102,10 @@ const ProductDetail = () => {
                 await instance.post(`api/cart`, dataX)
 
                 variant?.productDetailId && dispatch(cartActions.addToCart(variant?.productDetailId))
-                alert('Thêm sản phẩm vào giỏ hàng thành công')
+                toast.success('Thêm sản phẩm vào giỏ hàng thành công')
             } catch (error) {
                 console.log(error)
-                alert('Số lượng yêu cầu vượt quá số lượng trong kho')
+                toast.error('Số lượng yêu cầu vượt quá số lượng trong kho')
             }
         }
         fetchData({
@@ -126,13 +125,18 @@ const ProductDetail = () => {
     ]
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     useEffect(() => {
-        if (!infoProduct) return
+        if (!infoProduct) return;
+        let isSetVariant = false;
         for (let index = 0; index < infoProduct?.data?.productDetails.length; index++) {
             const element = infoProduct?.data?.productDetails[index]
             if (element.quantity > 0) {
                 setVariant(element)
+                isSetVariant = true;
                 break
             }
+        }
+        if(!isSetVariant){
+            setVariant(undefined);
         }
     }, [infoProduct])
     return (
@@ -171,7 +175,9 @@ const ProductDetail = () => {
                                 <span className='text-red-500 font-medium text-xl mr-2'>
                                     {variant?.promotionalPrice.toLocaleString() || 0}₫
                                 </span>
-                                <span className='line-through text-neutral-500 mr-4'>{variant?.price.toLocaleString() || 0}₫</span>
+                                <span className='line-through text-neutral-500 mr-4'>
+                                    {variant?.price.toLocaleString() || 0}₫
+                                </span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
                                     -53%
@@ -234,7 +240,7 @@ const ProductDetail = () => {
                                         className='w-10 h-10 text-center'
                                         onChange={(event) => {
                                             if (Number.parseInt(event.target.value) > variant?.quantity) {
-                                                alert('Vượt quá số lượng còn lại của sản phẩm')
+                                                toast.error('Vượt quá số lượng còn lại của sản phẩm')
                                                 return
                                             }
                                             setQuantity(Number.parseInt(event.target.value))
@@ -250,7 +256,7 @@ const ProductDetail = () => {
                                                 if (prev < variant?.quantity) {
                                                     return prev + 1
                                                 }
-                                                alert('Không được vượt quá số lượng sản phẩm đang có')
+                                                toast.error('Không được vượt quá số lượng sản phẩm đang có')
                                                 return prev
                                             })
                                         }

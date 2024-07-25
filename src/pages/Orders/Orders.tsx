@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
 import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Orders = () => {
     const [lstOrders, setLstOrders] = useState([])
@@ -38,7 +39,7 @@ const Orders = () => {
             setLstOrders(response.data.data)
         } catch (error) {
             console.log(error)
-            alert('Lỗi không lấy được dữ liệu đơn hàng')
+            toast.error('Lỗi không lấy được dữ liệu đơn hàng')
         }
     }
 
@@ -46,7 +47,7 @@ const Orders = () => {
         fetchData()
     }, [])
 
-    const convertStateToVN = (stateEN : string) => {
+    const convertStateToVN = (stateEN: string) => {
         switch (stateEN) {
             case 'pending':
                 return 'Chờ xác nhận'
@@ -75,21 +76,22 @@ const Orders = () => {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: 'cancel'
             })
-            let txtMessage = paymentMethod == "cod" ? 'Hủy đơn hàng thành công' : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn';
-            alert(txtMessage)
+            let txtMessage =
+                paymentMethod == 'cod'
+                    ? 'Hủy đơn hàng thành công'
+                    : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn'
+            toast.error(txtMessage)
             fetchData()
         } catch (error) {
             console.log(error)
             let messageX = error?.response?.data?.message
-            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1;
-            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex]);
-            alert(
-                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${
-                    currentStateVN
-                }`
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
+            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
+            toast.error(
+                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${currentStateVN}`
             )
         }
-        fetchData();
+        fetchData()
     }
 
     const onSelectOrderToReview = (order: any) => {
@@ -114,12 +116,12 @@ const Orders = () => {
         console.log(reviewObj)
         try {
             await instance.post('api/review/reviews', reviewObj)
-            alert('Bạn đã đánh giá thành công')
+            toast.success('Bạn đã đánh giá thành công')
             setShowReviewForm(false)
             fetchData()
         } catch (error) {
             console.log(error)
-            alert('Có lỗi xảy ra')
+            toast.error('Có lỗi xảy ra')
         }
     }
 
@@ -225,11 +227,14 @@ const Orders = () => {
                                                             className='h-[86px] w-[86px] '
                                                         />
                                                         <div className='order-detail-info__content ml-5'>
-                                                        <Link to={`/products/${product.productId}`} className='text-[16px] custom-focus'>
-                                                            <h3 className='font-bold text-[18px]'>
-                                                                {product.productName}
-                                                            </h3>
-                                                        </Link>
+                                                            <Link
+                                                                to={`/products/${product.productId}`}
+                                                                className='text-[16px] custom-focus'
+                                                            >
+                                                                <h3 className='font-bold text-[18px]'>
+                                                                    {product.productName}
+                                                                </h3>
+                                                            </Link>
                                                             <p className='text-[16px]'>
                                                                 Phân loại hàng: {product.sizeName}
                                                             </p>
@@ -257,7 +262,7 @@ const Orders = () => {
                                                 <span className='text-red-500'>
                                                     {formatMoney(order?.total_price || 0)}₫
                                                 </span>
-                                            </h3>       
+                                            </h3>
                                         </div>
                                         <div
                                             className='order-box__tool flex items-center px-[16px] justify-between py-[12px] bg-stone-200'
@@ -289,7 +294,9 @@ const Orders = () => {
                                                     if (['pending'].includes(order.orderStatus)) {
                                                         return (
                                                             <button
-                                                                onClick={() => cancelOrder(order._id, order.paymentMethod)}
+                                                                onClick={() =>
+                                                                    cancelOrder(order._id, order.paymentMethod)
+                                                                }
                                                                 className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
                                                             >
                                                                 Hủy đơn hàng
