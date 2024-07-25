@@ -215,9 +215,10 @@ const ProductDetail = () => {
                                 </div>
                             </div>
 
-                            <div className='flex items-center mt-5'>
-                                <span className='w-[120px]'>Số lượng:</span>
-                                <div className='flex'>
+                            <div className='flex items-center justify-between mt-5'>
+                                
+                                <div className='flex items-center'>
+                                    <span className='w-[120px]'>Số lượng:</span>
                                     <div
                                         className='w-10 h-10 group border border-neutral-200 bg-neutral-100 cursor-pointer flex items-center justify-center'
                                         onClick={() => setQuantity(quantity == 1 ? 1 : quantity - 1)}
@@ -262,7 +263,7 @@ const ProductDetail = () => {
 
                                 <div 
                                     onClick={onToggleFavorite}
-                                    className='cursor-pointer  text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
+                                    className='cursor-pointer text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
                                 >
                                     {isFavorite ? <HeartFilled className='text-red-500' /> : <HeartOutlined />}
                                 </div>
