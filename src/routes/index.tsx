@@ -45,12 +45,15 @@ import StatisticalProduct from '@/pages/pagesAdmin/Statistical/Products'
 import OrderingAndPaymentProcess from '@/pages/OrderingAndPaymentProcess'
 import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 import InformationSecurityPolicy from '@/pages/InformationSecurityPolicy'
+import ForgotPassword from '@/pages/auth/ForgotPassword'
+import ChangePassword from '@/pages/MyProfile/ChangePassword'
 
 const Routers = () => {
     return (
         <Routes>
             <Route path='/signup' element={<Signup />} />
             <Route path='/signin' element={<Signin />} />
+            <Route path='/forgot-password' element={<ForgotPassword />} />
             <Route path='/' element={<BaseLayout />}>
                 <Route index element={<HomePage />} />
                 <Route path='/products' element={<ProductsPage />} />
@@ -66,6 +69,7 @@ const Routers = () => {
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/policy/:id' element={<PolicyPage />} />
                 <Route path='/profile' element={<ProtectedRoute element={MyProfile} />} />
+                <Route path='/profile/change-password' element={<ProtectedRoute element={ChangePassword} />} />
                 <Route path='/payment-success' element={<PaymentSuccess />} />
                 <Route path='/pages/quy-trinh-dat-hang-va-thanh-toan' element={<OrderingAndPaymentProcess />} />
                 <Route path='/pages/chinh-sach-bao-mat-thong-tin' element={<InformationSecurityPolicy />} />

@@ -63,3 +63,9 @@ export const unblockAccount = async (userId: string) => {
         console.log(`['BLOCK_ACCOUNT_ERROR']`, error)
     }
 }
+
+export const changeAccountPassword = async ({ userId, ...data }: any) => {
+    return instance.put(`api/auth/change-password/${userId}`, {
+        ...data
+    })
+}

@@ -9,6 +9,7 @@
 
     .sidebarItem {
         cursor: pointer;
+        display: block;
     }
 }
 

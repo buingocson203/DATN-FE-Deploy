@@ -5,6 +5,7 @@ import classNames from 'classnames'
 import { useLocalStorage } from '@/hooks/useStorage'
 import { useAccountMutation, useAccountQuery } from '@/hooks/useAccount'
 import { Button, Form, Input, Select, message } from 'antd'
+import Sidebar from './Sidebar'
 
 const MyProfile = () => {
     const [user, setUser] = useLocalStorage('user', null)
@@ -27,11 +28,6 @@ const MyProfile = () => {
 
     const [form] = Form.useForm()
 
-    const onLogout = () => {
-        localStorage.removeItem('user')
-        window.location.href = '/signin'
-    }
-
     const onFinish = (formData: any) => {
         delete data?.user?.role
         delete data?.user?.block
@@ -46,14 +42,7 @@ const MyProfile = () => {
 
     return (
         <div className={classNames('app-container', styles.container)}>
-            <div className={styles.sidebar}>
-                <ul>
-                    <li className={styles.sidebarItem}>Cập nhật thông tin</li>
-                    <li className={styles.sidebarItem} onClick={onLogout}>
-                        Đăng xuất
-                    </li>
-                </ul>
-            </div>
+            <Sidebar />
 
             <div className={styles.content}>
                 <h1 className={styles.title}>Tài khoản của bạn</h1>

@@ -6,8 +6,7 @@ import { SigninForm, signinSchema } from '../../common/Schema'
 import { signin } from '../../core/auth'
 import { useLocalStorage } from '../../hook'
 import { Link, useNavigate } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
+import { toast } from 'react-toastify'
 import logo from '../../assets/logoFSneaker.png'
 
 type Props = {}
@@ -49,7 +48,6 @@ const Signin = (props: Props) => {
 
     return (
         <div className='flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8'>
-            <ToastContainer />
             <div className='sm:mx-auto sm:w-full sm:max-w-sm'>
                 <img className='mx-auto h-10 w-auto w-[200px] h-[200px]' src={logo} alt='Your Company' />
                 <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
@@ -79,9 +77,12 @@ const Signin = (props: Props) => {
                                 Mật khẩu
                             </label>
                             <div className='text-sm'>
-                                <a href='#' className='font-semibold text-indigo-600 hover:text-indigo-500'>
+                                <Link
+                                    to='/forgot-password'
+                                    className='font-semibold text-indigo-600 hover:text-indigo-500'
+                                >
                                     Quên mật khẩu
-                                </a>
+                                </Link>
                             </div>
                         </div>
                         <div className='mt-2'>
