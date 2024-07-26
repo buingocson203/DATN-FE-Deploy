@@ -1,4 +1,4 @@
-import ProductItem from '@/features/product/_components/product-item2'
+import ProductItem3 from '@/features/product/_components/product-item3'
 import { cn } from '@/lib/utils'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -40,7 +40,7 @@ const ListCategory: React.FC<Props> = ({ data, handgetProduct, category }) => {
                     </ul>
                 </div>
                 <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
-                    {data?.length > 0 && data?.map((product, index) => <ProductItem key={index} product={product} />)}
+                    {data?.length > 0 && data?.map((product, index) => <ProductItem3 key={index} product={product} />)}
                 </div>
                 <Link to={data[0]?.categoryId && '/collections/' + data[0]?.categoryId || "/"}>
                     <HomePageButton className='mt-10'>Xem tất cả</HomePageButton>
