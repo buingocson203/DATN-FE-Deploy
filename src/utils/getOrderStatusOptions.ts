@@ -20,7 +20,7 @@ export const getOrderStatusOptions = (currentOrder: IOrder) => {
             pending: ['waiting', 'cancel'],
             waiting: ['delivering', 'cancel'],
             delivering: ['done','cancel'],
-            done: [],
+            done: ['cancel'],
             cancel: []
         }
 
