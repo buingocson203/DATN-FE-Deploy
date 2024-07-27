@@ -152,6 +152,7 @@ const EditProduct = () => {
 
     const fetchImages = async () => {
         const res = await getAllImageProductById(productId as string)
+
         const data: IImage[] = res?.data?.arrImageProduct
 
         if (data) {

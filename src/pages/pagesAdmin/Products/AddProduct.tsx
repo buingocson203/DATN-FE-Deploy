@@ -35,6 +35,7 @@ import { addProductDetail } from '@/services/productDetail'
 import { getSizes } from '@/services/size'
 import { useNavigate } from 'react-router-dom'
 import InputNumber from '@/components/ui/input-number'
+import { FileType, getBase64 } from '@/utils/common'
 
 interface FieldType {
     name: string
@@ -154,21 +155,26 @@ const AddProduct: React.FC = () => {
 
             if (productId) {
                 message.success(response.message)
-                const thumbnail = values.thumbnail.map((item) => {
-                    return {
-                        image: item.thumbUrl, // base64
-                        productId: productId,
-                        type: 'thumbnail'
-                    }
-                }) as IAddImageBody[]
 
-                const gallery = values.gallery.map((item) => {
-                    return {
-                        image: item.thumbUrl, // base64
-                        productId: productId,
-                        type: 'gallery'
-                    }
-                }) as IAddImageBody[]
+                const thumbnail = (await Promise.all(
+                    values?.thumbnail?.map(async (item) => {
+                        return {
+                            image: await getBase64(item.originFileObj as FileType), // base64
+                            productId: productId,
+                            type: 'thumbnail'
+                        }
+                    })
+                )) as IAddImageBody[]
+
+                const gallery = (await Promise.all(
+                    values.gallery.map(async (item) => {
+                        return {
+                            image: await getBase64(item.originFileObj as FileType), // base64
+                            productId: productId,
+                            type: 'gallery'
+                        }
+                    })
+                )) as IAddImageBody[]
 
                 const imagesInput: IAddImageBody[] = [...thumbnail, ...gallery]
 
@@ -207,6 +213,7 @@ const AddProduct: React.FC = () => {
             }
         } catch (error: any) {
             // console.log(error, 'CREATE_PRODUCT_ERROR')
+
             message.error(error?.message)
         }
     }
@@ -291,6 +298,8 @@ const AddProduct: React.FC = () => {
         }
     }
 
+    // console.log ('v)
+
     return (
         <div className='border p-6'>
             <div className='flex justify-end mb-2 gap-2'>
@@ -359,6 +368,8 @@ const AddProduct: React.FC = () => {
                         onChange={() => {
                             if (form.getFieldValue('thumbnail')?.length !== 0 || !form.getFieldValue('thumbnail')) {
                                 setShowBtnUpload(false)
+                            } else {
+                                setShowBtnUpload(true)
                             }
                         }}
                     >
