@@ -12,7 +12,8 @@ import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Badge, Button, Form, Modal, Select, Space, Table, TableProps, Tag, message } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+
 
 const ORDER_PAYMENT_COLORS: Record<IPaymentMethod, string> = {
     cod: 'default',
@@ -41,10 +42,13 @@ const OrderList: React.FC = () => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
 
+    const queryParams = new URLSearchParams(location.search)
+    let statusCode = queryParams.get('status');
+
     // states
     const [data, setData] = useState<IOrder[]>([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const [status, setStatus] = useState<IOrderStatus[]>([])
+    const [status, setStatus] = useState<IOrderStatus[]>(statusCode || [])
 
     const [orderEdit, setOrderEdit] = useState<IOrder>()
 
@@ -56,7 +60,6 @@ const OrderList: React.FC = () => {
 
         if (response?.data) {
             setData(response?.data)
-            console.log(response.data)
         } else {
             setData([])
         }
