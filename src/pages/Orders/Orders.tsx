@@ -293,7 +293,7 @@ const Orders = () => {
                                             </div>
                                             <div className='order-box__tool--btn flex gap-x-[12px]'>
                                                 {(() => {
-                                                    // if (['pending'].includes(order.orderStatus)) {
+                                                    if (['pending'].includes(order.orderStatus)) {
                                                     return (
                                                         <button
                                                             onClick={() => {
@@ -309,7 +309,7 @@ const Orders = () => {
                                                             Hủy đơn hàng
                                                         </button>
                                                     )
-                                                    // }
+                                                    }
                                                 })()}
                                                 {(() => {
                                                     if (order.orderStatus == 'done' && !order.isRated) {
