@@ -78,6 +78,14 @@ const OrderDetail = () => {
         setShowReviewForm(true);
     };
 
+    const convertToVN = (statusName: string) => {
+        const enumStatusPaid = {
+            unpaid: "Chưa thanh toán",
+            paid: "Đã thanh toán",
+        }
+        return enumStatusPaid[statusName] || "Chưa xác định";
+    }
+
     const submitReview = async () => {
         console.log(reviewObj);
         let objReviewSubmit = {
@@ -255,7 +263,7 @@ const OrderDetail = () => {
                                     </p>
                                     <p className="text-[16px]">
                                         <span className="font-bold">Đã thanh toán: </span>
-                                        {detailOrder?.paymentStatus}
+                                        {convertToVN(detailOrder?.paymentStatus)}
                                     </p>
                                     <p className="text-[16px]">
                                         <span className="font-bold">Ngày đặt đơn: </span>

@@ -7,6 +7,7 @@ import isoWeek from 'dayjs/plugin/isoWeek'
 import weekday from 'dayjs/plugin/weekday'
 import { Bar } from 'react-chartjs-2'
 import { useQuery } from 'react-query'
+import { Link } from 'react-router-dom'
 
 import { IOderByDateRange, IOrder, IOrderStatus } from '@/common/interfaces/order'
 import instance from '@/core/api'
@@ -34,6 +35,7 @@ interface IStatisticOrder {
     statusName: IOrderStatus | string
     statusQuantity: number
     classColor: string
+    statusNameCode: string
 }
 
 interface IRevenueData {
@@ -129,7 +131,7 @@ const Dashboard = () => {
                     classColor = '#000'
                     break
             }
-            result.push({ statusName: parseName, statusQuantity, classColor })
+            result.push({ statusName: parseName, statusQuantity, classColor, statusNameCode: statusName })
         }
 
         return result
@@ -198,7 +200,7 @@ const Dashboard = () => {
             if (resultResolve) {
                 setStatisticOrder(resultResolve)
             }
-        } catch (error) {}
+        } catch (error) { }
     }
 
     const fetchRevenue = async () => {
@@ -432,21 +434,23 @@ const Dashboard = () => {
                 <div className='grid grid-cols-3 gap-4 px-[24px] mb-6'>
                     {statisticOrder.map((statisticOrderItem, index) => {
                         return (
-                            <div
-                                key={statisticOrderItem.statusName}
-                                style={{ color: statisticOrderItem.classColor, boxShadow: '0 0 5px #efefef' }}
-                                className='flex items-center justify-between border border-1 border-gray-300 rounded-lg py-5 px-[36px]'
-                            >
-                                <div className='flex items-center gap-x-4'>
-                                    <i className='fa-solid fa-tag text-[24px]' style={{ transform: 'scaleX(-1)' }}></i>
-                                    <p className='!text-black'>{statisticOrderItem.statusName}</p>
+                            <Link to={`/admin/orders?status=${statisticOrderItem.statusNameCode}`}>
+                                <div
+                                    key={statisticOrderItem.statusName}
+                                    style={{ color: statisticOrderItem.classColor, boxShadow: '0 0 5px #efefef' }}
+                                    className='flex items-center justify-between border border-1 border-gray-300 rounded-lg py-5 px-[36px]'
+                                >
+                                    <div className='flex items-center gap-x-4'>
+                                        <i className='fa-solid fa-tag text-[24px]' style={{ transform: 'scaleX(-1)' }}></i>
+                                        <p className='!text-black'>{statisticOrderItem.statusName}</p>
+                                    </div>
+                                    <p className='font-bold'>
+                                        {statisticOrderItem.statusQuantity < 10
+                                            ? `0${statisticOrderItem.statusQuantity}`
+                                            : statisticOrderItem.statusQuantity.toString()}
+                                    </p>
                                 </div>
-                                <p className='font-bold'>
-                                    {statisticOrderItem.statusQuantity < 10
-                                        ? `0${statisticOrderItem.statusQuantity}`
-                                        : statisticOrderItem.statusQuantity.toString()}
-                                </p>
-                            </div>
+                            </Link>
                         )
                     })}
                 </div>

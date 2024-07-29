@@ -3,8 +3,11 @@ import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { Modal } from 'antd';
 
 const Orders = () => {
+    const [cancelObj, setCancelObj] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [lstOrders, setLstOrders] = useState([])
     const [showReviewForm, setShowReviewForm] = useState(false)
     const [detailOrder, setDetailOrder] = useState(null)
@@ -14,6 +17,30 @@ const Orders = () => {
         const userID = user?._id || ''
         return userID
     }
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+    const handleOk = async () => {
+        let { orderID, paymentMethod } = cancelObj;
+        setIsModalOpen(false);
+        try {
+            await instance.patch(`api/order/update-order/${orderID}`, {
+                orderStatus: 'cancel'
+            })
+            toast.success('Hủy đơn hàng thành công')
+            fetchData()
+        } catch (error) {
+            console.log(error)
+            let messageX = error?.response?.data?.message
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
+            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
+            toast.error(
+                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${currentStateVN}`
+            )
+        }
+        fetchData()
+    };
 
     const [reviewObj, setReviewObj] = useState({
         userId: getUserID(),
@@ -64,34 +91,9 @@ const Orders = () => {
         }
     }
 
-    const cancelOrder = async (orderID: any, paymentMethod: any) => {
+    const cancelOrder = async () => {
         event?.stopPropagation()
-        let userConfirm = confirm(
-            'Khi đồng ý hủy đơn hàng bạn sẽ không được hoàn tiền của đơn hàng đã đặt. Bạn có chắc chắn muốn hủy không?'
-        )
-        if (!userConfirm) {
-            return
-        }
-        try {
-            await instance.patch(`api/order/update-order/${orderID}`, {
-                orderStatus: 'cancel'
-            })
-            let txtMessage =
-                paymentMethod == 'cod'
-                    ? 'Hủy đơn hàng thành công'
-                    : 'Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn'
-            toast.error(txtMessage)
-            fetchData()
-        } catch (error) {
-            console.log(error)
-            let messageX = error?.response?.data?.message
-            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
-            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
-            toast.error(
-                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${currentStateVN}`
-            )
-        }
-        fetchData()
+        setIsModalOpen(true);
     }
 
     const onSelectOrderToReview = (order: any) => {
@@ -294,8 +296,13 @@ const Orders = () => {
                                                     if (['pending'].includes(order.orderStatus)) {
                                                         return (
                                                             <button
-                                                                onClick={() =>
-                                                                    cancelOrder(order._id, order.paymentMethod)
+                                                                onClick={() => {
+                                                                    setCancelObj({
+                                                                        orderID: order._id,
+                                                                        paymentMethod: order.paymentMethod
+                                                                    })
+                                                                    cancelOrder()
+                                                                }
                                                                 }
                                                                 className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
                                                             >
@@ -336,6 +343,11 @@ const Orders = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Model Confirm Hủy đơn hàng */}
+            <Modal title="Thông báo" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <p>Khi đồng ý hủy đơn hàng bạn sẽ không được hoàn tiền của đơn hàng đã đặt. Bạn có chắc chắn muốn hủy không?</p>
+            </Modal>
         </div>
     )
 }
