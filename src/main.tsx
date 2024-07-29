@@ -11,10 +11,13 @@ import { store } from './store/store'
 import { ConfigProvider } from 'antd'
 const queryClient = new QueryClient()
 
+import 'dayjs/locale/vi'
 import locale from 'antd/locale/vi_VN'
 import dayjs from 'dayjs'
+import updateLocale from 'dayjs/plugin/updateLocale'
 
-dayjs.locale('zh-cn')
+dayjs.locale('vi')
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
         <ConfigProvider locale={locale}>

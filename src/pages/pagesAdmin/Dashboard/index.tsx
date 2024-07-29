@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import logo from '../../../assets/logoFSneaker.png'
-import { Table, TableProps } from 'antd'
-import { getReviews } from '@/services/review'
-import { log } from 'util'
 import { getOrders } from '@/services/order'
-import RevenueStatistics from './RevenueStatistics'
-import StatisticalProduct from '../Statistical/Products'
 import type { DatePickerProps } from 'antd'
-import { DatePicker, Select, Space } from 'antd'
+import { DatePicker, Select, Space, TableProps } from 'antd'
 import dayjs from 'dayjs'
+import { useEffect, useState } from 'react'
+import StatisticalProduct from '../Statistical/Products'
+import RevenueStatistics from './RevenueStatistics'
 
 const { Option } = Select
 
@@ -133,27 +129,27 @@ const Dashboard = (props: Props) => {
     const handleFilterStatisticOrder = (val: any) => {
         switch (type) {
             case 'date':
-                timeFilterOrder = new Date(val.$d);
-                break;
+                timeFilterOrder = new Date(val.$d)
+                break
             case 'week':
-                timeFilterOrder = handleSelectWeek(val.$d);
-                break;
+                timeFilterOrder = handleSelectWeek(val.$d)
+                break
             case 'month':
-                timeFilterOrder = new Date(val.$d);
-                break;
+                timeFilterOrder = new Date(val.$d)
+                break
             case 'year':
-                timeFilterOrder = val.$y;
-                break;
+                timeFilterOrder = val.$y
+                break
             default:
-                timeFilterOrder = null;
-                break;
+                timeFilterOrder = null
+                break
         }
-        handleFilterOrderByTime();
+        handleFilterOrderByTime()
     }
 
     const handleFilterOrderByTime = () => {
-        let resultResolve;
-        let filteredData;
+        let resultResolve
+        let filteredData
         switch (type) {
             case 'date':
                 filteredData = orders.filter((order) => {
@@ -163,7 +159,7 @@ const Dashboard = (props: Props) => {
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
-                break;
+                break
             case 'week':
                 filteredData = orders.filter((order) => {
                     let isValidOrder =
@@ -175,7 +171,7 @@ const Dashboard = (props: Props) => {
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
-                break;
+                break
             case 'month':
                 filteredData = orders.filter((order) => {
                     return new Date(order?.createdAt).getMonth() - 1 == timeFilterOrder?.getMonth() - 1
@@ -184,7 +180,7 @@ const Dashboard = (props: Props) => {
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
-                break;
+                break
             case 'year':
                 filteredData = orders.filter((order) => {
                     return new Date(order?.createdAt).getFullYear() == timeFilterOrder
@@ -193,9 +189,9 @@ const Dashboard = (props: Props) => {
                 if (resultResolve) {
                     setStatisticOrder(resultResolve)
                 }
-                break;
+                break
             default:
-                break;
+                break
         }
     }
 
@@ -245,7 +241,6 @@ const Dashboard = (props: Props) => {
                     <RevenueStatistics />
 
                     <StatisticalProduct />
-                    
                 </div>
             </main>
         </>

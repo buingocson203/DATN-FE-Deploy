@@ -52,7 +52,6 @@ const Dashboard = () => {
     const [orders, setOrders] = useState<IOrder[]>([])
     const [filteredOrders, setFilteredOrders] = useState([])
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
-    let timeFilterOrder: any = null
 
     const [profitData, setProfitData] = useState<IProfitData[]>([])
     const [revenueData, setRevenueData] = useState<IRevenueData[]>([])
@@ -75,7 +74,7 @@ const Dashboard = () => {
         } else
             return {
                 startDate: dayjs(date.startOf(unitType)).format(DEFAULT_DATE_FORMAT),
-                endDate: dayjs(date.endOf(unitType)).format(DEFAULT_DATE_FORMAT)
+                endDate: dayjs(date.endOf(unitType)).toISOString()
             }
     }, [date, unitType])
 
@@ -218,6 +217,7 @@ const Dashboard = () => {
         try {
             const response = await getOrdersByDateRange({ startDate, endDate })
             const data = response?.data
+            console.log(data)
 
             const tranform = tranformProfitData(getLabels(), data as any)
             setProfitData(tranform)
@@ -296,7 +296,7 @@ const Dashboard = () => {
                 })
 
             case 'month':
-                return Array.from({ length: dayjs().daysInMonth() }, (_, i) =>
+                return Array.from({ length: dayjs(date).daysInMonth() }, (_, i) =>
                     dayjs(date).startOf('month').add(i, 'days').format(labelFormats.month)
                 )
 
@@ -312,48 +312,20 @@ const Dashboard = () => {
 
     const onChangeDatePicker: DatePickerProps['onChange'] = (date, dateString) => {
         setDate(dayjs(date))
-        handleFilterStatisticOrder(date)
     }
 
-    const handleSelectWeek = (val: any) => {
-        const startOfWeek = new Date(val.getTime())
-        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
-        const endOfWeek = new Date(startOfWeek.getTime())
-        endOfWeek.setDate(endOfWeek.getDate() + 6)
-        let rangeWeek = {
-            startDate: startOfWeek,
-            endDate: endOfWeek
-        }
-        return rangeWeek
-    }
-    const handleFilterStatisticOrder = (val: any) => {
-        switch (unitType) {
-            case 'date':
-                timeFilterOrder = new Date(val.$d)
-                break
-            case 'week':
-                timeFilterOrder = handleSelectWeek(val.$d)
-                break
-            case 'month':
-                timeFilterOrder = new Date(val.$d)
-                break
-            case 'year':
-                timeFilterOrder = val.$y
-                break
-            default:
-                timeFilterOrder = null
-                break
-        }
+    useEffect(() => {
         handleFilterOrderByTime()
-    }
+    }, [unitType, date, orders])
 
     const handleFilterOrderByTime = () => {
         let resultResolve
         let filteredData
+
         switch (unitType) {
             case 'date':
                 filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).toDateString() == timeFilterOrder?.toDateString()
+                    return new Date(order?.createdAt).toDateString() == new Date(startDate).toDateString()
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
@@ -363,8 +335,8 @@ const Dashboard = () => {
             case 'week':
                 filteredData = orders.filter((order) => {
                     let isValidOrder =
-                        new Date(order?.createdAt) > timeFilterOrder?.startDate &&
-                        new Date(order?.createdAt) < timeFilterOrder?.endDate
+                        new Date(order?.createdAt) > new Date(startDate) &&
+                        new Date(order?.createdAt) < new Date(endDate)
                     return isValidOrder
                 })
                 resultResolve = countOrderStatus(filteredData)
@@ -374,7 +346,7 @@ const Dashboard = () => {
                 break
             case 'month':
                 filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).getMonth() - 1 == timeFilterOrder?.getMonth() - 1
+                    return new Date(order?.createdAt).getMonth() - 1 == new Date(startDate).getMonth() - 1
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
@@ -383,7 +355,7 @@ const Dashboard = () => {
                 break
             case 'year':
                 filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).getFullYear() == timeFilterOrder
+                    return new Date(order?.createdAt).getFullYear() == new Date(startDate).getFullYear()
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
