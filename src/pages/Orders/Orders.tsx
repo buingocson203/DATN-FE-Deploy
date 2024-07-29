@@ -33,7 +33,7 @@ const Orders = () => {
         } catch (error) {
             console.log(error)
             let messageX = error?.response?.data?.message
-            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from') + 1
+            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from' || x == 'từ') + 1
             let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
             toast.error(
                 `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${currentStateVN}`
@@ -293,23 +293,23 @@ const Orders = () => {
                                             </div>
                                             <div className='order-box__tool--btn flex gap-x-[12px]'>
                                                 {(() => {
-                                                    if (['pending'].includes(order.orderStatus)) {
-                                                        return (
-                                                            <button
-                                                                onClick={() => {
-                                                                    setCancelObj({
-                                                                        orderID: order._id,
-                                                                        paymentMethod: order.paymentMethod
-                                                                    })
-                                                                    cancelOrder()
-                                                                }
-                                                                }
-                                                                className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
-                                                            >
-                                                                Hủy đơn hàng
-                                                            </button>
-                                                        )
-                                                    }
+                                                    // if (['pending'].includes(order.orderStatus)) {
+                                                    return (
+                                                        <button
+                                                            onClick={() => {
+                                                                setCancelObj({
+                                                                    orderID: order._id,
+                                                                    paymentMethod: order.paymentMethod
+                                                                })
+                                                                cancelOrder()
+                                                            }
+                                                            }
+                                                            className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
+                                                        >
+                                                            Hủy đơn hàng
+                                                        </button>
+                                                    )
+                                                    // }
                                                 })()}
                                                 {(() => {
                                                     if (order.orderStatus == 'done' && !order.isRated) {
