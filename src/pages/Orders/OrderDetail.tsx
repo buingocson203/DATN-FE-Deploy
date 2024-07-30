@@ -34,7 +34,7 @@ const OrderDetail = () => {
             setDetailOrder(response.data.data);
         } catch (error) {
             console.log(error);
-            alert("Lỗi không lấy được dữ liệu đơn hàng");
+            toast.error("Lỗi không lấy được dữ liệu đơn hàng");
         }
     };
 
@@ -48,15 +48,15 @@ const OrderDetail = () => {
             await instance.patch(`api/order/update-order/${orderID}`, {
                 orderStatus: "cancel",
             });
-            let txtMessage =
-                detailOrder?.paymentMethod == "cod"
-                    ? "Hủy đơn hàng thành công"
-                    : "Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn";
-            toast.error(txtMessage)
+            // let txtMessage =
+            //     detailOrder?.paymentMethod == "cod"
+            //         ? "Hủy đơn hàng thành công"
+            //         : "Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn";
+            toast.success("Hủy đơn hàng thành công")
             fetchData();
         } catch (error) {
             console.log(error);
-            toast.error("Có lỗi xảy ra");
+            toast.error("Không thể hủy do trạng thái của đơn hàng đã được thay đổi");
         }
     };
 

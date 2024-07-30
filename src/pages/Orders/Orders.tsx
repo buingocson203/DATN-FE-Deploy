@@ -32,11 +32,11 @@ const Orders = () => {
             fetchData()
         } catch (error) {
             console.log(error)
-            let messageX = error?.response?.data?.message
-            let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from' || x == 'từ') + 1
-            let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
+            // let messageX = error?.response?.data?.message
+            // let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from' || x == 'từ') + 1
+            // let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
             toast.error(
-                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi thành ${currentStateVN}`
+                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi`
             )
         }
         fetchData()

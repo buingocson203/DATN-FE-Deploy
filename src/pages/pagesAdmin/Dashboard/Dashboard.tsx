@@ -50,7 +50,6 @@ const Dashboard = () => {
     const [unitType, setUnitType] = useState<ITimeUnitType>('date')
 
     const [orders, setOrders] = useState<IOrder[]>([])
-    const [filteredOrders, setFilteredOrders] = useState([])
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
 
     const [profitData, setProfitData] = useState<IProfitData[]>([])
@@ -194,8 +193,7 @@ const Dashboard = () => {
             const response = await getOrders()
             const data = response?.data?.filter((item: any) => item)
             setOrders(data)
-            setFilteredOrders(data)
-            let resultResolve = countOrderStatus(filteredOrders)
+            let resultResolve = countOrderStatus(data)
             if (resultResolve) {
                 setStatisticOrder(resultResolve)
             }
@@ -314,57 +312,6 @@ const Dashboard = () => {
         setDate(dayjs(date))
     }
 
-    useEffect(() => {
-        handleFilterOrderByTime()
-    }, [unitType, date, orders])
-
-    const handleFilterOrderByTime = () => {
-        let resultResolve
-        let filteredData
-
-        switch (unitType) {
-            case 'date':
-                filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).toDateString() == new Date(startDate).toDateString()
-                })
-                resultResolve = countOrderStatus(filteredData)
-                if (resultResolve) {
-                    setStatisticOrder(resultResolve)
-                }
-                break
-            case 'week':
-                filteredData = orders.filter((order) => {
-                    let isValidOrder =
-                        new Date(order?.createdAt) > new Date(startDate) &&
-                        new Date(order?.createdAt) < new Date(endDate)
-                    return isValidOrder
-                })
-                resultResolve = countOrderStatus(filteredData)
-                if (resultResolve) {
-                    setStatisticOrder(resultResolve)
-                }
-                break
-            case 'month':
-                filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).getMonth() - 1 == new Date(startDate).getMonth() - 1
-                })
-                resultResolve = countOrderStatus(filteredData)
-                if (resultResolve) {
-                    setStatisticOrder(resultResolve)
-                }
-                break
-            case 'year':
-                filteredData = orders.filter((order) => {
-                    return new Date(order?.createdAt).getFullYear() == new Date(startDate).getFullYear()
-                })
-                resultResolve = countOrderStatus(filteredData)
-                if (resultResolve) {
-                    setStatisticOrder(resultResolve)
-                }
-                break
-        }
-    }
-
     const revenueBarData = {
         labels: revenueData?.map((item) => item?.label),
         datasets: [
@@ -389,19 +336,6 @@ const Dashboard = () => {
 
     return (
         <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
-            <div>
-                <Segmented<ITimeUnitType> value={unitType} options={options} onChange={onChangeUnitType} />
-                <DatePicker
-                    value={dayjs(date, DEFAULT_DATE_FORMAT)}
-                    format={datePickerFormats[unitType]}
-                    onChange={onChangeDatePicker}
-                    picker={unitType}
-                    allowClear={false}
-                    inputReadOnly={true}
-                />
-            </div>
-            <br />
-
             <Card title={'Thống kê trạng thái đơn hàng'}>
                 <div className='grid grid-cols-3 gap-4 px-[24px] mb-6'>
                     {statisticOrder.map((statisticOrderItem, index) => {
@@ -427,6 +361,18 @@ const Dashboard = () => {
                     })}
                 </div>
             </Card>
+            <br />
+            <div>
+                <Segmented<ITimeUnitType> value={unitType} options={options} onChange={onChangeUnitType} />
+                <DatePicker
+                    value={dayjs(date, DEFAULT_DATE_FORMAT)}
+                    format={datePickerFormats[unitType]}
+                    onChange={onChangeDatePicker}
+                    picker={unitType}
+                    allowClear={false}
+                    inputReadOnly={true}
+                />
+            </div>
             <br />
             <Card title='Thống kê doanh thu'>
                 <Bar data={revenueBarData} />
