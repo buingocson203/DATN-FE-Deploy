@@ -33,9 +33,17 @@ const HomePage = (props: Props) => {
                 setProductCate(data.data);
             });
         })
-        instance.get("api/order/product-best-seller?startDate=2024-06-01&endDate=2024-12-30").then(({ data }) => {
-            setOutStProducts(data.data);
-        })
+        // instance.get("api/order/product-best-seller?startDate=2024-06-01&endDate=2024-12-30").then(({ data }) => {
+        //     setOutStProducts(data.data);
+        // })
+        instance.get("api/order/product-best-seller?startDate=2024-06-01&endDate=2024-12-30")
+            .then(({ data }) => {
+                const top12Products = data.data.slice(0, 12);
+                setOutStProducts(top12Products);
+            })
+            .catch(error => {
+                console.error("Error fetching top-selling products:", error);
+            });
     }, [])
 
     const handgetProduct = async (id: string) => {
