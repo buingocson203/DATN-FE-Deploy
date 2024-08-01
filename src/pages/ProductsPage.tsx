@@ -21,7 +21,7 @@ interface IFSlider {
 }
 
 const ProductsPage = () => {
-    const [sliderVal, setsliderVal] = useState(1000000)
+    const [sliderVal, setsliderVal] = useState(5000000)
     const [listProduct, setListProduct] = useState<IFProducts[]>([])
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);

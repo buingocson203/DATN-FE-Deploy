@@ -24,7 +24,7 @@ interface IFSlider {
 
 const Collection = () => {
     const { id: categoryId } = useParams()
-    const [sliderVal, setsliderVal] = useState(1000000)
+    const [sliderVal, setsliderVal] = useState(5000000)
     const [listProduct, setListProduct] = useState<IFCATEGORY_DETAIL[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
