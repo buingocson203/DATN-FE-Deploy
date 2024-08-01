@@ -49,6 +49,7 @@
 
 body {
     font-family: 'Roboto Slab', serif;
+
 }
 
 .img-product-container * {
@@ -64,26 +65,30 @@ body {
     text-decoration: underline;
 }
 
-/* CSS cho lớp nền làm mờ */
-.blur-background {
+.modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(244, 241, 241, 0.2);
-    /* Màu nền đen mờ */
-    filter: blur(4px);
-    z-index: 10;
-    /* Đặt thấp hơn modal */
-    transition: opacity 0.3s ease, filter 0.3s ease;
-    /* Thêm hiệu ứng chuyển tiếp */
-    opacity: 0;
-    /* Ẩn lớp nền ban đầu */
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    /* Nền mờ */
+    z-index: 40;
 }
 
-/* CSS cho lớp nền khi modal mở */
-.blur-background.active {
-    opacity: 1;
-    /* Hiện lớp nền khi modal mở */
+.modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 50;
+    /* Đảm bảo modal nổi bật hơn lớp nền */
+}
+
+.blur-background {
+    filter: blur(5px);
+}
+
+.active {
+    transition: filter 0.3s ease-in-out;
 }
