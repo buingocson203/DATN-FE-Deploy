@@ -269,7 +269,7 @@ export default function Header() {
                                                     <span>{product.nameProduct}</span>
                                                     <div>
                                                         <span className='text-red-500 text-sm pr-4'>
-                                                            {product.productDetails[0]?.importPrice.toLocaleString(
+                                                            {product.productDetails[0]?.promotionalPrice.toLocaleString(
                                                                 'vi-VN',
                                                                 { style: 'currency', currency: 'VND' }
                                                             )}
