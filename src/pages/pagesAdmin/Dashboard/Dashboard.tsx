@@ -267,7 +267,7 @@ const Dashboard = () => {
     }
 
     const labelFormats: Record<ITimeUnitType, string> = {
-        date: 'H',
+        date: 'HH',
         week: 'DD-MM',
         month: 'DD',
         year: 'MM-YYYY'
