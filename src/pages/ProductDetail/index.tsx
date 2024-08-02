@@ -144,7 +144,7 @@ const ProductDetail = () => {
             <BreadCrumb links={breadcrumb} />
             <div className='app-container text-[#333]'>
                 <div className='flex flex-col md:flex-row'>
-                    <div className='flex-1 img-product-container relative group'>
+                    <div className='flex-1 img-product-container relative group py-5 px-3'>
                         <Carousel>
                             <CarouselContent>
                                 {infoProduct?.data?.images?.map((image, index) => (
@@ -155,7 +155,7 @@ const ProductDetail = () => {
                             </CarouselContent>
                         </Carousel>
                     </div>
-                    <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row  gap-5'>
+                    <div className='w-full md:w-[64%] py-5 px-3 border-l border-neutral-200 flex flex-col lg:flex-row gap-5'>
                         <div className='flex-1'>
                             <h1 className='text-2xl font-semibold'>{infoProduct?.data?.nameProduct}</h1>
                             <div className='mt-1 mb-5 text-sm'>
@@ -164,12 +164,16 @@ const ProductDetail = () => {
                                 <span>Thương hiệu: {infoProduct?.data?.nameCategory}</span>
                             </div>
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
-                                <span className='w-[120px]'>Giá:</span>
+                            <span className='w-[120px]'>Giá:</span>
                                 <span className='text-red-500 font-medium text-xl mr-2'>
-                                    {variant?.promotionalPrice.toLocaleString() || 0}₫
+                                    {variant?.promotionalPrice.toLocaleString() ||
+                                        infoProduct?.data?.productDetails[0].promotionalPrice.toLocaleString()}
+                                    ₫
                                 </span>
                                 <span className='line-through text-neutral-500 mr-4'>
-                                    {variant?.price.toLocaleString() || 0}₫
+                                    {variant?.price.toLocaleString() ||
+                                        infoProduct?.data?.productDetails[0].price.toLocaleString()}
+                                    ₫
                                 </span>
                                 {/* <span className='text-xs p-1 bg-red-500 rounded-lg inline-flex item-center gap-1 text-white items-center w-fit'>
                                     <Zap size={10} />
