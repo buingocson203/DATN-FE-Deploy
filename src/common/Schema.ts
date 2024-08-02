@@ -6,11 +6,14 @@ export const formSchema = Joi.object({
         'any.required': 'Họ tên không được để trống',
         'string.empty': 'Họ tên không được để trống'
     }),
-    userName: Joi.string().min(6).required().messages({
-        'string.min': 'Tên đăng nhập phải có ít nhất 6 kí tự',
-        'any.required': 'Tên đăng nhập không được bỏ trống',
-        'string.empty': 'Tên đăng nhập không được bỏ trống'
-    }),
+    tel: Joi.string()
+        .required()
+        .messages({
+            'any.required': 'Số điện thoại không được bỏ trống',
+            'string.empty': 'Số điện thoại không được bỏ trống'
+        })
+        .pattern(new RegExp('(84|0[3|5|7|8|9])+([0-9]{8})$'))
+        .message('Số điện thoại không đúng định dạng'),
     email: Joi.string()
         .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
         .required()

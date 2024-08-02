@@ -49,19 +49,6 @@ const MyProfile = () => {
 
                 <Form form={form} layout='vertical' initialValues={{ gender: '' }} onFinish={onFinish}>
                     <Form.Item
-                        label='Tên đăng nhập'
-                        name='userName'
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng nhập tên đăng nhập'
-                            }
-                        ]}
-                    >
-                        <Input placeholder='Tên đăng nhập' />
-                    </Form.Item>
-
-                    <Form.Item
                         label='Họ tên'
                         name='fullName'
                         rules={[

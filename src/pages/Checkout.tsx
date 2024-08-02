@@ -86,7 +86,8 @@ const Checkout = () => {
     useEffect(() => {
         reset({
             name: user?.fullName,
-            address: user?.address
+            address: user?.address,
+            phone: user?.tel
         })
     }, [user])
 
@@ -208,16 +209,20 @@ const Checkout = () => {
             navigate('/payment-success')
         } catch (error: any) {
             if (error.response && error.response.data && error.response.data.message) {
-                const errorMessage = error.response.data.message;
+                const errorMessage = error.response.data.message
                 // Trích xuất thông tin sản phẩm từ payload
-                const productDetail = data.productDetails.find(detail => detail.productDetailId === errorMessage.match(/ID (\w+)/)[1]);
+                const productDetail = data.productDetails.find(
+                    (detail) => detail.productDetailId === errorMessage.match(/ID (\w+)/)[1]
+                )
                 if (productDetail) {
-                    toast.error(`Đặt hàng không thành công do sản phẩm "${productDetail.productName}" size "${productDetail.sizeName}" đã hết!`);
+                    toast.error(
+                        `Đặt hàng không thành công do sản phẩm "${productDetail.productName}" size "${productDetail.sizeName}" đã hết!`
+                    )
                 } else {
-                    toast.error('Sản phẩm đã hết size của bạn!');
+                    toast.error('Sản phẩm đã hết size của bạn!')
                 }
             } else {
-                toast.error('Sản phẩm đã hết size của bạn!');
+                toast.error('Sản phẩm đã hết size của bạn!')
             }
         }
     }
@@ -388,9 +393,9 @@ const Checkout = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
