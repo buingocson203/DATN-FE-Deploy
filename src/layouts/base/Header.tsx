@@ -311,13 +311,13 @@ export default function Header() {
                         </div>
                     </div>
                     <div className='flex gap-3'>
-                        {user?.userName ? (
+                        {user?.fullName ? (
                             <Link
                                 to={user?.role === 'admin' ? '/admin' : '/profile'}
                                 className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'
                             >
                                 <User2 size={26} />
-                                <p className='hidden md:block'>{user?.userName}</p>
+                                <p className='hidden md:block'>{user?.fullName}</p>
                             </Link>
                         ) : (
                             <Link to='/signin' className='flex gap-1 text-sm hover:opacity-90 items-center h-fit'>

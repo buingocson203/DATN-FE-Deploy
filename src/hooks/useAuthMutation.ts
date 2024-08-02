@@ -9,7 +9,7 @@ import { toast } from 'react-toastify'
 
 type FormAuthType = {
     fullName: string
-    userName: string
+    tel: string
     email: string
     address: string
     password: string
@@ -24,7 +24,7 @@ type useAuthMutationProps = {
 
 const useAuthMutation = ({
     action,
-    defaultValues = { fullName: '', userName: '', email: '', address: '', password: '', confirmPassword: '' },
+    defaultValues = { fullName: '', tel: '', email: '', address: '', password: '', confirmPassword: '' },
     onSuccess
 }: useAuthMutationProps) => {
     const queryClient = useQueryClient()
