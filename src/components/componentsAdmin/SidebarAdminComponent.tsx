@@ -31,6 +31,11 @@ const items: MenuItem[] = [
         icon: <TeamOutlined />,
         label: <Link to='/admin/account'>Quản lý tài khoản</Link>
     },
+    {
+        key: '12',
+        icon: <ProductOutlined />,
+        label: <Link to='/admin/post'>Quản lý bài viết</Link>
+    }
 ]
 
 const SidebarAdminComponent: React.FC = () => {

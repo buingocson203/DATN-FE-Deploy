@@ -9,7 +9,7 @@ import { Toaster } from './components/ui/toaster.tsx'
 import { AuthProvider } from './hooks/AuthContext.js'
 import { store } from './store/store'
 import { ConfigProvider } from 'antd'
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 import 'dayjs/locale/vi'
 import locale from 'antd/locale/vi_VN'
