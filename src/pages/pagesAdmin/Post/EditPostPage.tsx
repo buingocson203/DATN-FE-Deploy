@@ -1,6 +1,6 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import styles from './index.module.css'
-import { Button, Form, Input, message, Upload, UploadFile } from 'antd'
+import { Button, Form, Image, Input, message, Upload, UploadFile } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import { useEffect, useState } from 'react'
 import { PlusOutlined } from '@ant-design/icons'
@@ -27,9 +27,9 @@ const EditPostPage = () => {
     })
 
     const { mutate, isLoading } = useMutation({
-        mutationFn: (data: any) => instance.post('/api/news/create-news', data),
+        mutationFn: (data: any) => instance.put(`/api/news/update-news/${id}`, data),
         onSuccess: () => {
-            message.success('Thêm bài viết thành công')
+            message.success('Cập nhật bài viết thành công')
             navigate('/admin/post')
         },
         onError: (error: any) => {
@@ -40,9 +40,13 @@ const EditPostPage = () => {
     const [showBtnUpload, setShowBtnUpload] = useState(true)
     const [form] = Form.useForm()
 
+    const [preview, setPreview] = useState('')
+
     useEffect(() => {
         if (data?.data) {
             const post = data?.data?.data
+
+            setPreview(post?.img)
 
             form.setFieldsValue({
                 title: post.title,
@@ -68,7 +72,11 @@ const EditPostPage = () => {
 
     const onFinish: FormProps<IFieldType>['onFinish'] = async ({ img, title, desc, content }) => {
         try {
-            const image = await getBase64(img[0].originFileObj as any)
+            let image = preview
+
+            if (img && img.length) {
+                image = await getBase64(img[0].originFileObj as any)
+            }
 
             const body = {
                 img: image,
@@ -123,13 +131,7 @@ const EditPostPage = () => {
                     <TextArea placeholder='Nhập mô tả bài viết' rows={4} />
                 </Form.Item>
 
-                <Form.Item
-                    name='img'
-                    label='Ảnh bìa'
-                    valuePropName='fileList'
-                    getValueFromEvent={normFile}
-                    rules={[{ required: true, message: 'Vui lòng chọn ảnh' }]}
-                >
+                <Form.Item name='img' label='Ảnh bìa' valuePropName='fileList' getValueFromEvent={normFile}>
                     <Upload
                         showUploadList={{
                             showPreviewIcon: false
@@ -151,6 +153,12 @@ const EditPostPage = () => {
                     </Upload>
                 </Form.Item>
 
+                <div className='mb-4'>
+                    <p>Preview</p>
+
+                    <Image src={preview} alt='Preview' width={150} height={150} className='object-cover' />
+                </div>
+
                 <Form.Item
                     name='content'
                     label='Nội dung bài viết'
@@ -165,7 +173,7 @@ const EditPostPage = () => {
                 </Form.Item>
 
                 <Button htmlType='submit' type='primary' className='mt-4' loading={isLoading}>
-                    Thêm bài viết
+                    Cập nhật bài viết
                 </Button>
             </Form>
         </div>
