@@ -11,6 +11,7 @@ import ListCategory from './ListCategory'
 import { getAllCategory } from '@/services/category/requests'
 import instance from '@/core/api'
 import { Link } from 'react-router-dom'
+import NewsList from './NewsList'
 
 type Props = {}
 
@@ -186,38 +187,9 @@ const HomePage = (props: Props) => {
                     </div>
                     {/* <HomePageButton className='mt-10'>Xem tất cả&nbsp;{tabs[activeTab]}</HomePageButton> */}
                 </div>
-                {/* <div className='py-16 px-2'>
-                    <h1 className='text-4xl font-bold text-neutral-700 relative mb-10 px-5'>Bài viết mới nhất</h1>
-                    <div className='px-5'>
-                        <Carousel>
-                            <CarouselContent className='-ml-2 md:-ml-4'>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                                <CarouselItem className='md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'>
-                                    <NewsItem />
-                                </CarouselItem>
-                            </CarouselContent>
-                            <CarouselPrevious className='absolute top-1/2 left-0 -translate-x-1/2 -translate-y-1/2 z-10' />
-                            <CarouselNext className='absolute top-1/2 right-0 translate-x-1/2 -translate-y-1/2 z-10' />
-                        </Carousel>
-                    </div>
-                </div> */}
+
+                <NewsList />
+
                 <div className='py-16 px-2 grid lg:grid-cols-4 md:grid-cols-2 gap-4'>
                     <div className='flex justify-center items-start gap-3'>
                         <img
@@ -321,35 +293,6 @@ const SellProduct = ({ img, name, tooltipImg, price, collection, salePrice, plus
             <div className='relative'>
                 <h3 className='text-lg mt-4 mb-4'>{collection}</h3>
                 <HomePageButton className='w-fit m-0 text-sm'>XEM NHIỀU HƠN</HomePageButton>
-            </div>
-        </div>
-    )
-}
-
-const NewsItem = () => {
-    return (
-        <div className='bg-white rounded-md shadow-sm border border-neutral-100'>
-            <div className='relative overflow-hidden rounded-tl-md rounded-tr-md'>
-                <img
-                    src='https://file.hstatic.net/200000690551/article/thum-bai-viet-web_aed17445226844b78c7ce5a7918dad9a_large.jpg'
-                    alt=''
-                    className='w-full aspect-video'
-                />
-            </div>
-            <div className='px-4 py-3 text-neutral-400'>
-                <div className='border-b border-neutral-100 pb-4 '>
-                    <p className='text-base font-semibold text-neutral-800'>
-                        Back To School Đồng Giá 399k cho toàn bộ sản phẩm tại TheBasic.vn
-                    </p>
-                    <p className='text-sm mt-2'>
-                        Nổi tiếng là một trong những thương hiệu mang phong cách thời trang đường phố sành điệu, tiếp
-                        cận với khách hàng thông qua nhiều...
-                    </p>
-                </div>
-                <div className='pt-4 flex items-center justify-between text-sm'>
-                    <span>19 tháng 04,2023</span>
-                    <span>Xem thêm</span>
-                </div>
             </div>
         </div>
     )

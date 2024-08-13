@@ -50,6 +50,7 @@ import ChangePassword from '@/pages/MyProfile/ChangePassword'
 import ListPostPage from '@/pages/pagesAdmin/Post/ListPostPage'
 import AddPostPage from '@/pages/pagesAdmin/Post/AddPostPage'
 import EditPostPage from '@/pages/pagesAdmin/Post/EditPostPage'
+import NewsDetail from '@/pages/NewsDetail/NewsDetail'
 
 const Routers = () => {
     return (
@@ -77,6 +78,7 @@ const Routers = () => {
                 <Route path='/pages/quy-trinh-dat-hang-va-thanh-toan' element={<OrderingAndPaymentProcess />} />
                 <Route path='/pages/chinh-sach-bao-mat-thong-tin' element={<InformationSecurityPolicy />} />
                 <Route path='/pages/policy' element={<ReturnPolicy />} />
+                <Route path='/news/:id' element={<NewsDetail />} />
             </Route>
             <Route path='/admin' element={<ProtectedRoute element={AdminLayout} />}>
                 <Route index element={<Dashboard />} />
