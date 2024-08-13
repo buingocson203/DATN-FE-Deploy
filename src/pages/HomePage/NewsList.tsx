@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
-interface INews {
+export interface INews {
     _id: string
     img: string
     title: string
