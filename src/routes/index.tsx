@@ -47,6 +47,9 @@ import ReturnPolicy from '@/pages/Policy/ReturnPolicy'
 import InformationSecurityPolicy from '@/pages/InformationSecurityPolicy'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
 import ChangePassword from '@/pages/MyProfile/ChangePassword'
+import ListPostPage from '@/pages/pagesAdmin/Post/ListPostPage'
+import AddPostPage from '@/pages/pagesAdmin/Post/AddPostPage'
+import EditPostPage from '@/pages/pagesAdmin/Post/EditPostPage'
 
 const Routers = () => {
     return (
@@ -99,6 +102,11 @@ const Routers = () => {
 
                 <Route path='/admin/reviews' element={<ProtectedRoute element={ReviewList} />} />
                 <Route path='/admin/reviews/detail/:reviewId' element={<ProtectedRoute element={ReviewDetail} />} />
+
+                {/* post */}
+                <Route path='/admin/post' element={<ListPostPage />} />
+                <Route path='/admin/post/add' element={<AddPostPage />} />
+                <Route path='/admin/post/:id/edit' element={<EditPostPage />} />
             </Route>
         </Routes>
     )
