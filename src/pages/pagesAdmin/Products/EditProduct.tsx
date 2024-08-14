@@ -328,6 +328,10 @@ const EditProduct = () => {
         if (deleteProductDetail_Promise.status === 'fulfilled' && deleteProductDetail_Promise?.value) {
             //
         }
+        if (results.every((x) => x.status == 'fulfilled')) {
+            message.success('Cập nhật sản phẩm thành công')
+            navigate('/admin/products')
+        }
 
         fetchImages()
         fetchInfoProduct()

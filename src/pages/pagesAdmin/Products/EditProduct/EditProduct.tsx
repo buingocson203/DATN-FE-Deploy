@@ -35,6 +35,7 @@ import { getProduct, updateProduct } from '@/services/product'
 import { addProductDetail, deleteProductDetail, updateProductDetail } from '@/services/productDetail'
 import { getSizes } from '@/services/size'
 import { FileType, getBase64 } from '@/utils/common'
+import InputNumber from '@/components/ui/input-number'
 
 type UploadImageStatus = 'removed' | 'added'
 
@@ -151,6 +152,7 @@ const EditProduct = () => {
 
     const fetchImages = async () => {
         const res = await getAllImageProductById(productId as string)
+
         const data: IImage[] = res?.data?.arrImageProduct
 
         if (data) {
@@ -326,6 +328,9 @@ const EditProduct = () => {
         if (deleteProductDetail_Promise.status === 'fulfilled' && deleteProductDetail_Promise?.value) {
             //
         }
+        if (results.every((x) => x.status == 'fulfilled')) {
+            message.success('Cập nhật sản phẩm thành công')
+        }
 
         fetchImages()
         fetchInfoProduct()
@@ -433,7 +438,7 @@ const EditProduct = () => {
                     return Promise.reject(new Error('Giá niêm yết phải lớn hơn Giá nhập'))
                 }
                 if (promotionalPrice !== undefined && Number(value) < Number(promotionalPrice)) {
-                    return Promise.reject(new Error('Giá niêm yết phải lớn hơn Giá bán'))
+                    return Promise.reject(new Error('Giá niêm yết phải lớn hơn hoặc bằng Giá bán'))
                 }
             }
 
@@ -447,12 +452,10 @@ const EditProduct = () => {
 
             if (value !== undefined) {
                 if (importPrice !== undefined && Number(value) <= Number(importPrice)) {
-                    console.log('2')
                     return Promise.reject(new Error('Giá bán phải lớn hơn Giá nhập'))
                 }
                 if (price !== undefined && Number(value) > Number(price)) {
-                    console.log(price)
-                    return Promise.reject(new Error('Giá bán phải lớn hơn Giá niêm yết'))
+                    return Promise.reject(new Error('Giá bán phải nhỏ hoặc bằng Giá niêm yiết'))
                 }
             }
 
@@ -612,8 +615,12 @@ const EditProduct = () => {
                                                     { validator: validateImportPrice(form.getFieldValue, field) }
                                                 ]}
                                                 validateFirst
+                                                dependencies={[
+                                                    ['sizes', field.name, 'promotionalPrice'],
+                                                    ['sizes', field.name, 'price']
+                                                ]}
                                             >
-                                                <Input type='number' min={1} placeholder='Giá nhập' />
+                                                <InputNumber min={1} placeholder='Giá nhập' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -625,8 +632,12 @@ const EditProduct = () => {
                                                     { validator: validatePrice(form.getFieldValue, field) }
                                                 ]}
                                                 validateFirst
+                                                dependencies={[
+                                                    ['sizes', field.name, 'promotionalPrice'],
+                                                    ['sizes', field.name, 'importPrice']
+                                                ]}
                                             >
-                                                <Input type='number' min={1} placeholder='Giá niêm yiết' />
+                                                <InputNumber min={1} placeholder='Giá niêm yiết' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -638,8 +649,12 @@ const EditProduct = () => {
                                                     { validator: validatePromotionalPrice(form.getFieldValue, field) }
                                                 ]}
                                                 validateFirst
+                                                dependencies={[
+                                                    ['sizes', field.name, 'price'],
+                                                    ['sizes', field.name, 'importPrice']
+                                                ]}
                                             >
-                                                <Input type='number' min={1} placeholder='Giá bán' />
+                                                <InputNumber min={1} placeholder='Giá bán' />
                                             </Form.Item>
                                         </Col>
                                         <Col {...colProps}>
@@ -648,7 +663,7 @@ const EditProduct = () => {
                                                 name={[field.name, 'quantity']}
                                                 rules={[{ required: true, message: 'Vui lòng nhập' }]}
                                             >
-                                                <Input type='number' min={1} placeholder='Số lượng' />
+                                                <InputNumber min={1} placeholder='Số lượng' />
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -657,6 +672,9 @@ const EditProduct = () => {
                         </div>
                     )}
                 </Form.List>
+                <Button type='primary' size='large' className='bg-[#1677ff]' onClick={onSubmitForm}>
+                    Lưu
+                </Button>
             </Form>
         </div>
     )
