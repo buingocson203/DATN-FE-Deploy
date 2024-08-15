@@ -1,15 +1,29 @@
 import { IProduct } from '@/services/product/types'
 import { EyeIcon, ShoppingCartIcon, Zap } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { Rate } from 'antd'
 
 type Props = {} & IProduct
-export default function ProductItem({ _id, IdImages, name, sizeId, price, promotionalPrice, importPrice }: Props) {
+export default function ProductItem({
+    _id,
+    IdImages,
+    name,
+    sizeId,
+    price,
+    promotionalPrice,
+    importPrice,
+    ratingStar
+}: Props) {
     return (
-        <Link to={`/products/${_id}`} className='cursor-pointer group' onClick={() => {
+        <Link
+            to={`/products/${_id}`}
+            className='cursor-pointer group'
+            onClick={() => {
                 setTimeout(() => {
                     location.reload()
                 }, 200)
-            }}>
+            }}
+        >
             <div className='pt-6 relative pb-3 overflow-hidden'>
                 {/* <span className='absolute text-xs p-1 px-2 bg-red-500 rounded-full inline-flex item-center gap-1 text-white items-center w-fit top-0 left-2'>
                 <Zap size={10} />
@@ -51,7 +65,8 @@ export default function ProductItem({ _id, IdImages, name, sizeId, price, promot
                 </div>
             </div>
             <div>
-                <span className='text-xs'>+{sizeId?.length || 0} kích thước</span>
+                <span className='text-xs mr-3 block'>+{sizeId?.length || 0} kích thước</span>
+                <Rate className='my-1' disabled value={Number.parseInt(ratingStar)} />
                 <p className='text-md my-1'>{name}</p>
                 <div className='flex items-center gap-1'>
                     <span className='text-red-500 text-sm'>{promotionalPrice?.toLocaleString()}₫</span>

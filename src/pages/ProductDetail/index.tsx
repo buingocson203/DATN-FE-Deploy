@@ -21,6 +21,7 @@ import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
 import { message } from 'antd'
 import { toast } from 'react-toastify'
+import { Rate } from 'antd'
 
 const ProductDetail = () => {
     const { data: favoriteProduct, refetch } = useProductFavoriteQuery()
@@ -125,18 +126,18 @@ const ProductDetail = () => {
     ]
     const tabs = ['Mô Tả Sản Phẩm', 'Đánh Giá - Nhận Xét Từ Khách Hàng']
     useEffect(() => {
-        if (!infoProduct) return;
-        let isSetVariant = false;
+        if (!infoProduct) return
+        let isSetVariant = false
         for (let index = 0; index < infoProduct?.data?.productDetails.length; index++) {
             const element = infoProduct?.data?.productDetails[index]
             if (element.quantity > 0) {
                 setVariant(element)
-                isSetVariant = true;
+                isSetVariant = true
                 break
             }
         }
-        if(!isSetVariant){
-            setVariant(undefined);
+        if (!isSetVariant) {
+            setVariant(undefined)
         }
     }, [infoProduct])
     return (
@@ -163,8 +164,9 @@ const ProductDetail = () => {
                                 <span className='mx-2 text-neutral-200'>|</span>
                                 <span>Thương hiệu: {infoProduct?.data?.nameCategory}</span>
                             </div>
+                            <Rate className='mb-2' disabled value={Number.parseInt(infoProduct?.data?.averageRating)} />
                             <div className='p-4 bg-neutral-50 rounded-md flex items-center'>
-                            <span className='w-[120px]'>Giá:</span>
+                                <span className='w-[120px]'>Giá:</span>
                                 <span className='text-red-500 font-medium text-xl mr-2'>
                                     {variant?.promotionalPrice.toLocaleString() ||
                                         infoProduct?.data?.productDetails[0].promotionalPrice.toLocaleString()}
@@ -220,7 +222,6 @@ const ProductDetail = () => {
                             </div>
 
                             <div className='flex items-center justify-between mt-5'>
-                                
                                 <div className='flex items-center'>
                                     <span className='w-[120px]'>Số lượng:</span>
                                     <div
@@ -265,7 +266,7 @@ const ProductDetail = () => {
                                     <p className='text-red-500 ml-5'>Còn {variant?.quantity || 0} sản phẩm</p>
                                 </div>
 
-                                <div 
+                                <div
                                     onClick={onToggleFavorite}
                                     className='cursor-pointer text-black inline-block h-auto text-2xl group-hover:opacity-100 transition'
                                 >
@@ -509,6 +510,7 @@ const ProductDetail = () => {
                                             name={item.name}
                                             price={item.productDetails[0].price}
                                             promotionalPrice={item.productDetails[0].promotionalPrice}
+                                            ratingStar={Number.parseInt(item.averageRating)}
                                         />
                                     </CarouselItem>
                                 )

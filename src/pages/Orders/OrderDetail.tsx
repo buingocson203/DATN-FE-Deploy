@@ -3,6 +3,7 @@ import BreadCrumb, { IBreadCrumb } from "@/components/breadcrumb";
 import instance from "@/core/api";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Rate } from "antd";
 
 const OrderDetail = () => {
     const { id: orderID } = useParams();
@@ -52,13 +53,14 @@ const OrderDetail = () => {
             //     detailOrder?.paymentMethod == "cod"
             //         ? "Hủy đơn hàng thành công"
             //         : "Hủy đơn hàng thành công. Số tiền đã thanh toán sẽ được hoàn lại vào ví VNPay của bạn";
-            toast.success("Hủy đơn hàng thành công")
+            toast.success("Hủy đơn hàng thành công");
             fetchData();
         } catch (error) {
             console.log(error);
             toast.error("Không thể hủy do trạng thái của đơn hàng đã được thay đổi");
         }
     };
+    let ratingStarObj = [];
 
     const onSelectOrderToReview = () => {
         event?.stopPropagation();
@@ -71,9 +73,11 @@ const OrderDetail = () => {
                     return {
                         productId: x.productId,
                         content: "",
+                        rating: 0
                     };
-                }),
+                })
         });
+        ratingStarObj = detailOrder.productDetails?.map((x: any) => 0);
         console.log(reviewObj);
         setShowReviewForm(true);
     };
@@ -96,6 +100,7 @@ const OrderDetail = () => {
                     return {
                         productId: x.productId,
                         content: x.content,
+                        rating: x.rating
                     };
                 }),
         };
@@ -119,7 +124,7 @@ const OrderDetail = () => {
             link: "/orders",
         },
         {
-            title: detailOrder?.codeOrders || detailOrder?._id,
+            title: detailOrder?.codeOrders || detailOrder?._id
         },
     ];
 
@@ -159,12 +164,20 @@ const OrderDetail = () => {
                                                             className="my-2 border border-1 p-2 rounded border-gray"
                                                         >
                                                             <h4 className="font-bold">{product.productName}</h4>
+                                                            <Rate
+                                                                className="my-2"
+                                                                value={ratingStarObj[index]}
+                                                                onChange={(newValue: number) => {
+                                                                    ratingStarObj[index] = newValue;
+                                                                    reviewObj.reviews[index].rating = newValue;
+                                                                }}
+                                                            />
                                                             <textarea
                                                                 style={{
                                                                     width: "100%"
                                                                 }}
                                                                 className="border border-1 p-2 w-100 mt-1"
-                                                                placeholder="Your comment"
+                                                                placeholder="Bình luận của bạn"
                                                                 onChange={(e) => {
                                                                     reviewObj.reviews[index].content = e.target.value
                                                                 }}
@@ -183,14 +196,14 @@ const OrderDetail = () => {
                                         type="button"
                                         className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                     >
-                                        Submit
+                                        Đồng ý
                                     </button>
                                     <button
                                         onClick={() => setShowReviewForm(false)}
                                         type="button"
                                         className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                                     >
-                                        Cancel
+                                        Hủy bỏ
                                     </button>
                                 </div>
                             </div>
