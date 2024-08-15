@@ -106,7 +106,8 @@ const CheckoutNow = () => {
     useEffect(() => {
         reset({
             name: user?.fullName,
-            address: user?.address
+            address: user?.address,
+            phone: user?.tel
         })
     }, [user])
 

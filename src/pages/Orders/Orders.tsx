@@ -3,7 +3,8 @@ import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Modal } from 'antd';
+import { Modal } from 'antd'
+import { Rate } from 'antd'
 
 const Orders = () => {
     const [cancelObj, setCancelObj] = useState(null);
@@ -31,16 +32,10 @@ const Orders = () => {
             toast.success('Hủy đơn hàng thành công')
             fetchData()
         } catch (error) {
-            console.log(error)
-            // let messageX = error?.response?.data?.message
-            // let curStateIndex = messageX.split(' ').findIndex((x) => x == 'from' || x == 'từ') + 1
-            // let currentStateVN = convertStateToVN(messageX.split(' ')[curStateIndex])
-            toast.error(
-                `Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi`
-            )
+            toast.error(`Không thể hủy đơn hàng do trạng thái của đơn hàng này đã được thay đổi`)
         }
         fetchData()
-    };
+    }
 
     const [reviewObj, setReviewObj] = useState({
         userId: getUserID(),
@@ -74,27 +69,12 @@ const Orders = () => {
         fetchData()
     }, [])
 
-    const convertStateToVN = (stateEN: string) => {
-        switch (stateEN) {
-            case 'pending':
-                return 'Chờ xác nhận'
-            case 'waiting':
-                return 'Đã xác nhận'
-            case 'cancel':
-                return 'Hủy bỏ'
-            case 'delivering':
-                return 'Đang giao hàng'
-            case 'done':
-                return 'Đã giao hàng'
-            default:
-                return stateEN
-        }
-    }
-
     const cancelOrder = async () => {
         event?.stopPropagation()
-        setIsModalOpen(true);
+        setIsModalOpen(true)
     }
+
+    let ratingStarObj = []
 
     const onSelectOrderToReview = (order: any) => {
         event?.stopPropagation()
@@ -104,10 +84,12 @@ const Orders = () => {
             reviews: order.productDetails?.map((x: any) => {
                 return {
                     productId: x.productId,
-                    content: ''
+                    content: '',
+                    rating: 0
                 }
             })
         })
+        ratingStarObj = order.productDetails?.map((x: any) => 0)
         console.log(reviewObj)
 
         setDetailOrder(order)
@@ -163,10 +145,18 @@ const Orders = () => {
                                                             className='my-2 border border-1 p-2 rounded border-gray'
                                                         >
                                                             <h4 className='font-bold'>{product.productName}</h4>
+                                                            <Rate
+                                                                className='my-2'
+                                                                value={ratingStarObj[index]}
+                                                                onChange={(newValue: number) => {
+                                                                    ratingStarObj[index] = newValue
+                                                                    reviewObj.reviews[index].rating = newValue
+                                                                }}
+                                                            />
                                                             <textarea
                                                                 style={{ width: '100%' }}
                                                                 className='border border-1 p-2 w-100 mt-1'
-                                                                placeholder='Your comment'
+                                                                placeholder='Bình luận của bạn'
                                                                 onChange={(e) => {
                                                                     reviewObj.reviews[index].content = e.target.value
                                                                 }}
@@ -185,14 +175,14 @@ const Orders = () => {
                                         type='button'
                                         className='inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto'
                                     >
-                                        Submit
+                                        Đồng ý
                                     </button>
                                     <button
                                         onClick={() => setShowReviewForm(false)}
                                         type='button'
                                         className='mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto'
                                     >
-                                        Cancel
+                                        Hủy bỏ
                                     </button>
                                 </div>
                             </div>
@@ -294,21 +284,20 @@ const Orders = () => {
                                             <div className='order-box__tool--btn flex gap-x-[12px]'>
                                                 {(() => {
                                                     if (['pending'].includes(order.orderStatus)) {
-                                                    return (
-                                                        <button
-                                                            onClick={() => {
-                                                                setCancelObj({
-                                                                    orderID: order._id,
-                                                                    paymentMethod: order.paymentMethod
-                                                                })
-                                                                cancelOrder()
-                                                            }
-                                                            }
-                                                            className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
-                                                        >
-                                                            Hủy đơn hàng
-                                                        </button>
-                                                    )
+                                                        return (
+                                                            <button
+                                                                onClick={() => {
+                                                                    setCancelObj({
+                                                                        orderID: order._id,
+                                                                        paymentMethod: order.paymentMethod
+                                                                    })
+                                                                    cancelOrder()
+                                                                }}
+                                                                className='h-[36px] border border-red-500 text-red-500 bg-white outline-none hover:bg-red-500 hover:text-white transition-all rounded-md w-[160px] text-[16px]'
+                                                            >
+                                                                Hủy đơn hàng
+                                                            </button>
+                                                        )
                                                     }
                                                 })()}
                                                 {(() => {
