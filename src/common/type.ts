@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import * as Yup from 'Yup'
+import * as Yup from 'yup'
 export const formSchema = Joi.object({
     userName: Joi.string().min(6).required().messages({
         'string.min': ' it nhat 6 ki tu',
