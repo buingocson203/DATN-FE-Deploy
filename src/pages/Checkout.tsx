@@ -120,7 +120,7 @@ const Checkout = () => {
             // window.location.href = '/';
             const dataLocal = JSON.parse(localStorage.getItem('dataFormSelf')!)
             instance
-                .post('http://localhost:8000/api/order/create-order', {
+                .post('https://backend.fsneaker.id.vn/api/order/create-order', {
                     name: dataLocal.name,
                     address: dataLocal.address,
                     phone: dataLocal.phone,

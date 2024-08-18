@@ -27,7 +27,7 @@ const ProductsPage = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
     useEffect(() => {
-        instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=12`).then(({ data }) => {
+        instance.get(`https://backend.fsneaker.id.vn/api/infoProduct?page=${currentPage}&limit=12`).then(({ data }) => {
             const currentData = data
             setTotalPage(currentData.total)
             setListProduct(currentData.data)

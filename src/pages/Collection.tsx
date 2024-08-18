@@ -30,13 +30,16 @@ const Collection = () => {
     const [totalPage, setTotalPage] = useState(1)
     const productsPerPage = 8
     useEffect(() => {
-        instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=${productsPerPage}&category=${categoryId}`).then(({ data }) => {
-            const currentData = data;
-            setTotalPage(currentData.total)
-            setListProduct(currentData.data)
-        })
+        instance
+            .get(
+                `https://backend.fsneaker.id.vn/api/infoProduct?page=${currentPage}&limit=${productsPerPage}&category=${categoryId}`
+            )
+            .then(({ data }) => {
+                const currentData = data
+                setTotalPage(currentData.total)
+                setListProduct(currentData.data)
+            })
     }, [currentPage])
-
 
     const breadcrumb: IBreadCrumb[] = [
         {
@@ -44,15 +47,15 @@ const Collection = () => {
         }
     ]
     const handArrangeCategory = async (nameArrange: string) => {
-        if (nameArrange === "asc") {
-            const data = sortUpAscending(listProduct as any);
-            setListProduct(data);
-        } else if (nameArrange === "desc") {
-            const data = sortDescending(listProduct as any);
-            setListProduct(data);
+        if (nameArrange === 'asc') {
+            const data = sortUpAscending(listProduct as any)
+            setListProduct(data)
+        } else if (nameArrange === 'desc') {
+            const data = sortDescending(listProduct as any)
+            setListProduct(data)
         } else {
-            const data = sortAtoZ(listProduct as any);
-            setListProduct(data);
+            const data = sortAtoZ(listProduct as any)
+            setListProduct(data)
         }
     }
 
@@ -61,30 +64,32 @@ const Collection = () => {
     // }
 
     const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
-        const takeTwoImage = vals.images.slice(0, 2);
+        const takeTwoImage = vals.images.slice(0, 2)
         const formatCurrency = (amount: number | bigint) => {
             // Định dạng số thành tiền Việt Nam
             const formatter = new Intl.NumberFormat('vi-VN', {
                 style: 'currency',
                 currency: 'VND',
-                minimumFractionDigits: 0, // Tối thiểu số lẻ là 0
-            });
+                minimumFractionDigits: 0 // Tối thiểu số lẻ là 0
+            })
 
-            return formatter.format(amount);
-        };
+            return formatter.format(amount)
+        }
         return (
-            <Link
-                key={vals.productId}
-                to={`/products/${vals.productId}`}
-                className='cursor-pointer group'
-            >
+            <Link key={vals.productId} to={`/products/${vals.productId}`} className='cursor-pointer group'>
                 <div className='pt-6 relative pb-3 overflow-hidden'>
                     <div className='relative rounded-md overflow-hidden'>
-                        {takeTwoImage.map((itemImage, index) => <img
-                            className={`w-full h-[240px] ${index == 1 ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all' : ''}`}
-                            src={itemImage.imageUrl}
-                            alt='Ảnh không tồn tại'
-                        />)}
+                        {takeTwoImage.map((itemImage, index) => (
+                            <img
+                                className={`w-full h-[240px] ${
+                                    index == 1
+                                        ? 'absolute top-0 left-0 right-0 bottom-0 object-cover opacity-0 group-hover:opacity-100 duration-500  transition-all'
+                                        : ''
+                                }`}
+                                src={itemImage.imageUrl}
+                                alt='Ảnh không tồn tại'
+                            />
+                        ))}
                         {/*  */}
                     </div>
                     <div className='absolute group-hover:bottom-4 transition-all group-hover:opacity-100 opacity-0 duration-500 -bottom-4 left-0 right-0 flex justify-center items-center gap-2 px-2'>
@@ -107,7 +112,9 @@ const Collection = () => {
                     <span className='text-xs'>+{vals.productDetails?.length || 0} kích thước</span>
                     <p className='text-md my-1 line-clamp-2'>{vals.nameProduct}</p>
                     <div className='flex items-center gap-2'>
-                        <span className='text-red-500 font-semibold text-sm'>{formatCurrency(vals.productDetails[0].promotionalPrice)}</span>
+                        <span className='text-red-500 font-semibold text-sm'>
+                            {formatCurrency(vals.productDetails[0].promotionalPrice)}
+                        </span>
                         <span className='text-neutral-300 text-sm line-through'>
                             {formatCurrency(vals.productDetails[0].price)}
                         </span>
@@ -122,14 +129,19 @@ const Collection = () => {
             <BreadCrumb links={breadcrumb} />
             <div className='app-container text-[#333] flex gap-10 pt-5'>
                 <div className='w-[300px] h-20 md:block hidden'>
-                    <FilerSection setsliderVal={setsliderVal} sliderVal={sliderVal} setListProduct={setListProduct} categoryId={categoryId!} />
+                    <FilerSection
+                        setsliderVal={setsliderVal}
+                        sliderVal={sliderVal}
+                        setListProduct={setListProduct}
+                        categoryId={categoryId!}
+                    />
                 </div>
                 <div className='flex-1'>
                     <div className='flex md:items-center gap-3 flex-col md:flex-row'>
                         <div className='flex-1 flex items-center gap-3'>
                             <h1 className='text-2xl'>{listProduct && listProduct[0]?.nameCategory}</h1>
                             <p className='text-sm relative top-1 flex-1'>{listProduct?.length || 0} sản phẩm </p>
-                        </div >
+                        </div>
                         <div className='flex gap-3 items-center'>
                             <div className='flex-1 md:hidden'>
                                 <Sheet>
@@ -169,39 +181,44 @@ const Collection = () => {
                                 </Select>
                             </div>
                         </div>
-                    </div >
+                    </div>
                     <div className='mt-5 grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-x-3 gap-y-5'>
                         {listProduct?.map((product) => renderItemProduct(product))}
-                    </div >
+                    </div>
                     {listProduct && listProduct?.length < 1 && (
                         <div className='w-full h-[300px] flex justify-center items-center'>Không có sản phẩm nào </div>
                     )}
-                    <Pagination2 products={listProduct} productsPerPage={productsPerPage} setCurrentPage={setCurrentPage} totalPage={totalPage} />
-                </div >
-            </div >
-        </div >
+                    <Pagination2
+                        products={listProduct}
+                        productsPerPage={productsPerPage}
+                        setCurrentPage={setCurrentPage}
+                        totalPage={totalPage}
+                    />
+                </div>
+            </div>
+        </div>
     )
 }
 
 const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: IFSlider) => {
-    const [sizeShoe, setSizeShoe] = useState<IFSize[] | null>(null);
-    const [currSizeShoe, setCurrSizeShoe] = useState<string | null>(null);
+    const [sizeShoe, setSizeShoe] = useState<IFSize[] | null>(null)
+    const [currSizeShoe, setCurrSizeShoe] = useState<string | null>(null)
 
     const handleValueCommit = async (e: number[]) => {
-        const data = await filterCategoryBySize(categoryId!, currSizeShoe, 0, e[0]);
-        setListProduct(data);
+        const data = await filterCategoryBySize(categoryId!, currSizeShoe, 0, e[0])
+        setListProduct(data)
     }
 
     const handFilterSizeShoe = async (size: string) => {
-        const data = await getCategoryBySize(size, categoryId, 0, sliderVal);
+        const data = await getCategoryBySize(size, categoryId, 0, sliderVal)
         setCurrSizeShoe(size)
-        setListProduct(data);
+        setListProduct(data)
     }
 
     useEffect(() => {
         getAllSize().then((data) => {
             setSizeShoe(data)
-        });
+        })
     }, [])
 
     return (
@@ -234,15 +251,16 @@ const FilerSection = ({ setsliderVal, sliderVal, setListProduct, categoryId }: I
                     <AccordionItem value='1' className='border-none'>
                         <AccordionTrigger className='text-left text-lg hover:no-underline'>Size</AccordionTrigger>
                         <AccordionContent className='flex flex-wrap gap-3'>
-                            {sizeShoe && sizeShoe.map((size) => (
-                                <div
-                                    onClick={() => handFilterSizeShoe(size._id)}
-                                    key={size._id}
-                                    className='flex items-center space-x-2 w-12 h-12 border rounded-md border-neutral-400 justify-center text-neutral-700 cursor-pointer hover:bg-neutral-700 hover:text-white'
-                                >
-                                    {size.size}
-                                </div>
-                            ))}
+                            {sizeShoe &&
+                                sizeShoe.map((size) => (
+                                    <div
+                                        onClick={() => handFilterSizeShoe(size._id)}
+                                        key={size._id}
+                                        className='flex items-center space-x-2 w-12 h-12 border rounded-md border-neutral-400 justify-center text-neutral-700 cursor-pointer hover:bg-neutral-700 hover:text-white'
+                                    >
+                                        {size.size}
+                                    </div>
+                                ))}
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>

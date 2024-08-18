@@ -143,7 +143,7 @@ const CheckoutNow = () => {
             // window.location.href = '/';
             const dataLocal = JSON.parse(localStorage.getItem('dataFormSelf')!)
             instance
-                .post('http://localhost:8000/api/order/create-order', {
+                .post('https://backend.fsneaker.id.vn/api/order/create-order', {
                     name: dataLocal.name,
                     address: dataLocal.address,
                     phone: dataLocal.phone,
@@ -385,9 +385,9 @@ const CheckoutNow = () => {
                                             type='radio'
                                             {...register('paymentMethod')}
                                             value={'vnpay'}
-                                        // onChange={(e) => {
-                                        //     setPaymentMethod(e.target.value as 'vnpay')
-                                        // }}
+                                            // onChange={(e) => {
+                                            //     setPaymentMethod(e.target.value as 'vnpay')
+                                            // }}
                                         />
                                         <img
                                             src='https://hstatic.net/0/0/global/design/seller/image/payment/other.svg?v=6'
@@ -456,7 +456,8 @@ const CheckoutNow = () => {
                         <div className='payy__provisional--total flex justify-between mx-4 mt-4'>
                             <p className='text-[18px] text-gray-500'>Tổng cộng</p>
                             <p>
-                                <span className='text-[16px] text-gray-500 mr-2'>VNĐ</span> {totalPrice.toLocaleString()}₫
+                                <span className='text-[16px] text-gray-500 mr-2'>VNĐ</span>{' '}
+                                {totalPrice.toLocaleString()}₫
                             </p>
                         </div>
                     </div>
