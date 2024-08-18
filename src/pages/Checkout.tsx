@@ -1,14 +1,11 @@
 import instance from '@/core/api'
 import { useLocalStorage } from '@/hooks/useStorage'
-import { store } from '@/store/store'
 import { Icon } from '@iconify/react'
 import classNames from 'classnames'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { itemsActions } from '@/store/slices/cartSlice'
-import { log } from 'console'
 import { useSelector } from 'react-redux'
 
 type Inputs = {
@@ -63,7 +60,7 @@ const getUserID = (): string => {
 }
 
 const Checkout = () => {
-    const items = useSelector((state) => state.itemsSelected) // Select data from counter slice
+    const items = useSelector((state: any) => state.itemsSelected) // Select data from counter slice
     const [user] = useLocalStorage('user', null)
     const navigate = useNavigate()
     const [step, setStep] = useState<'CHECKOUT' | 'PAYMENT'>('CHECKOUT')

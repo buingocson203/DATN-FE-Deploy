@@ -39,7 +39,7 @@ export const addSize = async (size: ISize) => {
             toast.success('Thêm thành công')
         }
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         if (error.response && error.response.status === 500) {
             toast.error('Kích thước đã tồn tại!')
         } else {
@@ -48,7 +48,7 @@ export const addSize = async (size: ISize) => {
     }
 }
 
-export const updateSize = async ({ _id, size, slug, ...sizes }: ISize) => {
+export const updateSize = async ({ _id, size, slug }: ISize) => {
     console.log('data size: ', size)
     try {
         const response = await instance.put(`/api/size/${_id}`, { size, slug })
@@ -65,7 +65,7 @@ export const deleteSize = async (size: ISize) => {
         if (response.status === 200) {
             toast.success('Xóa size thành công')
         }
-    } catch (error) {
+    } catch (error: any) {
         if (error.response && error.response.status === 400) {
             // toast.error('Kích thước không thể xóa!')
             showModal('Lỗi', 'Kích thước không thể xóa vì có sản phẩm liên quan!')

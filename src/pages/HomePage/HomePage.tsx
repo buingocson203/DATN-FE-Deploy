@@ -1,12 +1,11 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
 import ProductItem from '@/features/product/_components/product-item2'
 import { cn } from '@/lib/utils'
-import { getAllNewProduct, getProductDetail } from '@/services/product/request'
-import { IFNewOutStand, IProduct, IProductDetail } from '@/services/product/types'
-import { EyeIcon, PlusIcon, ShoppingCartIcon } from 'lucide-react'
+import { getAllNewProduct } from '@/services/product/request'
+import { IFNewOutStand } from '@/services/product/types'
+import { EyeIcon, ShoppingCartIcon } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
-import { useOnClickOutside } from 'usehooks-ts'
 import ListCategory from './ListCategory'
 import { getAllCategory } from '@/services/category/requests'
 import instance from '@/core/api'
@@ -14,12 +13,10 @@ import { Link } from 'react-router-dom'
 import { Rate } from 'antd'
 import NewsList from './NewsList'
 
-type Props = {}
-
-const HomePage = (props: Props) => {
+const HomePage = () => {
     const [activeTab, setActiveTab] = useState(0)
     const [productCate, setProductCate] = useState([])
-    const [category, setCategory] = useState([])
+    const [category, setCategory] = useState<any>([])
     const [outStProducts, setOutStProducts] = useState([])
 
     const tabs = ['sản phẩm nổi bật']
@@ -257,60 +254,60 @@ const HomePage = (props: Props) => {
     )
 }
 
-interface SellProcuctProps {
-    img: string
-    tooltipImg: string
-    name: string
-    price: string
-    collection: string
-    salePrice: string
-    plusStyle?: {
-        top: string
-        right: string
-    }
-}
-const SellProduct = ({ img, name, tooltipImg, price, collection, salePrice, plusStyle }: SellProcuctProps) => {
-    const [isShow, setIsShow] = useState(false)
-    const ref = React.useRef<HTMLDivElement>(null)
-    useOnClickOutside(ref, () => {
-        setIsShow(false)
-    })
+// interface SellProcuctProps {
+//     img: string
+//     tooltipImg: string
+//     name: string
+//     price: string
+//     collection: string
+//     salePrice: string
+//     plusStyle?: {
+//         top: string
+//         right: string
+//     }
+// }
+// const SellProduct = ({ img, name, tooltipImg, price, collection, salePrice, plusStyle }: SellProcuctProps) => {
+//     const [isShow, setIsShow] = useState(false)
+//     const ref = React.useRef<HTMLDivElement>(null)
+//     useOnClickOutside(ref, () => {
+//         setIsShow(false)
+//     })
 
-    return (
-        <div className='w-full'>
-            <div className='relative'>
-                <img src={img} alt='' />
-                <div
-                    className='w-5 h-5 bg-white rounded-full flex items-center justify-center absolute top-[73%] right-[55%] cursor-pointer'
-                    style={plusStyle}
-                    onClick={() => setIsShow((prev) => !prev)}
-                    ref={ref}
-                >
-                    <PlusIcon size={16}></PlusIcon>
-                    <div className='absolute inset-0 rounded-full bg-white animate-ping'></div>
-                    {/* Tooltip above with caret */}
-                    {isShow && (
-                        <div className='absolute bottom-[120%] right-1/2 translate-x-1/2 bg-white rounded-sm shadow-md w-[276px] h-[100px] flex items-center p-[10px]'>
-                            <img src={tooltipImg} alt='' className='max-h-full' />
-                            <div>
-                                <p className='text-sm text-neutral-900'>{name}</p>
-                                <p>
-                                    <span className='text-[15px] text-red-500'>{price}</span>
-                                    <span className='text-[12px] ml-1 line-through text-neutral-500'>{salePrice}</span>
-                                </p>
-                            </div>
-                            <div className='absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-[5px] border-solid border-transparent border-t-white'></div>
-                        </div>
-                    )}
-                </div>
-            </div>
-            <div className='relative'>
-                <h3 className='text-lg mt-4 mb-4'>{collection}</h3>
-                <HomePageButton className='w-fit m-0 text-sm'>XEM NHIỀU HƠN</HomePageButton>
-            </div>
-        </div>
-    )
-}
+//     return (
+//         <div className='w-full'>
+//             <div className='relative'>
+//                 <img src={img} alt='' />
+//                 <div
+//                     className='w-5 h-5 bg-white rounded-full flex items-center justify-center absolute top-[73%] right-[55%] cursor-pointer'
+//                     style={plusStyle}
+//                     onClick={() => setIsShow((prev) => !prev)}
+//                     ref={ref}
+//                 >
+//                     <PlusIcon size={16}></PlusIcon>
+//                     <div className='absolute inset-0 rounded-full bg-white animate-ping'></div>
+//                     {/* Tooltip above with caret */}
+//                     {isShow && (
+//                         <div className='absolute bottom-[120%] right-1/2 translate-x-1/2 bg-white rounded-sm shadow-md w-[276px] h-[100px] flex items-center p-[10px]'>
+//                             <img src={tooltipImg} alt='' className='max-h-full' />
+//                             <div>
+//                                 <p className='text-sm text-neutral-900'>{name}</p>
+//                                 <p>
+//                                     <span className='text-[15px] text-red-500'>{price}</span>
+//                                     <span className='text-[12px] ml-1 line-through text-neutral-500'>{salePrice}</span>
+//                                 </p>
+//                             </div>
+//                             <div className='absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-[5px] border-solid border-transparent border-t-white'></div>
+//                         </div>
+//                     )}
+//                 </div>
+//             </div>
+//             <div className='relative'>
+//                 <h3 className='text-lg mt-4 mb-4'>{collection}</h3>
+//                 <HomePageButton className='w-fit m-0 text-sm'>XEM NHIỀU HƠN</HomePageButton>
+//             </div>
+//         </div>
+//     )
+// }
 
 export const HomePageButton = ({ className, children }: { className?: string; children?: React.ReactNode }) => {
     return (

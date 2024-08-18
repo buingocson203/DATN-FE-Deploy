@@ -3,17 +3,16 @@ import { cn } from '@/lib/utils'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HomePageButton } from './HomePage'
-import { ICategory } from '@/common/type'
 
 type Props = {
-    data: ICategory[];
+    data: any[];
     handgetProduct: (id: string) => void,
     category: any[]
 }
 
 const ListCategory: React.FC<Props> = ({ data, handgetProduct, category }) => {
     const [activeTab, setActiveTab] = useState(0);
-    const [activeTabIDcate, setActiveTabIDcate] = useState("");
+    // const [activeTabIDcate, setActiveTabIDcate] = useState("");
     const [showAllCategories, setShowAllCategories] = useState(false);
 
     const displayedCategories = showAllCategories ? category : category.slice(0, 4);
@@ -49,7 +48,7 @@ const ListCategory: React.FC<Props> = ({ data, handgetProduct, category }) => {
                                 key={category._id}
                                 onClick={() => {
                                     setActiveTab(index)
-                                    setActiveTabIDcate(category._id)
+                                    // setActiveTabIDcate(category._id)
                                     handgetProduct(category._id as string)
                                 }}
                             >

@@ -12,7 +12,7 @@ import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { Badge, Button, Form, Modal, Select, Space, Table, TableProps, Tag, message } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const ORDER_PAYMENT_COLORS: Record<IPaymentMethod, string> = {
@@ -43,7 +43,7 @@ const OrderList: React.FC = () => {
     const [form] = Form.useForm()
 
     const queryParams = new URLSearchParams(location.search)
-    let statusCode = queryParams.get('status');
+    let statusCode: any = queryParams.get('status');
 
     // states
     const [data, setData] = useState<IOrder[]>([])
@@ -161,7 +161,7 @@ const OrderList: React.FC = () => {
     const handleOk = async () => {
         const newStatus = form.getFieldValue('status')
         try {
-            const response = await updateOrder(orderEdit._id, {
+            const response = await updateOrder(orderEdit?._id as any, {
                 orderStatus: newStatus
             })
 
@@ -198,7 +198,7 @@ const OrderList: React.FC = () => {
     return (
         <div className='border p-6'>
             <Table<IOrder>
-                onChange={(pagination, filters: any) => {
+                onChange={(_, filters: any) => {
                     setStatus(filters.orderStatus)
                 }}
                 dataSource={data}

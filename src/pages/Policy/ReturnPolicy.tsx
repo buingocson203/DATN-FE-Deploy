@@ -1,4 +1,3 @@
-import React from 'react';
 import BreadCrumb from '@/components/breadcrumb';
 const ReturnPolicy = () => {
     const breadcrumbLinks = [

@@ -1,10 +1,8 @@
-import { Icon } from '@iconify/react'
 import { useEffect, useState, useMemo } from 'react'
 import instance from '@/core/api'
 import { Rate, Select } from 'antd'
-import { json } from 'stream/consumers'
 
-const ProductComment = ({ productID }) => {
+const ProductComment = ({ productID }: any) => {
     const [comments, setComments] = useState([])
     const [selectedRate, setSelectedRate] = useState<number | null>(null)
     useEffect(() => {
@@ -13,7 +11,7 @@ const ProductComment = ({ productID }) => {
     const fetchData = async () => {
         const response = await instance.get(`api/review/reviews/${productID}/list-review`)
         let reviews = response.data.data.reviews;
-        let sortedReviews = reviews.sort((a, b) => {
+        let sortedReviews = reviews.sort((a: any, b: any) => {
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
         setComments(sortedReviews)
@@ -22,7 +20,7 @@ const ProductComment = ({ productID }) => {
         if (selectedRate == null) {
             return comments;
         }
-        return comments.filter(x => Number.parseInt(x.rating) == selectedRate);
+        return comments.filter((x: any) => Number.parseInt(x.rating) == selectedRate);
     }, [selectedRate, comments])
 
     const handleChange = (value: number | null) => {
@@ -48,7 +46,7 @@ const ProductComment = ({ productID }) => {
                 {filteredCommentByRating.length == 0 ? (
                     <div>Chưa có đánh giá nào</div>
                 ) : (
-                    filteredCommentByRating.map((cmt) => {
+                    filteredCommentByRating.map((cmt: any) => {
                         return (
                             <>
                                 <div className='flex justify-between items-center'>

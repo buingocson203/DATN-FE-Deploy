@@ -1,6 +1,6 @@
 import { getOrders } from '@/services/order'
 import type { DatePickerProps } from 'antd'
-import { DatePicker, Select, Space, TableProps } from 'antd'
+import { DatePicker, Select, Space } from 'antd'
 import dayjs from 'dayjs'
 import { useEffect, useState } from 'react'
 import StatisticalProduct from '../Statistical/Products'
@@ -8,41 +8,40 @@ import RevenueStatistics from './RevenueStatistics'
 
 const { Option } = Select
 
-type Props = {}
 type PickerType = 'date' | 'week' | 'month' | 'year'
 const PickerWithType = ({ type, onChange }: { type: PickerType; onChange: DatePickerProps['onChange'] }) => {
     if (type === 'date') return <DatePicker onChange={onChange} defaultValue={dayjs(new Date())} />
     return <DatePicker picker={type} onChange={onChange} />
 }
 
-const Dashboard = (props: Props) => {
+const Dashboard = () => {
     const [type, setType] = useState<PickerType>('date')
-    const [orders, setOrders] = useState([])
+    const [orders, setOrders] = useState<any>([])
     const [filteredOrders, setFilteredOrders] = useState([])
-    let timeFilterOrder = null
+    let timeFilterOrder: any = null
     interface IStatisticOrder {
         statusName: string
         statusQuantity: number
         classColor: string
     }
-    const columns: TableProps<IStatisticOrder>['columns'] = [
-        {
-            title: 'Thống kê trạng thái đơn hàng',
-            dataIndex: 'statusName',
-            key: 'statusName'
-        },
-        {
-            title: 'Số lượng',
-            dataIndex: 'statusQuantity',
-            key: 'statusQuantity',
-            render: (value: any) => value
-        }
-    ]
-    const [isLoading, setIsLoading] = useState(false)
+    // const columns: TableProps<IStatisticOrder>['columns'] = [
+    //     {
+    //         title: 'Thống kê trạng thái đơn hàng',
+    //         dataIndex: 'statusName',
+    //         key: 'statusName'
+    //     },
+    //     {
+    //         title: 'Số lượng',
+    //         dataIndex: 'statusQuantity',
+    //         key: 'statusQuantity',
+    //         render: (value: any) => value
+    //     }
+    // ]
+    // const [isLoading, setIsLoading] = useState(false)
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
 
     const countOrderStatus = (orderList: any) => {
-        const orderStatusCount = {
+        const orderStatusCount: any = {
             pending: 0,
             waiting: 0,
             delivering: 0,
@@ -100,16 +99,16 @@ const Dashboard = (props: Props) => {
     }
 
     const fetchOrders = async () => {
-        setIsLoading(true)
+        // setIsLoading(true)
         const response = await getOrders()
         const data = response?.data?.filter((item: any) => item)
         setOrders(data)
         setFilteredOrders(data)
         let resultResolve = countOrderStatus(filteredOrders)
         if (resultResolve) {
-            setStatisticOrder(resultResolve)
+            setStatisticOrder(resultResolve as any)
         }
-        setIsLoading(false)
+        // setIsLoading(false)
     }
 
     useEffect(() => {
@@ -152,16 +151,16 @@ const Dashboard = (props: Props) => {
         let filteredData
         switch (type) {
             case 'date':
-                filteredData = orders.filter((order) => {
+                filteredData = orders.filter((order: any) => {
                     return new Date(order?.createdAt).toDateString() == timeFilterOrder?.toDateString()
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
-                    setStatisticOrder(resultResolve)
+                    setStatisticOrder(resultResolve as any)
                 }
                 break
             case 'week':
-                filteredData = orders.filter((order) => {
+                filteredData = orders.filter((order: any) => {
                     let isValidOrder =
                         new Date(order?.createdAt) > timeFilterOrder?.startDate &&
                         new Date(order?.createdAt) < timeFilterOrder?.endDate
@@ -169,25 +168,25 @@ const Dashboard = (props: Props) => {
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
-                    setStatisticOrder(resultResolve)
+                    setStatisticOrder(resultResolve as any)
                 }
                 break
             case 'month':
-                filteredData = orders.filter((order) => {
+                filteredData = orders.filter((order: any) => {
                     return new Date(order?.createdAt).getMonth() - 1 == timeFilterOrder?.getMonth() - 1
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
-                    setStatisticOrder(resultResolve)
+                    setStatisticOrder(resultResolve as any)
                 }
                 break
             case 'year':
-                filteredData = orders.filter((order) => {
+                filteredData = orders.filter((order: any) => {
                     return new Date(order?.createdAt).getFullYear() == timeFilterOrder
                 })
                 resultResolve = countOrderStatus(filteredData)
                 if (resultResolve) {
-                    setStatisticOrder(resultResolve)
+                    setStatisticOrder(resultResolve as any)
                 }
                 break
             default:
@@ -214,7 +213,7 @@ const Dashboard = (props: Props) => {
                             </Space>
                         </div>
                         <div className='grid grid-cols-3 gap-4 px-[24px] mb-6'>
-                            {statisticOrder.map((statisticOrderItem, index) => {
+                            {statisticOrder.map((statisticOrderItem) => {
                                 return (
                                     <div
                                         key={statisticOrderItem.statusName}

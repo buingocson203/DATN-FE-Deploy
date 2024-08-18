@@ -18,7 +18,7 @@ const ReviewList = () => {
         setIsLoading(true)
 
         const response = await getReviews()
-        const data = response?.data?.filter((item) => item)
+        const data = response?.data?.filter((item: any) => item)
 
         if (data) {
             setReviews(data)

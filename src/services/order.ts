@@ -1,4 +1,4 @@
-import { IOrderStatus, IPaymentStatus } from '@/common/interfaces/order'
+import { IOrderStatus } from '@/common/interfaces/order'
 import instance from '@/core/api'
 
 export interface GetOrdersParams {

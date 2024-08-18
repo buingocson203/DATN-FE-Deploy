@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '../../../components/ui/button'
 import { Pencil } from 'lucide-react'
 import { SubmitHandler } from 'react-hook-form'
@@ -7,10 +7,9 @@ import { Form, FormControl, FormField, FormItem } from '../../../components/ui/f
 import { Input } from '../../../components/ui/input'
 import { useProductMutation } from '@/hooks/useProductMutation'
 import { useToast } from '../../../components/ui/use-toast'
-import { IProduct } from '@/common/type'
 
 type PriceFormProps = {
-    data: IProduct
+    data: any
 }
 
 type FormControlType = {

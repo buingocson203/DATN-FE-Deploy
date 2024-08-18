@@ -1,6 +1,6 @@
 import { IProductDetail } from '@/common/interfaces/productDetail'
 import { ISize } from '@/common/interfaces/size'
-import { Button, Checkbox, Col, Form, Input, Modal, Row, Typography, notification } from 'antd'
+import { Checkbox, Col, Form, Input, Modal, Row, Typography } from 'antd'
 import { useState } from 'react'
 
 export interface ModalAddProductDetailVariantProps {
@@ -22,7 +22,7 @@ const ModalAddProductDetailVariant: React.FC<ModalAddProductDetailVariantProps> 
     const [form] = Form.useForm()
     const [checkedItems, setCheckedItems] = useState([])
 
-    const onChange = (checkedValues) => {
+    const onChange = (checkedValues: any) => {
         setCheckedItems(checkedValues)
     }
 
@@ -38,7 +38,7 @@ const ModalAddProductDetailVariant: React.FC<ModalAddProductDetailVariantProps> 
                 sizes: item
             }))
 
-            onOk?.(formDataArray)
+            onOk?.(formDataArray as any)
         } catch (errorInfo) {}
     }
 

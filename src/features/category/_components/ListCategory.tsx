@@ -1,5 +1,5 @@
 import { useCategoryMutation } from '@/hooks/useAdmCategoryMutation'
-import { useCategoryQuery } from '@/hooks/useAdmCategoryQuery.ts'
+import { useCategoryQuery } from '@/hooks/useAdmCategoryQuery'
 import { useEffect } from 'react'
 import { getColumns } from './ColumnCategory'
 import { DataTable } from './DataTableCategory'

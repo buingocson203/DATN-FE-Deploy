@@ -1,11 +1,9 @@
 import { useRef, useState } from 'react';
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined, PlusSquareOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import type { GetRef, TableColumnsType, TableColumnType } from 'antd';
 import { Button, Form, Input, InputNumber, Popconfirm, Select, Space, Table, message } from 'antd';
 import type { FilterDropdownProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 
 import { Option } from 'antd/es/mentions';
 import ModalForm from '@/components/ModalForm/ModalForm';
@@ -49,12 +47,12 @@ const ListUser = () => {
     const [modalMode, setModalMode] = useState('');
 
 
-    const confirmDelete = async (productId: string) => {
-        message.success("xoá thành công")
-    };
-    const cancelDelete = () => {
-        message.error('Product deletion cancelled');
-    };
+    // const confirmDelete = async (productId: string) => {
+    //     message.success("xoá thành công")
+    // };
+    // const cancelDelete = () => {
+    //     message.error('Product deletion cancelled');
+    // };
 
     const handleSearch = (
         selectedKeys: string[],
@@ -241,37 +239,37 @@ const ListUser = () => {
         setIsModalOpen(true);
     };
 
-    const layout = {
-        labelCol: { span: 8 },
-        wrapperCol: { span: 16 },
-    };
+    // const layout = {
+    //     labelCol: { span: 8 },
+    //     wrapperCol: { span: 16 },
+    // };
 
     const validateMessages = {
         required: '${label} chưa nhập!',
     };
 
     const [form] = Form.useForm();
-    const onFinish = async (values: any) => {
+    const onFinish = async () => {
         if (modalMode === 'add') {
-            const images = values?.images?.fileList?.map(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                ({ response }: any) => response.data.url
-            );
+            // const images = values?.images?.fileList?.map(
+            //     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            //     ({ response }: any) => response.data.url
+            // );
 
-            const newValues = { ...values, images };
+            // const newValues = { ...values, images };
 
             //call api
             message.success(`Tạo  thành công!`);
         } else if (modalMode === 'edit') {
             //console.log("values", values);
 
-            const newImages = values.images.fileList
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                values.images.fileList.map(({ response }: any) => response.data.url)
-                : values.images;
+            // const newImages = values.images.fileList
+            //     ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            //     values.images.fileList.map(({ response }: any) => response.data.url)
+            //     : values.images;
 
-            const newValues = { ...values, images: newImages };
-            const { _id, ...post } = newValues;
+            // const newValues = { ...values, images: newImages };
+            // const { _id, ...post } = newValues;
 
             //   await dispatch(updatePostMid({ _id, post }));
             message.success(`Sửa  thành công!`);
@@ -279,43 +277,43 @@ const ListUser = () => {
         setIsModalOpen(false);
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const uploadFiles = async (file: any) => {
-        if (file) {
-            const CLOUD_NAME = 'clouur-your-name';
-            const PRESET_NAME = 'clouur-your-name';
-            const FOLDER_NAME = 'clouur-your-name';
-            const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+    // const uploadFiles = async (file: any) => {
+    //     if (file) {
+    //         const CLOUD_NAME = 'clouur-your-name';
+    //         const PRESET_NAME = 'clouur-your-name';
+    //         const FOLDER_NAME = 'clouur-your-name';
+    //         const api = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
-            const formData = new FormData();
-            formData.append('upload_preset', PRESET_NAME);
-            formData.append('folder', FOLDER_NAME);
-            formData.append('file', file);
+    //         const formData = new FormData();
+    //         formData.append('upload_preset', PRESET_NAME);
+    //         formData.append('folder', FOLDER_NAME);
+    //         formData.append('file', file);
 
-            const response = await axios.post(api, formData);
+    //         const response = await axios.post(api, formData);
 
-            return response;
-        }
-    };
+    //         return response;
+    //     }
+    // };
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const customRequest = async ({ file, onSuccess, onError }: any) => {
-        try {
-            // Gọi hàm tải lên ảnh của bạn và chờ kết quả
-            const response = await uploadFiles(file);
-            // Kiểm tra kết quả và xử lý tùy theo trạng thái tải lên
-            if (response?.status === 200) {
-                message.success(`${file.name} uploaded successfully`);
-                onSuccess(response, file);
-            } else {
-                message.error(`${file.name} upload failed.`);
-                onError(response);
-            }
-        } catch (error) {
-            // Xử lý lỗi nếu có
-            message.error('An error occurred while uploading the image.');
-            onError(error);
-        }
-    };
+    // const customRequest = async ({ file, onSuccess, onError }: any) => {
+    //     try {
+    //         // Gọi hàm tải lên ảnh của bạn và chờ kết quả
+    //         const response = await uploadFiles(file);
+    //         // Kiểm tra kết quả và xử lý tùy theo trạng thái tải lên
+    //         if (response?.status === 200) {
+    //             message.success(`${file.name} uploaded successfully`);
+    //             onSuccess(response, file);
+    //         } else {
+    //             message.error(`${file.name} upload failed.`);
+    //             onError(response);
+    //         }
+    //     } catch (error) {
+    //         // Xử lý lỗi nếu có
+    //         message.error('An error occurred while uploading the image.');
+    //         onError(error);
+    //     }
+    // };
     return (
         <div>
             <div className='flex justify-between items-center mx-[50px] my-4'>

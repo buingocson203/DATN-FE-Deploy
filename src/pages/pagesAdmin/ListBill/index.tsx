@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Button, Input, Space, Table, Tag } from 'antd'
 import type { InputRef, TableColumnType, TableProps } from 'antd'
 import Title from 'antd/es/typography/Title'
@@ -49,21 +49,21 @@ const data: DataType[] = [
 const onChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra)
 }
-const onSearch = (value, _e, info) => console.log(info?.source, value)
+// const onSearch = (value, _e, info) => console.log(info?.source, value)
 const ListBill: React.FC = () => {
-    const [searchText, setSearchText] = useState('')
-    const [searchedColumn, setSearchedColumn] = useState('')
+    // const [searchText, setSearchText] = useState('')
+    // const [searchedColumn, setSearchedColumn] = useState('')
     const searchInput = useRef<InputRef>(null)
 
-    const handleSearch = (selectedKeys: string[], confirm: FilterDropdownProps['confirm'], dataIndex: DataIndex) => {
+    const handleSearch = (_: string[], confirm: FilterDropdownProps['confirm'], __: DataIndex) => {
         confirm()
-        setSearchText(selectedKeys[0])
-        setSearchedColumn(dataIndex)
+        // setSearchText(selectedKeys[0])
+        // setSearchedColumn(dataIndex)
     }
 
     const handleReset = (clearFilters: () => void) => {
         clearFilters()
-        setSearchText('')
+        // setSearchText('')
     }
 
     const getColumnSearchProps = (dataIndex: DataIndex): TableColumnType<DataType> => ({
@@ -99,8 +99,8 @@ const ListBill: React.FC = () => {
                         size='small'
                         onClick={() => {
                             confirm({ closeDropdown: false })
-                            setSearchText((selectedKeys as string[])[0])
-                            setSearchedColumn(dataIndex)
+                            // setSearchText((selectedKeys as string[])[0])
+                            // setSearchedColumn(dataIndex)
                         }}
                     >
                         Filter
@@ -187,6 +187,7 @@ const ListBill: React.FC = () => {
                 { text: 'Chưa thanh toán', value: 'Chưa thanh toán' },
                 { text: 'Đã thanh toán', value: 'Đã thanh toán' }
             ],
+            // @ts-ignore
             onFilter: (value: string, record) => record.paymentStatus.indexOf(value) === 0,
             width: '20%',
 
@@ -216,6 +217,7 @@ const ListBill: React.FC = () => {
                 { text: 'Đang giao hàng', value: 'Đang giao hàng' },
                 { text: 'Giao hàng thành công', value: 'Giao hàng thành công' }
             ],
+            // @ts-ignore
             onFilter: (value: string, record) => record.orderStatus.indexOf(value) === 0,
             // sorter: (a, b) => a.orderStatus.length - b.orderStatus.length,
             // sortDirections: ['descend'],
@@ -258,7 +260,7 @@ const ListBill: React.FC = () => {
                     className='pt-7'
                     placeholder='Search hóa đơn chi tiết'
                     allowClear
-                    onSearch={onSearch}
+                    // onSearch={onSearch}
                     style={{
                         width: 220
                     }}
@@ -271,6 +273,3 @@ const ListBill: React.FC = () => {
 }
 
 export default ListBill
-function getColumnSearchProps(arg0: string): import('antd').TableColumnGroupType<DataType> | TableColumnType<DataType> {
-    throw new Error('Function not implemented.')
-}

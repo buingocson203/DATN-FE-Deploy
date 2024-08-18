@@ -33,7 +33,7 @@ interface FieldType {
     orderStatus: string
     paymentStatus: string
     address: string
-    name: strings
+    name: string
 }
 
 const OrderDetail = () => {
@@ -108,7 +108,7 @@ const OrderDetail = () => {
         const newStatus: IOrderStatus = formOrderStatus.getFieldValue('newStatus')
 
         try {
-            const response = await updateOrder(data._id, {
+            const response = await updateOrder(data?._id as any, {
                 orderStatus: newStatus
             })
             const newOrderData: IOrder = response?.data
@@ -174,7 +174,7 @@ const OrderDetail = () => {
                 <List
                     itemLayout='horizontal'
                     dataSource={data?.productDetails}
-                    renderItem={(item, index) => (
+                    renderItem={(item) => (
                         <List.Item extra={item.quantityOrders && `x${item.quantityOrders}`}>
                             <List.Item.Meta
                                 avatar={

@@ -19,4 +19,5 @@ export interface IFProducts {
     filteredByMaxPrice: string
     images: Array<{ imageUrl: string; type: string }>
     productDetails: Array<IFProductDetail>
+    averageRating: string
 }

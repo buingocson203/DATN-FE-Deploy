@@ -6,11 +6,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Slider } from '@/components/ui/slider'
 import instance from '@/core/api'
-import { filterProductByPrice, getAllProduct } from '@/services/product/queries'
+import { filterProductByPrice } from '@/services/product/queries'
 import { getAllSize, getProductbySize } from '@/services/size/size.requeries'
 import { IFProducts } from '@/types/product'
 import { IFSize } from '@/types/size.type'
-import { EyeIcon, FilterIcon, ShoppingCartIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { EyeIcon, FilterIcon, ShoppingCartIcon } from 'lucide-react'
 import { SetStateAction, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Rate } from 'antd'
@@ -26,7 +26,6 @@ const ProductsPage = () => {
     const [listProduct, setListProduct] = useState<IFProducts[]>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPage, setTotalPage] = useState(1)
-    const [total, setTotal] = useState(0)
     useEffect(() => {
         instance.get(`http://localhost:8000/api/infoProduct?page=${currentPage}&limit=12`).then(({ data }) => {
             const currentData = data

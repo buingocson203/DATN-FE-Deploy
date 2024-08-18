@@ -2,7 +2,7 @@ import instance from '@/core/api'
 import { useLocalStorage } from '@/hooks/useStorage'
 import { Icon } from '@iconify/react'
 import classNames from 'classnames'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -100,7 +100,7 @@ const CheckoutNow = () => {
                 imageProduct: data.productImage
             }
         ]
-        setCartList(newItems)
+        setCartList(newItems as any)
     }
 
     useEffect(() => {

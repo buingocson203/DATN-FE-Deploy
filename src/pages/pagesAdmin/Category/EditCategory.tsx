@@ -7,16 +7,16 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-const categories = [
-    {
-        id: 'jjkglhkgjgkhjh1',
-        name: 'hehe'
-    },
-    {
-        id: 'jjkglhkgjgkhjh2',
-        name: 'gkhlj'
-    }
-]
+// const categories = [
+//     {
+//         id: 'jjkglhkgjgkhjh1',
+//         name: 'hehe'
+//     },
+//     {
+//         id: 'jjkglhkgjgkhjh2',
+//         name: 'gkhlj'
+//     }
+// ]
 
 const EditCategory = ({ id, name }: any) => {
     console.log(id, name)
@@ -24,7 +24,7 @@ const EditCategory = ({ id, name }: any) => {
     // console.log(categoryId)
     const navigate = useNavigate()
     const [categoryEditStatus, setCategoryEditStatus] = useState(false)
-    const { data: category, isLoading } = useGetCategoryDetailQuery(categoryId!)
+    const { data: category } = useGetCategoryDetailQuery(categoryId!)
     console.log('data - ', category?.data)
 
     const {

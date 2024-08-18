@@ -1,7 +1,7 @@
-import { Breadcrumb, Button, Card, Row, Spin, Typography } from 'antd'
+import { Breadcrumb, Button, Card, Spin } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import React from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 export interface DetailProps {
     name?: string
@@ -17,7 +17,7 @@ const Detail: React.FC<DetailProps> = (props) => {
     const pathSegments = location.pathname.split('/')
     const mainSegment = pathSegments[2]
 
-    const previousPage = location.state && location.state.from
+    // const previousPage = location.state && location.state.from
 
     const goBack = () => {
         // navigate(`/admin/${mainSegment}`)

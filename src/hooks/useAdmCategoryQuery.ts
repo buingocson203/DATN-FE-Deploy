@@ -25,7 +25,7 @@ export const useGetCategoryDetailQuery = (categoryId: string) => {
     return { data, error, ...rest }
 }
 
-export const useUpdateCategoryMutation = (data: any) => {
+export const useUpdateCategoryMutation = () => {
     return useMutation({
         mutationFn: (data: any) => updateCategory(data),
         onError: (err) => {

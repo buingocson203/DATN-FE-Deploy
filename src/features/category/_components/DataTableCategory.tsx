@@ -7,7 +7,7 @@ import { useCategoryMutation } from "@/hooks/useAdmCategoryMutation";
 import { Icon } from "@iconify/react";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import React, { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 interface DataTableProps<TData> {
     columns: any[];
@@ -35,7 +35,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     useEffect(() => {
         const subscription = form.watch((value, { name }) => {
             if (name === 'name') {
-                form.setValue('slug', value.name);
+                form.setValue('slug', value.name as any);
             }
         });
         return () => subscription.unsubscribe();

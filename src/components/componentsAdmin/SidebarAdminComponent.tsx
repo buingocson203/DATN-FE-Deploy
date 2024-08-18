@@ -39,7 +39,7 @@ const items: MenuItem[] = [
 ]
 
 const SidebarAdminComponent: React.FC = () => {
-    const [collapsed, setCollapsed] = useState(false)
+    const [collapsed] = useState(false)
 
     return (
         <div style={{ width: 288 }}>

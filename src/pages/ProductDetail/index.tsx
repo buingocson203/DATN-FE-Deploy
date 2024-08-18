@@ -3,19 +3,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carosel'
 import ProductItem from '@/features/product/_components/product-item'
 import { cn, onMutateError } from '@/lib/utils'
-import { FacebookIcon, MessageCircleIcon, MinusIcon, PlusIcon, TwitterIcon, Zap } from 'lucide-react'
+import { MinusIcon, PlusIcon } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { twMerge } from 'tailwind-merge'
 import ProductComment from './ProductComment'
 import ProductDescription from './ProductDescription'
-import Pagination from '@/components/ui/pagination'
 import { useQuery } from 'react-query'
 import { getInfoProductById, getProductDetailById, getRelatedProductsInfo } from '@/services/product/request'
-import { IProduct, IProductSize } from '@/services/product/types'
+import { IProductSize } from '@/services/product/types'
 import instance from '@/core/api'
 import { useDispatch } from 'react-redux'
-import { updateCartQuantityStore } from '../../store/actions'
 import { cartActions } from '@/store/slices/cartSlice'
 import { HeartOutlined, HeartFilled } from '@ant-design/icons'
 import { useProductFavoriteMutation, useProductFavoriteQuery } from '@/hooks/useProductFavorite'
@@ -78,7 +76,8 @@ const ProductDetail = () => {
         queryKey: ['/productDetail/related', detailID],
         onError: onMutateError
     })
-    const { data: productDetail } = useQuery({
+    
+    useQuery({
         queryFn: () => getProductDetailById(String(detailID)),
         queryKey: ['/productDetail', detailID],
         enabled: !!detailID,
@@ -148,7 +147,7 @@ const ProductDetail = () => {
                     <div className='flex-1 img-product-container relative group py-5 px-3'>
                         <Carousel>
                             <CarouselContent>
-                                {infoProduct?.data?.images?.map((image, index) => (
+                                {infoProduct?.data?.images?.map((image: any, index: number) => (
                                     <CarouselItem key={index}>
                                         <img src={image.imageUrl} alt='product' />
                                     </CarouselItem>
@@ -190,10 +189,10 @@ const ProductDetail = () => {
                                         infoProduct?.data?.productDetails
                                             ?.filter(
                                                 (size: any, index: any, self: any) =>
-                                                    index === self.findIndex((t) => t.size === size.size)
+                                                    index === self.findIndex((t: any) => t.size === size.size)
                                             )
-                                            .sort((a, b) => a.size - b.size)
-                                            .map((size, index) => {
+                                            .sort((a: any, b: any) => a.size - b.size)
+                                            .map((size: any, index: number) => {
                                                 return (
                                                     <span
                                                         className={cn(
@@ -497,15 +496,15 @@ const ProductDetail = () => {
                     <h2 className='text-4xl text-center font-bold mb-10'>Sản phẩm liên quan</h2>
                     <Carousel>
                         <CarouselContent className='-ml-2 md:-ml-4'>
-                            {relatedProducts?.data?.map((item, index) => {
+                            {relatedProducts?.data?.map((item: any, index: number) => {
                                 return (
                                     <CarouselItem
                                         key={index}
                                         className='basis-full sm:basis-1/2 md:basis-1/2 lg:basis-1/4 pl-2 md:pl-4'
                                     >
                                         <ProductItem
-                                            IdImages={item.images.map((x) => x.imageUrl)}
-                                            sizeId={item.productDetails.map((x) => x.size)}
+                                            IdImages={item.images.map((x: any) => x.imageUrl)}
+                                            sizeId={item.productDetails.map((x: any) => x.size)}
                                             _id={item._id}
                                             name={item.name}
                                             price={item.productDetails[0].price}

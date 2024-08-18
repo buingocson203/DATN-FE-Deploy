@@ -33,11 +33,12 @@ export interface IProductDetailInfo {
 export interface IProductSize {
     "_id": string,
     "size": number,
-    "quantity": number,
+    "quantity": any,
     "price": number,
     "importPrice": number,
     "promotionalPrice": number,
-    "productDetailId": string
+    "productDetailId": string,
+    sizeId: string;
 }
 export interface IFNewOutStand {
     productId: string
@@ -47,4 +48,5 @@ export interface IFNewOutStand {
     price: number
     promotionalPrice: number
     image: string
+    averageRating: string
 }

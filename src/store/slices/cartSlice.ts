@@ -49,7 +49,7 @@ const itemsSelected = createSlice({
     name: 'itemsSelected',
     initialState: [],
     reducers: {
-        selectItem: (state, action: PayloadAction<any>) => {
+        selectItem: (state: any, action: PayloadAction<any>) => {
             const newItem = action.payload
             state.push(newItem)
             console.log(state)
@@ -59,7 +59,7 @@ const itemsSelected = createSlice({
             if (index > -1) state.splice(index, 1)
             console.log(state)
         },
-        unselectAll: (state) => []
+        unselectAll: () => []
     }
 })
 

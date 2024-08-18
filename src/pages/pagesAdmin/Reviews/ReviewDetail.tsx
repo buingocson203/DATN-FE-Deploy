@@ -1,5 +1,5 @@
 import { getReview } from '@/services/review'
-import { Card, Col, ColProps, Form, Input, Row, Typography, Upload, UploadFile, UploadProps } from 'antd'
+import { Card, Col, ColProps, Form, Input, Row, Upload, UploadFile, UploadProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 
@@ -54,8 +54,8 @@ const ReviewDetail = () => {
             const product = data?.product
 
             const thumbnail: UploadFile[] = product?.images
-                ?.filter((item) => item.type === 'thumbnail')
-                .map((e, idx) => {
+                ?.filter((item: any) => item.type === 'thumbnail')
+                .map((e: any, idx: number) => {
                     return {
                         name: idx.toString(),
                         uid: idx.toString(),
@@ -64,8 +64,8 @@ const ReviewDetail = () => {
                 })
 
             const gallery: UploadFile[] = product?.images
-                ?.filter((item) => item.type === 'gallery')
-                .map((e, idx) => {
+                ?.filter((item: any) => item.type === 'gallery')
+                .map((e: any, idx: number) => {
                     return {
                         name: idx.toString(),
                         uid: idx.toString(),

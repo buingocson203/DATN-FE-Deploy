@@ -1,5 +1,3 @@
-import React from 'react'
-
 import styles from './index.module.css'
 import { useNavigate } from 'react-router-dom'
 import { useAccountMutation } from '@/hooks/useAccount'

@@ -1,9 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Icon } from '@iconify/react'
 import '../../styles/HearderAdmin.css'
-import { FaSearch } from 'react-icons/fa'
-import Switch from './Switch'
-import logo from '../../assets/1-01.png'
 
 interface User {
     accessToken: string;
@@ -18,7 +14,7 @@ interface User {
     _id: string;
 }
 
-const HeaderAdminComponents = ({ darkMode, toggleDarkMode }: any) => {
+const HeaderAdminComponents = () => {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {

@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { MessageOutlined, FacebookOutlined, CloseOutlined } from '@ant-design/icons'
+import { useState } from 'react';
+import { MessageOutlined, CloseOutlined } from '@ant-design/icons'
 import zalo from "../../assets/th.png"
 import hotline from "../../assets/hotline.jpg"
 import email from "../../assets/email.png"
 import face from "../../assets/face.png"
+
+import styles from "./index.module.css"
+import classNames from 'classnames';
+
 const ContactButton = () => {
     const [isOpen, setIsOpen] = useState(false);
 
@@ -35,7 +39,7 @@ const ContactButton = () => {
             )}
             <button
                 onClick={toggleContactInfo}
-                className={`flex flex-col items-center text-white p-2 rounded-full shadow-lg shake ${isOpen ? 'bg-black' : 'bg-black'}`}
+                className={classNames('flex flex-col items-center text-white p-2 rounded-full shadow-lg bg-black', styles.shake)}
             >
                 {isOpen ? (
                     <>
@@ -50,23 +54,6 @@ const ContactButton = () => {
                     </>
                 )}
             </button>
-            <style jsx>{`
-        @keyframes shake {
-          0%, 100% {
-            transform: translateX(0);
-          }
-          10%, 30%, 50%, 70%, 90% {
-            transform: translateX(-5px);
-          }
-          20%, 40%, 60%, 80% {
-            transform: translateX(5px);
-          }
-        }
-        .shake {
-          animation: shake 1s linear infinite;
-          animation-delay: 2s;
-        }
-      `}</style>
         </div>
     );
 };

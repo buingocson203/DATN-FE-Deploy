@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { DOTS, usePagination } from '../../hooks/usePagination'
 import { Button } from 'antd'
 

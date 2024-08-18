@@ -16,7 +16,7 @@ export const getAllNewProduct = async (): Promise<IProductDetail[]> => {
     return data.data
 }
 
-export const getProductDetail = async (params: any): Promise<IProductDetail[]> => {
+export const getProductDetail = async (): Promise<IProductDetail[]> => {
     const { data } = await instance.get(`api/productDetail`)
     return data.data
 }

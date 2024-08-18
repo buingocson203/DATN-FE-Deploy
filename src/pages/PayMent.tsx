@@ -1,7 +1,6 @@
-import instance from '@/core/api'
 import { Icon } from '@iconify/react'
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom'
 
 
@@ -28,19 +27,19 @@ const PayMent = () => {
         setCheckTypePayment(e.target.value);
     }
 
-    const expire = queryParams.get('expire');
-    const amount = queryParams.get('vnp_Amount');
-    const bankCode = queryParams.get('vnp_BankCode');
-    const bankTranNo = queryParams.get('vnp_BankTranNo');
-    const cardType = queryParams.get('vnp_CardType');
-    const orderInfo = queryParams.get('vnp_OrderInfo');
-    const payDate = queryParams.get('vnp_PayDate');
-    const responseCode = queryParams.get('vnp_ResponseCode');
-    const tmnCode = queryParams.get('vnp_TmnCode');
-    const transactionNo = queryParams.get('vnp_TransactionNo');
+    // const expire = queryParams.get('expire');
+    // const amount = queryParams.get('vnp_Amount');
+    // const bankCode = queryParams.get('vnp_BankCode');
+    // const bankTranNo = queryParams.get('vnp_BankTranNo');
+    // const cardType = queryParams.get('vnp_CardType');
+    // const orderInfo = queryParams.get('vnp_OrderInfo');
+    // const payDate = queryParams.get('vnp_PayDate');
+    // const responseCode = queryParams.get('vnp_ResponseCode');
+    // const tmnCode = queryParams.get('vnp_TmnCode');
+    // const transactionNo = queryParams.get('vnp_TransactionNo');
     const transactionStatus = queryParams.get('vnp_TransactionStatus');
-    const txnRef = queryParams.get('vnp_TxnRef');
-    const secureHash = queryParams.get('vnp_SecureHash');
+    // const txnRef = queryParams.get('vnp_TxnRef');
+    // const secureHash = queryParams.get('vnp_SecureHash');
     //   console.log(expire,amount, bankCode, bankCode, bankTranNo, cardType, orderInfo, payDate,responseCode);
     //   console.log(tmnCode,transactionNo, transactionStatus, txnRef, secureHash);
     useEffect(() => {
@@ -50,18 +49,18 @@ const PayMent = () => {
         }
     }, [transactionStatus])
 
-    const [paymentMethod, setPaymentMethod] = useState<'cod' | 'vnpay'>('cod')
-    const exmapleBody = {
-        address: 'Nghệ An',
-        phone: '0987754123',
-        user_id: '66671b3baa76694e64bf608c',
-        products: [
-            { product_id: '6665ebfbaeb64196d817c50c', quantity: 2 },
-            { product_id: '666678c9fc5976b672b49918', quantity: 1 }
-        ],
-        total_price: 200000
-        // payment_type: 'cod'
-    }
+    // const [paymentMethod, setPaymentMethod] = useState<'cod' | 'vnpay'>('cod')
+    // const exmapleBody = {
+    //     address: 'Nghệ An',
+    //     phone: '0987754123',
+    //     user_id: '66671b3baa76694e64bf608c',
+    //     products: [
+    //         { product_id: '6665ebfbaeb64196d817c50c', quantity: 2 },
+    //         { product_id: '666678c9fc5976b672b49918', quantity: 1 }
+    //     ],
+    //     total_price: 200000
+    //     // payment_type: 'cod'
+    // }
 
 
     return (

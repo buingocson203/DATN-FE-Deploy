@@ -79,7 +79,7 @@ export const ProfitStatistics: React.FC = () => {
     const getData = async () => {
         try {
             const response = await getOrdersByDateRange(getDateRange())
-            const responseData = response?.data
+            const responseData = response?.data as any
             const tranform = tranformData(getLabels(), responseData)
             setData(tranform)
         } catch (error) {
@@ -111,13 +111,13 @@ export const ProfitStatistics: React.FC = () => {
         setValue(value)
     }
 
-    const onChangeDatePicker: DatePickerProps['onChange'] = (date, dateString) => {
+    const onChangeDatePicker: DatePickerProps['onChange'] = (date) => {
         setDefaultValue(moment(new Date(date as any)).format('YYYY-MM-DD'))
     }
 
     return (
         <div className='p-6'>
-            <Segmented options={options} onChange={onChangeSelect} />
+            <Segmented options={options as any} onChange={onChangeSelect} />
             <DatePicker
                 value={dayjs(defaultValue, 'YYYY-MM-DD')}
                 format={datePickerFormats[value]}

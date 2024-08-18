@@ -3,7 +3,7 @@ import { formatPrice } from '@/lib/utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { Link } from 'react-router-dom'
 import { Button } from '../../../components/ui/button'
-import { IProduct } from '@/common/type'
+interface IProduct {}
 
 export const getColumns = (removeProduct: any): ColumnDef<IProduct>[] => [
     {
@@ -22,7 +22,7 @@ export const getColumns = (removeProduct: any): ColumnDef<IProduct>[] => [
     {
         accessorKey: '',
         header: 'Hành động',
-        cell: ({ row }) => {
+        cell: ({ row }: any) => {
             return (
                 <>
                     <Link to={`/admin/products/${row?.original.id}/edit`}>Chỉnh sửa</Link>

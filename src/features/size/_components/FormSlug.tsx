@@ -30,13 +30,13 @@ const FormSize = ({ data }: SlugFormProps) => {
   useEffect(() => {
     if (data && form) {
       form.reset({
-        size: data.size || '',
-        slug: data.slug || ''
+        size: (data.size as any) || '',
+        slug: (data.slug as any) || ''
       })
     }
   }, [data, form])
   const onHandleSubmit: SubmitHandler<FormControlType> = (values) => {
-    onSubmit({ ...data, ...values })
+    onSubmit({ ...data, ...values } as any)
   }
   return (
     <div className='mt-6 border bg-slate-100 rounded-md p-4'>
@@ -56,7 +56,7 @@ const FormSize = ({ data }: SlugFormProps) => {
       {!sizeEditStatus && <p className='text-sm mt-2'>{data?.size}</p>}
       {sizeEditStatus && (
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onHandleSubmit)} className='flex flex-col gap-y-8'>
+          <form onSubmit={form.handleSubmit(onHandleSubmit as any)} className='flex flex-col gap-y-8'>
             <FormField
               control={form.control}
               name='slug'

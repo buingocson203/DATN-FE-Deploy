@@ -1,4 +1,3 @@
-import React from 'react'
 import '../../../styles/BillDetail.css'
 
 const BillDetail = () => {
@@ -6,6 +5,7 @@ const BillDetail = () => {
         const printContent = document.getElementById('bill-detail')
         const originalContents = document.body.innerHTML
 
+        // @ts-ignore
         document.body.innerHTML = printContent.innerHTML
 
         window.print()

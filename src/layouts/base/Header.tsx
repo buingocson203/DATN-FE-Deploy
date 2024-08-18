@@ -11,7 +11,8 @@ import { useQuery } from 'react-query'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import logo from '../../assets/1-01.png'
-import { Badge, Drawer } from 'antd'
+import { Badge } from 'antd'
+// @ts-ignore
 import debounce from 'lodash.debounce'
 import { HeartOutlined } from '@ant-design/icons'
 import { useProductFavoriteQuery } from '@/hooks/useProductFavorite'
@@ -43,19 +44,19 @@ export default function Header() {
         const fetchData = async () => {
             const response = await instance.get(`api/cart/${getUserID()}`)
             const data = response?.data?.data
-            const ids = data?.map((item) => item.productDetailId)
+            const ids = data?.map((item: any) => item.productDetailId)
             dispatch(cartActions.replaceAll(ids))
         }
         fetchData()
     }, [])
 
-    const [open, setOpen] = useState(false)
+    const [_, setOpen] = useState(false)
     const [user] = useLocalStorage('user', null)
 
     const { data: categories } = useQuery({ queryFn: getAllCategory, queryKey: ['/categories'] })
     const navigate = useNavigate()
 
-    const handleCategoryClick = (categoryId) => {
+    const handleCategoryClick = (categoryId: any) => {
         navigate('/collections/' + categoryId, { replace: true })
         window.location.reload() // reload the page
     }
@@ -119,13 +120,13 @@ export default function Header() {
         }
     }, [searchTerm]);
     useEffect(() => {
-        const handleClickOutside = (event) => {
+        const handleClickOutside = (event: any) => {
             if (!event.target.closest('.search-popup')) {
                 setIsSearchPopupOpen(false);
             }
         };
 
-        const handleEscapeKey = (event) => {
+        const handleEscapeKey = (event: any) => {
             if (event.key === 'Escape') {
                 setIsSearchPopupOpen(false);
             }
@@ -251,7 +252,7 @@ export default function Header() {
                         {isSearchPopupOpen && searchResults.length > 0 && (
                             <div className='search-popup border border-gray-300 bg-white rounded-lg mt-2 p-4 absolute z-50 w-full max-w-4xl'>
                                 <ul>
-                                    {searchResults.map((product) => (
+                                    {searchResults.map((product: any) => (
                                         <li
                                             key={product.productId}
                                             className='flex justify-between items-center border-b border-gray-200 py-1'

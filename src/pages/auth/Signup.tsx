@@ -22,7 +22,7 @@ const Signup = () => {
         }
     })
 
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = (event: any) => {
         if (!agree) {
             toast.error('Bạn phải đồng ý với điều khoản trước khi đăng ký tài khoản')
             event.preventDefault() // Prevent form submission

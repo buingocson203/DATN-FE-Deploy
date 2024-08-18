@@ -1,9 +1,7 @@
-import { IProduct } from '@/services/product/types'
-import { EyeIcon, ShoppingCartIcon, Zap } from 'lucide-react'
+import { EyeIcon, ShoppingCartIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Rate } from 'antd'
 
-type Props = {} & IProduct
 export default function ProductItem({
     _id,
     IdImages,
@@ -11,9 +9,8 @@ export default function ProductItem({
     sizeId,
     price,
     promotionalPrice,
-    importPrice,
     ratingStar
-}: Props) {
+}: any) {
     return (
         <Link
             to={`/products/${_id}`}

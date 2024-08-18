@@ -1,5 +1,3 @@
-import React from 'react'
-
 const PolicyPage = () => {
     return (
         <div className='max-w-[1200px] mx-auto'>

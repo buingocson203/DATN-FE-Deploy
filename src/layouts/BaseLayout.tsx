@@ -3,9 +3,7 @@ import { Outlet } from 'react-router-dom'
 import Footer from './base/Footer'
 import Header from './base/Header'
 
-type Props = {}
-
-const BaseLayout = (props: Props) => {
+const BaseLayout = () => {
   return (
     <div>
       <Header />

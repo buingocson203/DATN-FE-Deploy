@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 
 import styles from './index.module.css'
 import { useNavigate, useParams } from 'react-router-dom'

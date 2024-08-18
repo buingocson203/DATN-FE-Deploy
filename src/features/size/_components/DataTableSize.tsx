@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useSizeMutation } from '@/hooks/useSizeMutation'
-import { ToastContainer, toast } from 'react-toastify'
+import { ToastContainer } from 'react-toastify'
 import { Button } from '@/components/ui/button'
 
 interface DataTableProps<TData> {
@@ -31,7 +31,7 @@ export function DataTable<TData>({ columns, data }: DataTableProps<TData>) {
     useEffect(() => {
         const subscription = form.watch((value, { name }) => {
             if (name === 'size') {
-                form.setValue('slug', value.size)
+                form.setValue('slug', value.size as any)
             }
         })
         return () => subscription.unsubscribe()

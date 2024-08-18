@@ -2,11 +2,10 @@ import { Modal, Typography } from 'antd'
 
 import UploadImage from '@/components/ui/upload-image'
 import { useState } from 'react'
-import { IImageUpload } from '@/common/interfaces/productDetail'
 
 export interface ModalUploadImagesProps {
     productId: string
-    onOk: (data: IImageUpload[]) => void
+    onOk: (data: any[]) => void
     open: boolean
 }
 
@@ -19,7 +18,7 @@ const ModalUploadImages: React.FC<ModalUploadImagesProps> = (props) => {
         if (!thumb || galleries.length == 0) {
             alert('Vui lòng chọn ảnh')
         } else {
-            const thumbData: IImageUpload[] = [
+            const thumbData: any[] = [
                 {
                     image: thumb,
                     productId: productId,
@@ -27,7 +26,7 @@ const ModalUploadImages: React.FC<ModalUploadImagesProps> = (props) => {
                 }
             ]
 
-            const galleryData: IImageUpload[] = galleries.map((e) => {
+            const galleryData: any[] = galleries.map((e) => {
                 return {
                     image: e,
                     productId: productId,
@@ -58,7 +57,7 @@ const ModalUploadImages: React.FC<ModalUploadImagesProps> = (props) => {
                 <br />
                 <UploadImage
                     onChange={(img) => {
-                        setThumb(img)
+                        setThumb(img as any)
                     }}
                 />
                 <br />

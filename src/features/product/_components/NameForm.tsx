@@ -7,10 +7,9 @@ import { Button } from '../../../components/ui/button'
 import { Pencil } from 'lucide-react'
 import { Form, FormControl, FormField, FormItem } from '../../../components/ui/form'
 import { Input } from '../../../components/ui/input'
-import { IProduct } from '@/common/type'
 
 type NameFormProps = {
-    data: IProduct
+    data: any
 }
 
 type FormControlType = {

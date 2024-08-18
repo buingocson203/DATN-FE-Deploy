@@ -39,7 +39,7 @@ export const addCategory = async (category: ICategory) => {
             toast.success('Thêm thành công')
         }
         return response.data
-    } catch (error) {
+    } catch (error: any) {
         if (error.response && error.response.status === 500) {
             toast.error('Danh mục đã tồn tại!')
         } else {
@@ -48,7 +48,7 @@ export const addCategory = async (category: ICategory) => {
     }
 }
 
-export const updateCategory = async ({ _id, name, slug, ...category }: ICategory) => {
+export const updateCategory = async ({ _id, name, slug }: ICategory) => {
     console.log('data size: ', name)
     try {
         const response = await instance.put(`/api/categories/${_id}`, { name, slug })
@@ -66,7 +66,7 @@ export const deleteCategory = async (category: ICategory) => {
         if (response.status === 200) {
             toast.success('Xóa danh mục thành công')
         }
-    } catch (error) {
+    } catch (error: any) {
         if (error.response && error.response.status === 400) {
             showModal('Lỗi', 'Danh mục không thể xóa vì không có sản phẩm liên quan!')
         } else {

@@ -9,7 +9,7 @@ import { Bar } from 'react-chartjs-2'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
 
-import { IOderByDateRange, IOrder, IOrderStatus } from '@/common/interfaces/order'
+import { IOderByDateRange, IOrderStatus } from '@/common/interfaces/order'
 import instance from '@/core/api'
 import { getOrders, getOrdersByDateRange } from '@/services/order'
 import BestSellingProducts from './components/ProductStatistical'
@@ -49,7 +49,7 @@ const BAR_BG = 'rgba(54, 162, 235, 0.2)'
 const Dashboard = () => {
     const [unitType, setUnitType] = useState<ITimeUnitType>('date')
 
-    const [orders, setOrders] = useState<IOrder[]>([])
+    // const [orders, setOrders] = useState<IOrder[]>([])
     const [statisticOrder, setStatisticOrder] = useState<IStatisticOrder[]>([])
 
     const [profitData, setProfitData] = useState<IProfitData[]>([])
@@ -154,7 +154,7 @@ const Dashboard = () => {
             const { data } = await instance.get(url)
             console.log(`Data fetched from ${endpoint}:`, data)
             return data
-        } catch (error) {
+        } catch (error: any) {
             console.error(`Error fetching data from ${endpoint}:`, error)
             throw new Error(error.response?.data?.message || 'Error fetching data')
         }
@@ -164,7 +164,7 @@ const Dashboard = () => {
     const fetchHighestRevenueProducts = () => fetchProducts('/api/order/top-revenue-product', startDate, endDate)
     const fetchHighestProfitProducts = () => fetchProducts('/api/order/topProfitableProducts', startDate, endDate)
 
-    const { data: bestSellingProducts, isLoading: isLoadingBestSelling } = useQuery(
+    const { data: bestSellingProducts } = useQuery(
         ['bestSellingProducts', startDate, endDate],
         fetchBestSellingProducts,
         {
@@ -172,7 +172,7 @@ const Dashboard = () => {
         }
     )
 
-    const { data: highestRevenueProducts, isLoading: isLoadingHighestRevenue } = useQuery(
+    const { data: highestRevenueProducts } = useQuery(
         ['highestRevenueProducts', startDate, endDate],
         fetchHighestRevenueProducts,
         {
@@ -180,7 +180,7 @@ const Dashboard = () => {
         }
     )
 
-    const { data: highestProfitProducts, isLoading: isLoadingHighestProfit } = useQuery(
+    const { data: highestProfitProducts } = useQuery(
         ['highestProfitProducts', startDate, endDate],
         fetchHighestProfitProducts,
         {
@@ -192,7 +192,6 @@ const Dashboard = () => {
         try {
             const response = await getOrders()
             const data = response?.data?.filter((item: any) => item)
-            setOrders(data)
             let resultResolve = countOrderStatus(data)
             if (resultResolve) {
                 setStatisticOrder(resultResolve)
@@ -308,7 +307,7 @@ const Dashboard = () => {
         setUnitType(value)
     }
 
-    const onChangeDatePicker: DatePickerProps['onChange'] = (date, dateString) => {
+    const onChangeDatePicker: DatePickerProps['onChange'] = (date) => {
         setDate(dayjs(date))
     }
 
@@ -338,7 +337,7 @@ const Dashboard = () => {
         <div className='mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10'>
             <Card title={'Thống kê trạng thái đơn hàng'}>
                 <div className='grid grid-cols-3 gap-4 px-[24px] mb-6'>
-                    {statisticOrder.map((statisticOrderItem, index) => {
+                    {statisticOrder.map((statisticOrderItem) => {
                         return (
                             <Link to={`/admin/orders?status=${statisticOrderItem.statusNameCode}`}>
                                 <div

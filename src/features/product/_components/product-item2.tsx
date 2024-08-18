@@ -1,13 +1,8 @@
-import { IProduct } from '@/services/product/types'
-import { EyeIcon, ShoppingCartIcon, Zap } from 'lucide-react'
+import { EyeIcon, ShoppingCartIcon } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Rate } from 'antd'
 
-type Props = {
-    product: any[]
-}
-
-export default function ProductItem({ product }: Props) {
+export default function ProductItem({ product }: any) {
     const takeTwoImage = product.images.slice(0, 2)
     const formatCurrency = (amount: number | bigint) => {
         // Định dạng số thành tiền Việt Nam
@@ -31,7 +26,7 @@ export default function ProductItem({ product }: Props) {
         >
             <div className='pt-6 relative pb-3 overflow-hidden'>
                 <div className='relative rounded-md overflow-hidden'>
-                    {takeTwoImage.map((itemImage, index) => (
+                    {takeTwoImage.map((itemImage: any, index: number) => (
                         <img
                             className={`w-full h-[240px] ${
                                 index == 1

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { Card, Col, ColProps, Form, Input, Row, Typography, Upload, UploadFile, UploadProps } from 'antd'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import { IInfoProduct } from '@/common/interfaces/infoProduct'
 import Detail from '@/components/crud/detail'
@@ -41,7 +41,6 @@ const DISABLED_FIELD = true
 const DetailProduct = () => {
     const [form] = Form.useForm()
     const { productId } = useParams()
-    const navigate = useNavigate()
 
     const fetchProduct = async () => {
         const product = await getProduct(productId)

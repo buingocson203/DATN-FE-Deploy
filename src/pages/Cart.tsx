@@ -2,7 +2,7 @@ import BreadCrumb, { IBreadCrumb } from '@/components/breadcrumb'
 import instance from '@/core/api'
 import { Icon } from '@iconify/react'
 import { useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { cartActions } from '@/store/slices/cartSlice'
@@ -27,18 +27,20 @@ const Cart = () => {
         size: number
         totalPrice: number
         imageProduct: string
+        productDetailId: string
+        productId: string
     }
 
     const [cartList, setCartList] = useState<CartItem[]>([])
     const [forceRender, setForceRender] = useState(0)
-    const [lstSelected, setLstSelected] = useState([])
-    const [itemsSelected, setItemsSelected] = useState([])
+    const [lstSelected, setLstSelected] = useState<any>([])
+    const [itemsSelected, setItemsSelected] = useState<any>([])
 
     const fetchDataCart = async () => {
         const response = await instance.get(`api/cart/${getUserID()}`)
         setCartList(response.data.data)
         const data = response?.data?.data
-        const ids = data?.map((item) => item.productDetailId)
+        const ids = data?.map((item: any) => item.productDetailId)
 
         dispatch(cartActions.replaceAll(ids))
         dispatch(itemsActions.unselectAll())
@@ -76,12 +78,12 @@ const Cart = () => {
             }
             return item
         })
-        const newItemsSelected = itemsSelected?.map((item) => {
+        const newItemsSelected = itemsSelected?.map((item: any) => {
             let newQuantity = newCartList.find((x) => x.idCart === item.idCart)?.totalQuantity
             return { ...item, totalQuantity: newQuantity }
         })
         setCartList(newCartList)
-        setItemsSelected(newItemsSelected)
+        setItemsSelected(newItemsSelected as any)
         setForceRender(forceRender + 1)
     }
     const removeCart = (itemID: string) => {
@@ -137,7 +139,7 @@ const Cart = () => {
     }
     const totalPrice = useMemo(() => {
         let count = 0
-        itemsSelected?.forEach((item) => {
+        itemsSelected?.forEach((item: any) => {
             count += item?.promotionalPrice * item?.totalQuantity
         })
         return count
@@ -205,9 +207,9 @@ const Cart = () => {
                                                 <p className='mb-4 text-[16px] font-semibold'>Size: {item.size}</p>
                                                 <p className='text-gray-600 font-semibold'>
                                                     Price: {item.promotionalPrice.toLocaleString()}₫
-                                                    <strike className='text-[16px] text-gray-400 ml-1'>
+                                                    <div className='text-[16px] text-gray-400 ml-1 line-through'>
                                                         {item.price.toLocaleString()}₫
-                                                    </strike>
+                                                    </div>
                                                 </p>
                                             </div>
                                         </div>

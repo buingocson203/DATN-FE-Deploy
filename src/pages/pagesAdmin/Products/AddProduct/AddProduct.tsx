@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { PlusOutlined, RedoOutlined, SaveOutlined } from '@ant-design/icons'
 import {
@@ -210,7 +210,7 @@ const AddProduct: React.FC = () => {
         }
     }
 
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = () => {
         // console.log('Failed:', errorInfo)
         message.error('Thiếu thông tin sản phẩm')
     }

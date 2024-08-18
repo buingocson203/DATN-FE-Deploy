@@ -7,11 +7,11 @@ import { Modal } from 'antd'
 import { Rate } from 'antd'
 
 const Orders = () => {
-    const [cancelObj, setCancelObj] = useState(null);
+    const [cancelObj, setCancelObj] = useState<any>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [lstOrders, setLstOrders] = useState([])
     const [showReviewForm, setShowReviewForm] = useState(false)
-    const [detailOrder, setDetailOrder] = useState(null)
+    const [detailOrder, setDetailOrder] = useState<any>(null)
     const getUserID = () => {
         const storedUser = localStorage.getItem('user')
         const user = storedUser ? JSON.parse(storedUser) : {}
@@ -23,7 +23,7 @@ const Orders = () => {
         setIsModalOpen(false);
     };
     const handleOk = async () => {
-        let { orderID, paymentMethod } = cancelObj;
+        let { orderID } = cancelObj as any;
         setIsModalOpen(false);
         try {
             await instance.patch(`api/order/update-order/${orderID}`, {
@@ -37,7 +37,7 @@ const Orders = () => {
         fetchData()
     }
 
-    const [reviewObj, setReviewObj] = useState({
+    const [reviewObj, setReviewObj] = useState<any>({
         userId: getUserID(),
         orderId: '', //id của oder
         reviews: []
@@ -74,7 +74,7 @@ const Orders = () => {
         setIsModalOpen(true)
     }
 
-    let ratingStarObj = []
+    let ratingStarObj: any = []
 
     const onSelectOrderToReview = (order: any) => {
         event?.stopPropagation()
@@ -89,7 +89,7 @@ const Orders = () => {
                 }
             })
         })
-        ratingStarObj = order.productDetails?.map((x: any) => 0)
+        ratingStarObj = order.productDetails?.map(() => 0)
         console.log(reviewObj)
 
         setDetailOrder(order)
@@ -138,7 +138,7 @@ const Orders = () => {
                                             </h3>
                                             {/* CONTENT POPUP */}
                                             <div className='box-product h-[400px]' style={{ overflowY: 'auto' }}>
-                                                {detailOrder?.productDetails?.map((product, index) => {
+                                                {detailOrder?.productDetails?.map((product: any, index: number) => {
                                                     return (
                                                         <div
                                                             key={index}
@@ -200,13 +200,13 @@ const Orders = () => {
                             <h2 className='content--title text-[36px] font-bold'>Lịch sử đơn hàng</h2>
                         </div>
                         <div className='cart__content--oder rounded'>
-                            {lstOrders.map((order) => {
+                            {lstOrders.map((order: any) => {
                                 return (
                                     <div
                                         className='order-box border border-2 rounded mx-[24px] mb-5 border-slate-300'
                                         key={order._id}
                                     >
-                                        {order?.productDetails.map((product, index) => {
+                                        {order?.productDetails.map((product: any, index: number) => {
                                             return (
                                                 <div
                                                     key={index}

@@ -5,11 +5,11 @@ import '../styles/AdminLayout.css'
 import { useState } from 'react'
 
 const AdminLayout = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false)
+    const [isDarkMode] = useState(false)
 
-    const handleToggleDarkMode = () => {
-        setIsDarkMode((prevMode) => !prevMode)
-    }
+    // const handleToggleDarkMode = () => {
+    //     setIsDarkMode((prevMode) => !prevMode)
+    // }
     return (
         <div className={`flex ${isDarkMode ? 'dark-mode' : ''}`}>
             <div
@@ -26,7 +26,7 @@ const AdminLayout = () => {
                 <SidebarAdminComponent />
             </div>
             <main className='flex-grow ml-64 p-8'>
-                <HeaderAdminComponents darkMode={isDarkMode} toggleDarkMode={handleToggleDarkMode} />
+                <HeaderAdminComponents />
                 <div className={`bg-main ${isDarkMode ? 'dark-mode-content' : ''}`}>
                     <Outlet />
                 </div>

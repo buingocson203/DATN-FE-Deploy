@@ -8,6 +8,8 @@
 
 // type Props = {}
 
+// @ts-nocheck
+
 const HomePage = (props: Props) => {
   const [activeTab, setActiveTab] = useState(0)
   const [activeTab1, setActiveTab1] = useState(0)

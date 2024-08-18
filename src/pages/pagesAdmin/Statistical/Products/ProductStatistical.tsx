@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-const BestSellingProducts = ({ products }) => {
+const BestSellingProducts = ({ products }: any) => {
     // Kiểm tra xem products.data có phải là mảng không và có dữ liệu hay không
     if (!Array.isArray(products?.data) || products.data.length === 0) {
         return <div>No data available</div>;
@@ -13,7 +12,7 @@ const BestSellingProducts = ({ products }) => {
                 <div className="text-right">Số Lượng Bán</div>
             </div>
             <ul className="space-y-2">
-                {products.data.map((product, index) => (
+                {products.data.map((product: any, index: number) => (
                     <li key={index} className="flex items-center p-2 bg-gray-50 hover:bg-gray-100 shadow-sm rounded-lg transition duration-300">
                         <div className="flex items-center w-full">
                             <Link to={`/admin/products/detail/${product.productId}`} className="flex items-center w-full">

@@ -1,6 +1,4 @@
-import React from 'react'
 import { useForm } from 'react-hook-form'
-import * as Yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { SigninForm, signinSchema } from '../../common/Schema'
 import { signin } from '../../core/auth'
@@ -9,9 +7,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import logo from '../../assets/logoFSneaker.png'
 
-type Props = {}
-
-const Signin = (props: Props) => {
+const Signin = () => {
     const navigate = useNavigate()
     const {
         register,
@@ -21,7 +17,7 @@ const Signin = (props: Props) => {
         resolver: yupResolver(signinSchema)
     })
 
-    const [user, setUser] = useLocalStorage('user', null)
+    const [_, setUser] = useLocalStorage('user', null)
 
     const onSubmit = async (data: SigninForm) => {
         try {

@@ -9,7 +9,7 @@ const OrderDetail = () => {
     const { id: orderID } = useParams();
 
     const [showReviewForm, setShowReviewForm] = useState(false);
-    const [detailOrder, setDetailOrder] = useState(null);
+    const [detailOrder, setDetailOrder] = useState<any>(null);
     const getUserID = () => {
         const storedUser = localStorage.getItem("user");
         const user = storedUser ? JSON.parse(storedUser) : {};
@@ -17,7 +17,7 @@ const OrderDetail = () => {
         return userID;
     };
 
-    const [reviewObj, setReviewObj] = useState({
+    const [reviewObj, setReviewObj] = useState<any>({
         userId: getUserID(),
         orderId: "", //id của oder
         reviews: [],
@@ -60,7 +60,7 @@ const OrderDetail = () => {
             toast.error("Không thể hủy do trạng thái của đơn hàng đã được thay đổi");
         }
     };
-    let ratingStarObj = [];
+    let ratingStarObj: any = [];
 
     const onSelectOrderToReview = () => {
         event?.stopPropagation();
@@ -68,7 +68,7 @@ const OrderDetail = () => {
             userId: getUserID(),
             orderId: detailOrder?._id,
             reviews: detailOrder?.productDetails
-                ?.filter((x) => !x.isRated)
+                ?.filter((x: any) => !x.isRated)
                 .map((x: any) => {
                     return {
                         productId: x.productId,
@@ -77,13 +77,13 @@ const OrderDetail = () => {
                     };
                 })
         });
-        ratingStarObj = detailOrder.productDetails?.map((x: any) => 0);
+        ratingStarObj = detailOrder.productDetails?.map(() => 0);
         console.log(reviewObj);
         setShowReviewForm(true);
     };
 
     const convertToVN = (statusName: string) => {
-        const enumStatusPaid = {
+        const enumStatusPaid: any = {
             unpaid: "Chưa thanh toán",
             paid: "Đã thanh toán",
         }
@@ -157,7 +157,7 @@ const OrderDetail = () => {
                                             </h3>
                                             {/* CONTENT POPUP */}
                                             <div className="box-product h-[400px]" style={{ overflowY: "auto" }}>
-                                                {detailOrder?.productDetails?.map((product, index) => {
+                                                {detailOrder?.productDetails?.map((product: any, index: number) => {
                                                     return (
                                                         <div
                                                             key={index}
@@ -292,7 +292,7 @@ const OrderDetail = () => {
                                 className="order-box border border-2 rounded mb-5 border-slate-300"
                                 key={detailOrder?._id}
                             >
-                                {detailOrder?.productDetails.map((product, index) => {
+                                {detailOrder?.productDetails.map((product: any, index: number) => {
                                     return (
                                         <div
                                             key={index}

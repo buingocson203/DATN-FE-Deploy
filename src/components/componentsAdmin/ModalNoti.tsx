@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Modal = ({ title, content, isOpen, onClose }) => {
+const Modal = ({ title, content, isOpen, onClose }: any) => {
   if (!isOpen) return null;
 
   return (

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { PlusOutlined, RedoOutlined, SaveOutlined } from '@ant-design/icons'
 import {
@@ -218,7 +218,7 @@ const AddProduct: React.FC = () => {
         }
     }
 
-    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = () => {
         // console.log('Failed:', errorInfo)
         message.error('Thiếu thông tin sản phẩm')
     }
@@ -290,13 +290,13 @@ const AddProduct: React.FC = () => {
             return Promise.resolve()
         }
 
-    const handleKeyPress = (e) => {
-        const charCode = e.which ? e.which : e.keyCode
-        // Ngăn chặn các ký tự không phải số từ 1-9
-        if (charCode < 49 || charCode > 57) {
-            e.preventDefault()
-        }
-    }
+    // const handleKeyPress = (e) => {
+    //     const charCode = e.which ? e.which : e.keyCode
+    //     // Ngăn chặn các ký tự không phải số từ 1-9
+    //     if (charCode < 49 || charCode > 57) {
+    //         e.preventDefault()
+    //     }
+    // }
 
     // console.log ('v)
 

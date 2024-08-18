@@ -1,11 +1,10 @@
 import { IQueryParams } from '@/common/interfaces/common'
-import { IProduct } from '@/common/type'
 import instance from '../core/api'
 import { IAddProductBody, IAddProductResponse } from '@/common/interfaces/product'
 
 export interface GetProductsResponse {
     datas: {
-        docs: IProduct[]
+        docs: any[]
         hasNextPage: boolean
         hasPrevPage: boolean
         limit: number
@@ -35,7 +34,7 @@ export const getProduct = async (id: string) => {
     }
 }
 
-export const updateProduct = async (id, product) => {
+export const updateProduct = async (id: string, product: any) => {
     const response = await instance.put(`api/product/${id}`, product)
     return response.data
 }

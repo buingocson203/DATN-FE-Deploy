@@ -1,10 +1,9 @@
 import { useAuth } from '@/hooks/AuthContext';
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 
-const ProtectedRoute = ({ element: Component, ...rest }) => {
-    const { isAuthenticated } = useAuth();
+const ProtectedRoute = ({ element: Component, ...rest }: any) => {
+    const { isAuthenticated }: any = useAuth();
 
     return isAuthenticated ? <Component {...rest} /> : <Navigate to="/signin" />;
 };

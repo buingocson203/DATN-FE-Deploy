@@ -1,4 +1,3 @@
-import { IProduct } from "@/common/type" 
 import { useToast } from "../../../components/ui/use-toast"
 import { useState } from "react"
 import { useProductMutation } from "@/hooks/useProductMutation"
@@ -6,17 +5,13 @@ import { Form, FormControl, FormField, FormItem } from "../../../components/ui/f
 import { Input } from "../../../components/ui/input"
 
 type ProductItemProps = {
-    product: IProduct
-}
-type formControlDataType = {
-    name: string,
-    price: number
+    product: any
 }
 
 const ProductItem = ({product}: ProductItemProps) => {
     const {toast} = useToast()
     const [productEditId, setProductEditId] = useState(null as number | null)
-    const [productEdit, setProductEdit] = useState({} as IProduct)
+    const [productEdit, setProductEdit] = useState({} as any)
     const  {form, onSubmit} = useProductMutation({
         action: 'UPDATE',
         onSuccess: () => {
@@ -28,7 +23,7 @@ const ProductItem = ({product}: ProductItemProps) => {
             })
         }
     })
-    const handleClick = (product: IProduct) => {
+    const handleClick = (product: any) => {
         setProductEditId(product.id!)
         setProductEdit(product)
         form.reset({
@@ -36,7 +31,7 @@ const ProductItem = ({product}: ProductItemProps) => {
             price: product.price || 0
         })
     }
-    const handleOnSubmit = (values: IProduct) => {
+    const handleOnSubmit = (values: any) => {
         onSubmit({...productEdit, ...values})
     }
     return(

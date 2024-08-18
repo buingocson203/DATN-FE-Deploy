@@ -114,7 +114,7 @@ const EditProduct = () => {
                 name: product?.name,
                 description: product?.description,
                 status: product?.status,
-                category: product?.categoryId?._id
+                category: (product?.categoryId as any)?._id
             })
         }
     }
@@ -136,7 +136,7 @@ const EditProduct = () => {
         form.setFieldValue(
             'sizes',
 
-            infoData?.map((e) => {
+            infoData?.map((e: any) => {
                 return { ...e, _sizeIdKey: e.sizeId } // size
             })
         )

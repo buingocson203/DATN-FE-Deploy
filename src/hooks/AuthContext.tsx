@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useQuery } from 'react-query';
-import axios from 'axios';
 
+// @ts-ignore
 const AuthContext = createContext();
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: any) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState(null);
 
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         return null;
     };
 
-    const { data, isLoading } = useQuery('user', fetchUser, {
+    const { isLoading } = useQuery('user', fetchUser, {
         onSuccess: (data) => {
             if (data) {
                 setIsAuthenticated(true);
@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         }
     });
 
-    const login = (userData) => {
+    const login = (userData: any) => {
         localStorage.setItem('user', JSON.stringify(userData));
         setIsAuthenticated(true);
         setUser(userData);

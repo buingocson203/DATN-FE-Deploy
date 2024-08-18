@@ -45,20 +45,20 @@ const Collection = () => {
     ]
     const handArrangeCategory = async (nameArrange: string) => {
         if (nameArrange === "asc") {
-            const data = sortUpAscending(listProduct);
+            const data = sortUpAscending(listProduct as any);
             setListProduct(data);
         } else if (nameArrange === "desc") {
-            const data = sortDescending(listProduct);
+            const data = sortDescending(listProduct as any);
             setListProduct(data);
         } else {
-            const data = sortAtoZ(listProduct);
+            const data = sortAtoZ(listProduct as any);
             setListProduct(data);
         }
     }
 
-    const handlePageChange = (page: number) => {
-        setCurrentPage(page)
-    }
+    // const handlePageChange = (page: number) => {
+    //     setCurrentPage(page)
+    // }
 
     const renderItemProduct = (vals: IFCATEGORY_DETAIL) => {
         const takeTwoImage = vals.images.slice(0, 2);

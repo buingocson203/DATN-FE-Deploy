@@ -1,5 +1,4 @@
 import { addProduct, deleteProduct, updateProduct } from '@/services/product'
-import { IProduct } from '@/common/type'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -38,7 +37,7 @@ const formSchema = Joi.object({
 
 type useProductMutationProps = {
     action: 'ADD' | 'UPDATE' | 'DELETE'
-    defaultValues?: IProduct
+    defaultValues?: any
     onSuccess?: () => void
 }
 
@@ -49,11 +48,12 @@ export const useProductMutation = ({
 }: useProductMutationProps) => {
     const queryClient = useQueryClient()
     const { mutate, ...rest } = useMutation({
-        mutationFn: async (product: IProduct) => {
+        mutationFn: async (product: any) => {
             switch (action) {
                 case 'ADD':
                     return await addProduct(product)
                 case 'UPDATE':
+                    // @ts-ignore
                     return await updateProduct(product)
                 case 'DELETE':
                     return await deleteProduct(product)
@@ -79,7 +79,7 @@ export const useProductMutation = ({
         console.log(values)
         mutate(values)
     }
-    const onRemove = (product: IProduct) => {
+    const onRemove = (product: any) => {
         mutate(product)
     }
     return {

@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from 'react-query';
-import axios from 'axios';
 import BestSellingProducts from './ProductStatistical';
 import HighestRevenueProducts from './TopRevenue';
 import HighestProfitProducts from './TopProfit';
@@ -11,14 +10,14 @@ import locale from 'antd/locale/vi_VN';
 
 dayjs.locale('vi');
 
-const fetchProducts = async (endpoint, startDate, endDate) => {
+const fetchProducts = async (endpoint: string, startDate: string, endDate: string) => {
     const url = `${endpoint}?startDate=${startDate}&endDate=${endDate}`;
 
     try {
         const { data } = await instance.get(url);
         console.log(`Data fetched from ${endpoint}:`, data);
         return data;
-    } catch (error) {
+    } catch (error: any) {
         console.error(`Error fetching data from ${endpoint}:`, error);
         throw new Error(error.response?.data?.message || 'Error fetching data');
     }
@@ -29,8 +28,8 @@ const StatisticalProduct = () => {
     const [datePickerVal, setDatePickerVal] = useState(dayjs());
 
     const { startDate, endDate } = useMemo(() => {
-        const startDate = dayjs(datePickerVal.startOf(activeTab.toLowerCase())).format('YYYY-MM-DD');
-        const endDate = dayjs(datePickerVal.endOf(activeTab.toLowerCase())).format('YYYY-MM-DD');
+        const startDate = dayjs(datePickerVal.startOf(activeTab.toLowerCase() as any)).format('YYYY-MM-DD');
+        const endDate = dayjs(datePickerVal.endOf(activeTab.toLowerCase() as any)).format('YYYY-MM-DD');
 
         return { startDate, endDate };
     }, [datePickerVal, activeTab]);
@@ -65,7 +64,7 @@ const StatisticalProduct = () => {
 
     const isLoading = isLoadingBestSelling || isLoadingHighestRevenue || isLoadingHighestProfit;
 
-    const onTabChange = (tab) => {
+    const onTabChange = (tab: string) => {
         setActiveTab(tab);
         setDatePickerVal(dayjs());
     };
@@ -88,7 +87,7 @@ const StatisticalProduct = () => {
                         <DatePicker
                             value={datePickerVal}
                             onChange={setDatePickerVal}
-                            picker={activeTab.toLowerCase()}
+                            picker={activeTab.toLowerCase() as any}
                         />
                     </div>
                 </div>
