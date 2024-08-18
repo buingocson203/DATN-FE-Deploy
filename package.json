@@ -63,6 +63,7 @@
     "react-toastify": "^10.0.5",
     "redux": "^5.0.1",
     "resolvers": "^1.0.0",
+    "suneditor": "^2.47.0",
     "suneditor-react": "^3.6.1",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
